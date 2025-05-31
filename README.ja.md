@@ -1,7 +1,6 @@
 # fighting-game-button-challenge
 Windows用の格ゲー練習用アプリ。ボタン練習ができます。スト6のレバーレスで動作確認しました。
 
-# 関連
 [English README](README.md)
 
 # どんなアプリか3行で説明
