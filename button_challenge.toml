@@ -1,5 +1,10 @@
-lever_toml      = "lever_names.toml"
+lever_toml        = "lever_names.toml"
 button_names_toml = "button_names.toml"
+
+title = "ボタンチャレンジ 終了はterminalでCTRL+C"
+geometry = "640x120+256+256"
+font_name = "Arial"
+font_size = 20
 
 left_right      = ['左', '右']       # 左右反転対象にする文字
 left_right_temp = ['ひだり', 'みぎ'] # 内部で左右反転処理時に一時的に使う用（missionで使われない文字にすること）

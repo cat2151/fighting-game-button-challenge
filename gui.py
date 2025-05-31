@@ -1,8 +1,8 @@
 from gui_utils import do_backmost, do_topmost, init_tkinter
 
-def gui_init_tkinter():
+def gui_init_tkinter(args):
     gui_label_count = 3
-    return init_tkinter("ボタンチャレンジ 終了はterminalでCTRL+C", "640x120", ("Arial", 20), gui_label_count)
+    return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count)
 
 def update_display_with_mission(tkinter_root, labels, timer_id_dict, score, old_texts, lever_plus_pressed, mission):
     texts = [f"mission : {mission}", f"{lever_plus_pressed}", f"score : {score}"]

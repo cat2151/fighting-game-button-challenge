@@ -6,7 +6,7 @@ from check_playing_game import check_playing_game_and_do_backmost, init_timer_fo
 
 def main():
     (args, names, plus, lever_names, missions) = load_game_configuration()
-    (tkinter_root, labels) = gui_init_tkinter()
+    (tkinter_root, labels) = gui_init_tkinter(args)
     joystick = setup_pygame_and_joystick()
     (missions_set, success_missions, mission_index) = initialize_mission_sets(missions)
     (timer_id_dict, clock, check_interval_msec, last_check_msec) = init_timer_for_check_playing_game(args)
