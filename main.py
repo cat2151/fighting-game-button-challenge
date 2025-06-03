@@ -8,7 +8,7 @@ def main():
     (args, names, plus, lever_names, missions) = load_game_configuration()
     (tkinter_root, labels) = gui_init_tkinter(args)
     joystick = setup_pygame_and_joystick()
-    (missions_set, success_missions, mission_index) = initialize_mission_sets(missions)
+    (missions, missions_set, success_missions, mission_index) = initialize_mission_sets(missions, args.left_right, args.left_right_temp)
     (timer_id_dict, clock, check_interval_msec, last_check_msec) = init_timer_for_check_playing_game(args)
     try:
         main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock)

@@ -4,7 +4,7 @@ def load_game_configuration():
     args = get_args()
     args = update_args_by_toml(args, args.config_filename)
     (names, plus, lever_names, missions) = load_all_configs(args)
-    return args,names,plus,lever_names,missions
+    return args, names, plus, lever_names, missions
 
 def load_all_configs(args):
     config = read_toml(args.button_names_toml)

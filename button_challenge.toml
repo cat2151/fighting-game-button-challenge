@@ -20,22 +20,13 @@ process_names = ['StreetFighter6.exe', 'CapcomFightingCollection.exe']
 input = "右"
 
 [[missions]]
-input = "左"
-
-[[missions]]
 input = "右上"
-
-[[missions]]
-input = "左上"
 
 [[missions]]
 input = "上"
 
 [[missions]]
 input = "右下"
-
-[[missions]]
-input = "左下"
 
 # 弱中強
 [[missions]]
@@ -51,18 +42,12 @@ input = "強"
 [[missions]]
 input = "右 + 弱 + 中"
 
-[[missions]]
-input = "左 + 弱 + 中"
-
 # 必殺技
 [[missions]]
 input = "必"
 
 [[missions]]
 input = "右 + 必"
-
-[[missions]]
-input = "左 + 必"
 
 [[missions]]
 input = "下 + 必"
@@ -77,9 +62,6 @@ input = "DP"
 
 [[missions]]
 input = "右 + DP"
-
-[[missions]]
-input = "左 + DP"
 
 # アシスト
 [[missions]]
@@ -100,9 +82,6 @@ input = "下 + ア + 必"
 [[missions]]
 input = "右 + ア + 必"
 
-[[missions]]
-input = "左 + ア + 必"
-
 # SA
 [[missions]]
 input = "強 + 必"
@@ -112,6 +91,3 @@ input = "下 + 強 + 必"
 
 [[missions]]
 input = "右 + 強 + 必"
-
-[[missions]]
-input = "左 + 強 + 必"

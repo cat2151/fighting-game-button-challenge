@@ -1,10 +1,49 @@
 import random
+import copy
+import os
 
-def initialize_mission_sets(missions):
+def initialize_mission_sets(missions, left_right, left_right_temp):
+    missions = amplify_missions_left_right(missions, left_right, left_right_temp) # 左右反転したミッションを追加
     missions_set = set(mission["input"] for mission in missions)
     success_missions = set()
     mission_index = get_new_mission_index(missions, missions_set)
-    return missions_set,success_missions,mission_index
+    return missions, missions_set, success_missions, mission_index
+
+def amplify_missions_left_right(missions, left_right, left_right_temp):
+    def validate_left_right_temp(missions, left_right_temp):
+        for temp in left_right_temp:
+            for mission in missions:
+                if temp in mission["input"]:
+                    raise ValueError(f"left_right_tempの値 '{temp}' がmission '{mission['input']}' に含まれています。安全な一時置換のため、他のmission文字列と被らない値にしてください。")
+
+    def swap_left_right(input_str):
+        if len(left_right) != len(left_right_temp):
+            raise ValueError("left_rightとleft_right_tempの要素数が一致していません。どちらも2要素にしてください。")
+        swapped = input_str
+        for orig, temp in zip(left_right, left_right_temp):
+            swapped = swapped.replace(orig, temp)
+        for temp, repl in zip(left_right_temp, reversed(left_right)):
+            swapped = swapped.replace(temp, repl)
+        return swapped
+
+    validate_left_right_temp(missions, left_right_temp)
+
+    amplified = []
+    seen = set()
+    for mission in missions:
+        input_str = mission["input"]
+        if input_str not in seen:
+            amplified.append(copy.deepcopy(mission))
+            seen.add(input_str)
+        swapped = swap_left_right(input_str)
+        if swapped != input_str and swapped not in seen:
+            amplified.append({**copy.deepcopy(mission), "input": swapped})
+            seen.add(swapped)
+
+    print(f"[amplify_missions_left_right] 変更前 missions:\n{os.linesep.join(f'  {m}' for m in missions)}")
+    print(f"[amplify_missions_left_right] 変更後 amplified:\n{os.linesep.join(f'  {a}' for a in amplified)}")
+
+    return amplified
 
 def check_and_update_mission(plus, missions, mission_index, lever_plus_pressed, missions_set, success_missions, score):
     mission = missions[mission_index]["input"]
