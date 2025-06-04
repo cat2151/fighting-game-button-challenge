@@ -1,4 +1,3 @@
-
 # START / SELECT / BACK はスコープ外、シンプル優先
 names = [
     "弱",   # "A",
@@ -18,3 +17,5 @@ names = [
 ]
 
 plus = " + "
+
+none_word = "なし" # 全ボタン離しのチェック処理用

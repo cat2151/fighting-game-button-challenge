@@ -45,19 +45,29 @@ def amplify_missions_left_right(missions, left_right, left_right_temp):
 
     return amplified
 
-def check_and_update_mission(plus, missions, mission_index, lever_plus_pressed, missions_set, success_missions, score):
+def check_and_update_mission(plus, missions, mission_index, lever_plus_pressed, missions_set, success_missions, score, wait_for_all_buttons_release, _=None, none_word="なし"):
+    if wait_for_all_buttons_release: # issues #8
+        all_released = (lever_plus_pressed == none_word)
+        if all_released:
+            wait_for_all_buttons_release = False
+        else:
+            mission = missions[mission_index]["input"]
+            return mission, mission_index, missions_set, success_missions, score, wait_for_all_buttons_release
+
     mission = missions[mission_index]["input"]
     mission_result = check_mission_success(mission, lever_plus_pressed, plus)
     if mission_result == "green":
-        mission_index, missions_set, success_missions, score = on_green(missions, missions_set, mission, success_missions, score)
+        mission_index, missions_set, success_missions, score, wait_for_all_buttons_release = on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release)
 
-    return mission, mission_index, missions_set, success_missions, score
+    return mission, mission_index, missions_set, success_missions, score, wait_for_all_buttons_release
 
-def on_green(missions, missions_set, mission, success_missions, score):
+def on_green(missions, missions_set, mission, success_missions, score, wait_for_all_release):
+    # ミッション成功時に全ボタン離し待ち状態へ遷移
+    wait_for_all_release = True
     missions_set = update_missions_set(missions, missions_set, mission, success_missions)
     mission_index = get_new_mission_index(missions, missions_set)
     score += 1
-    return mission_index, missions_set, success_missions, score
+    return mission_index, missions_set, success_missions, score, wait_for_all_release
 
 def update_missions_set(missions, missions_set, mission, success_missions):
     success_missions.add(mission)
