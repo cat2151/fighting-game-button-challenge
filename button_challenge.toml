@@ -1,5 +1,6 @@
 lever_toml        = "lever_names.toml"
 button_names_toml = "button_names.toml"
+alias_toml        = "alias.toml"
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "640x120+256+256"
