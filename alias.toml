@@ -1,33 +1,65 @@
 use_alias = true
 
+#[[alias]]
+#from = "左"
+#to = "4"
+#
+#[[alias]]
+#from = "右"
+#to = "6"
+#
+#[[alias]]
+#from = "上"
+#to = "8"
+#
+#[[alias]]
+#from = "下"
+#to = "2"
+#
+#[[alias]]
+#from = "左上"
+#to = "7"
+#
+#[[alias]]
+#from = "右上"
+#to = "9"
+#
+#[[alias]]
+#from = "左下"
+#to = "1"
+#
+#[[alias]]
+#from = "右下"
+#to = "3"
+
 [[alias]]
 from = "左"
-to = "4"
+to = "←"
 
 [[alias]]
 from = "右"
-to = "6"
+to = "→"
 
 [[alias]]
 from = "上"
-to = "8"
+to = "↑"
 
 [[alias]]
 from = "下"
-to = "2"
+to = "↓"
 
 [[alias]]
 from = "左上"
-to = "7"
+to = "↖"
 
 [[alias]]
 from = "右上"
-to = "9"
+to = "↗"
 
 [[alias]]
 from = "左下"
-to = "1"
+to = "↙"
 
 [[alias]]
 from = "右下"
-to = "3"
+to = "↘"
