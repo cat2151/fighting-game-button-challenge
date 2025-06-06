@@ -45,7 +45,7 @@ def amplify_missions_left_right(missions, left_right, left_right_temp):
 
     return amplified
 
-def check_and_update_mission(plus, missions, mission_index, lever_plus_pressed, missions_set, success_missions, score, wait_for_all_buttons_release, _=None, none_word="なし"):
+def check_and_update_mission(plus, missions, mission_index, lever_plus_pressed, missions_set, success_missions, score, wait_for_all_buttons_release, no_count_names=None, _=None, none_word="なし"):
     if wait_for_all_buttons_release: # issues #8
         all_released = (lever_plus_pressed == none_word)
         if all_released:
@@ -57,11 +57,11 @@ def check_and_update_mission(plus, missions, mission_index, lever_plus_pressed, 
     mission = missions[mission_index]["input"]
     mission_result = check_mission_success(mission, lever_plus_pressed, plus)
     if mission_result == "green":
-        mission_index, missions_set, success_missions, score, wait_for_all_buttons_release = on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release)
+        mission_index, missions_set, success_missions, score, wait_for_all_buttons_release = on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release, no_count_names)
 
     return mission, mission_index, missions_set, success_missions, score, wait_for_all_buttons_release
 
-def on_green(missions, missions_set, mission, success_missions, score, wait_for_all_release):
+def on_green(missions, missions_set, mission, success_missions, score, wait_for_all_release, no_count_names=None):
     # ミッション成功時に全ボタン離し待ち状態へ遷移
     wait_for_all_release = True
     missions_set = update_missions_set(missions, missions_set, mission, success_missions)
@@ -73,9 +73,13 @@ def update_missions_set(missions, missions_set, mission, success_missions):
     success_missions.add(mission)
     missions_set.remove(mission)
     if not missions_set:
-        print("すべてのmissionを成功しました")
-        success_missions.clear()
-        missions_set = set(m["input"] for m in missions)
+        missions_set = on_all_mission_green(missions, success_missions)
+    return missions_set
+
+def on_all_mission_green(missions, success_missions):
+    print("すべてのmissionを成功しました")
+    success_missions.clear()
+    missions_set = set(m["input"] for m in missions)
     return missions_set
 
 def get_new_mission_index(missions, missions_set):
@@ -87,7 +91,6 @@ def check_mission_success(mission, lever_plus_pressed, plus):
     formated_mission = format_mission_string(mission, plus)
     formated_lever_plus_pressed = format_mission_string(lever_plus_pressed, plus)
 
-    # print(f"mission: {formated_mission}, lever_plus_pressed: {formated_lever_plus_pressed}")
     if formated_lever_plus_pressed == formated_mission:
         return "green"
     return "red"
