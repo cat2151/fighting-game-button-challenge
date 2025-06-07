@@ -105,7 +105,7 @@ def check_mission_success(mission, lever_plus_pressed, plus, no_count_names, non
 
     if formated_lever_plus_pressed == formated_mission:
         return "green"
-    elif is_no_count_case(formated_mission, formated_lever_plus_pressed, no_count_names, plus):
+    if is_no_count_case(formated_mission, formated_lever_plus_pressed, no_count_names, plus):
         return "no_count"
     return "red"
 
