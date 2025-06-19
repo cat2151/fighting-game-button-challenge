@@ -93,11 +93,8 @@ def shutdown_pygame():
         pygame.quit()
 
 def should_skip_input_processing(buttons_bits, initial_bitstring, input_activated):
-    """
-    入力が一度もない間は処理をスキップするか判定する。
-    戻り値: (should_skip: bool, input_activated: bool)
-    """
-    is_all_released = (buttons_bits == initial_bitstring)
+    # 課題、起動直後の入力誤爆がある、対策、起動直後はボタンを押して離すまでは入力なしとみなす、この関数を利用する
+    is_all_released = buttons_bits == initial_bitstring
     if not is_all_released:
         input_activated = True
     return not input_activated, input_activated

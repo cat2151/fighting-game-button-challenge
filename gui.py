@@ -4,7 +4,9 @@ def gui_init_tkinter(args):
     gui_label_count = 3
     return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count)
 
-def update_display_with_mission(tkinter_root, labels, timer_id_dict, score, fail_count, old_texts, lever_plus_pressed, mission, wait_for_all_release=None, alias_conf=None):
+def update_display_with_mission(tkinter_root, labels, timer_id_dict, score, fail_count, old_texts, lever_plus_pressed, mission, wait_for_all_release=None, alias_conf=None, should_skip=False, none_word=None):
+    if should_skip and none_word is not None:
+        lever_plus_pressed = none_word
     if alias_conf is not None:
         mission = alias(mission, alias_conf)
         lever_plus_pressed = alias(lever_plus_pressed, alias_conf)
@@ -37,6 +39,8 @@ def show_input(root, label, text, timer):
     timer["id"] = root.after(1000, lambda: do_backmost(root))
 
 def alias(text, alias_conf):
+    if text is None:
+        return text
     if not alias_conf or not alias_conf.get('use_alias', False):
         return text
     rules = alias_conf.get('alias', [])
@@ -48,18 +52,3 @@ def alias(text, alias_conf):
         if frm and to:
             result = result.replace(frm, to)
     return result
-
-def handle_first_input_display(
-    mission, tkinter_root, labels, timer_id_dict, score, fail_count, old_texts,
-    wait_for_all_buttons_release, alias_conf, clock, none_word
-):
-    """
-    初回入力前のUI表示を更新する。
-    """
-    display_mission = mission if mission is not None else ""
-    old_texts = update_display_with_mission(
-        tkinter_root, labels, timer_id_dict, score, fail_count, old_texts, none_word, display_mission, wait_for_all_buttons_release, alias_conf)
-    tkinter_root.update_idletasks()
-    tkinter_root.update()
-    clock.tick(60)
-    return old_texts

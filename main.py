@@ -1,5 +1,5 @@
 from configs import load_game_configuration
-from gui import gui_init_tkinter, update_display_with_mission, handle_first_input_display
+from gui import gui_init_tkinter, update_display_with_mission
 from joystick import create_button_states, get_buttons_as_bitstring, setup_pygame_and_joystick, shutdown_pygame, should_skip_input_processing
 from missions import check_and_update_mission, initialize_mission_sets
 from check_playing_game import check_playing_game_and_do_backmost, init_timer_for_check_playing_game
@@ -23,7 +23,7 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
         "fail_count": 0,
         "old_texts": [],
         "wait_for_all_buttons_release": False,
-        "mission": None,
+        "mission": missions[mission_index]["input"],
         "is_first_input_detected": False,
         "initial_bitstring": None,
         "last_failed_input": None,
@@ -41,25 +41,14 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
             state["initial_bitstring"] = buttons_bits
         lever_plus_pressed = create_button_states(names, plus, lever_names, joystick, buttons_bits)
 
-        # 起動直後の初回入力スキップ
-        should_skip, state["is_first_input_detected"] = should_skip_input_processing(buttons_bits, state["initial_bitstring"], state["is_first_input_detected"])
-        if should_skip:
-            state["old_texts"] = handle_first_input_display(state["mission"], tkinter_root, labels, timer_id_dict, state["score"], state["fail_count"], state["old_texts"], state["wait_for_all_buttons_release"], alias_conf, clock, none_word)
-            continue
-
-        # check & 状態更新
-        result = check_and_update_mission(
-            state, missions, plus, lever_plus_pressed, no_count_names, none_word)
-
-        # dictからstateへ反映
-        for k in state:
-            if k in result:
-                state[k] = result[k]
-        state["mission"] = result["mission"]
+        should_skip, state["is_first_input_detected"] = should_skip_input_processing(buttons_bits, state["initial_bitstring"], state["is_first_input_detected"]) # 課題、起動直後の入力誤爆がある、対策、起動直後はボタンを押して離すまでは入力なしとみなす
+        if not should_skip:
+            # check & 状態更新
+            state = check_and_update_mission(
+                state, missions, plus, lever_plus_pressed, no_count_names, none_word)
 
         # display
-        state["old_texts"] = update_display_with_mission(
-            tkinter_root, labels, timer_id_dict, state["score"], state["fail_count"], state["old_texts"], lever_plus_pressed, state["mission"], state["wait_for_all_buttons_release"], alias_conf)
+        state["old_texts"] = update_display_with_mission(tkinter_root, labels, timer_id_dict, state["score"], state["fail_count"], state["old_texts"], lever_plus_pressed, state["mission"], state["wait_for_all_buttons_release"], alias_conf, should_skip, none_word)
         tkinter_root.update_idletasks()
         tkinter_root.update()
         clock.tick(60) # 60fps

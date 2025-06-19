@@ -47,59 +47,62 @@ def amplify_missions_left_right(missions, left_right, left_right_temp):
 
 def check_and_update_mission(state, missions, plus, lever_plus_pressed, no_count_names=None, none_word="なし"):
     result = state.copy()
-    mission_index = result["mission_index"]
-    missions_set = result["missions_set"]
-    success_missions = result["success_missions"]
-    score = result["score"]
-    fail_count = result["fail_count"]
-    wait_for_all_buttons_release = result["wait_for_all_buttons_release"]
-    last_failed_input = result["last_failed_input"]
-    if wait_for_all_buttons_release: # issues #8
-        all_released = lever_plus_pressed == none_word
-        if all_released:
-            result["wait_for_all_buttons_release"] = False
-            result["status"] = "released"
-        else:
-            result["status"] = "wait_release"
+    if result["wait_for_all_buttons_release"]: # issues #8
+        should_return, result = handle_wait_for_all_buttons_release(result, missions, lever_plus_pressed, none_word)
+        if should_return:
             return result
 
-    mission = missions[mission_index]["input"]
+    mission = missions[result["mission_index"]]["input"]
     mission_result = check_mission_success(mission, lever_plus_pressed, plus, no_count_names, none_word)
-    # missionがNoneの場合は空文字列にする（GUIでalias()のreplaceで落ちないように）
-    result["mission"] = mission if mission is not None else ""
     result["status"] = mission_result
     if mission_result == "green":
-        mission_index, missions_set, success_missions, score, wait_for_all_buttons_release, fail_count = on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release, fail_count)
-        result.update({
-            "mission_index": mission_index,
-            "missions_set": missions_set,
-            "success_missions": success_missions,
-            "score": score,
-            "wait_for_all_buttons_release": wait_for_all_buttons_release,
-            "fail_count": fail_count,
-            "last_failed_input": None
-        })
+        result.update(on_green(missions, result["missions_set"], mission, result["success_missions"], result["score"], result["wait_for_all_buttons_release"], result["fail_count"]))
     elif mission_result == "red":
-        if last_failed_input != lever_plus_pressed:
-            fail_count = on_red(fail_count)
-            result["fail_count"] = fail_count
-            result["last_failed_input"] = lever_plus_pressed
+        result["fail_count"], result["last_failed_input"] = on_red(result["fail_count"], lever_plus_pressed, result["last_failed_input"])
     elif mission_result == "no_count":
         pass
     return result
 
-def on_red(fail_count):
-    # print("ミッション失敗")
-    fail_count += 1
-    return fail_count
+def handle_wait_for_all_buttons_release(result, missions, lever_plus_pressed, none_word):
+    all_released = lever_plus_pressed == none_word
+    if all_released:
+        result["wait_for_all_buttons_release"] = False
+        result["status"] = "released"
+        return True, result
+    else:
+        result["status"] = "wait_release"
+        if 0 <= result["mission_index"] < len(missions):
+            result["mission"] = missions[result["mission_index"]]["input"]
+        else:
+            result["mission"] = ""
+        return True, result
+    raise ValueError("wait_for_all_buttons_releaseがTrueのとき、lever_plus_pressedはnone_wordでなければなりません。") # 今後仕様変更時にここに到達したら問題検知できる用
+
+def on_red(fail_count, lever_plus_pressed, last_failed_input):
+    if last_failed_input != lever_plus_pressed:
+        fail_count += 1
+        last_failed_input = lever_plus_pressed
+    return fail_count, last_failed_input
 
 def on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release, fail_count):
-    # ミッション成功時に全ボタン離し待ち状態へ遷移
     wait_for_all_buttons_release = True
     missions_set, fail_count = update_missions_set(missions, missions_set, mission, success_missions, fail_count)
     mission_index = get_new_mission_index(missions, missions_set)
     score += 1
-    return mission_index, missions_set, success_missions, score, wait_for_all_buttons_release, fail_count
+    if 0 <= mission_index < len(missions):
+        mission_value = missions[mission_index]["input"] # 全ボタン離し待ち中も次のミッションをすぐ表示する用
+    else:
+        mission_value = ""
+    return {
+        "mission_index": mission_index,
+        "missions_set": missions_set,
+        "success_missions": success_missions,
+        "score": score,
+        "wait_for_all_buttons_release": wait_for_all_buttons_release,
+        "fail_count": fail_count,
+        "last_failed_input": None,
+        "mission": mission_value
+    }
 
 def update_missions_set(missions, missions_set, mission, success_missions, fail_count):
     success_missions.add(mission)
