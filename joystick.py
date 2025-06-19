@@ -91,3 +91,13 @@ def get_pressed_buttons(names, bitstring, plus):
 def shutdown_pygame():
     if hasattr(pygame, 'quit'): # こうしないとlinterエラー
         pygame.quit()
+
+def should_skip_input_processing(buttons_bits, initial_bitstring, input_activated):
+    """
+    入力が一度もない間は処理をスキップするか判定する。
+    戻り値: (should_skip: bool, input_activated: bool)
+    """
+    is_all_released = (buttons_bits == initial_bitstring)
+    if not is_all_released:
+        input_activated = True
+    return not input_activated, input_activated

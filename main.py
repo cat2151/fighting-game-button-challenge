@@ -1,6 +1,6 @@
 from configs import load_game_configuration
-from gui import gui_init_tkinter, update_display_with_mission
-from joystick import create_button_states, get_buttons_as_bitstring, setup_pygame_and_joystick, shutdown_pygame
+from gui import gui_init_tkinter, update_display_with_mission, handle_first_input_display
+from joystick import create_button_states, get_buttons_as_bitstring, setup_pygame_and_joystick, shutdown_pygame, should_skip_input_processing
 from missions import check_and_update_mission, initialize_mission_sets
 from check_playing_game import check_playing_game_and_do_backmost, init_timer_for_check_playing_game
 
@@ -18,27 +18,50 @@ def main():
         shutdown_pygame()
 
 def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, none_word, alias_conf, no_count_names):
-    score = 0
-    old_texts = []
-    wait_for_all_buttons_release = False
+    state = {
+        "score": 0,
+        "fail_count": 0,
+        "old_texts": [],
+        "wait_for_all_buttons_release": False,
+        "mission": None,
+        "is_first_input_detected": False,
+        "initial_bitstring": None,
+        "last_failed_input": None,
+        "mission_index": mission_index,
+        "missions_set": missions_set,
+        "success_missions": success_missions,
+    }
     print("start!")
     while True:
         last_check_msec = check_playing_game_and_do_backmost(tkinter_root, args, check_interval_msec, last_check_msec)
 
         # input
         buttons_bits = get_buttons_as_bitstring(joystick)
+        if state["initial_bitstring"] is None:
+            state["initial_bitstring"] = buttons_bits
         lever_plus_pressed = create_button_states(names, plus, lever_names, joystick, buttons_bits)
 
-        # check
-        (mission, mission_index, missions_set, success_missions, score, wait_for_all_buttons_release) = check_and_update_mission(
-            plus, missions, mission_index, lever_plus_pressed, missions_set, success_missions, score, wait_for_all_buttons_release, no_count_names, none_word)
+        # 起動直後の初回入力スキップ
+        should_skip, state["is_first_input_detected"] = should_skip_input_processing(buttons_bits, state["initial_bitstring"], state["is_first_input_detected"])
+        if should_skip:
+            state["old_texts"] = handle_first_input_display(state["mission"], tkinter_root, labels, timer_id_dict, state["score"], state["fail_count"], state["old_texts"], state["wait_for_all_buttons_release"], alias_conf, clock, none_word)
+            continue
+
+        # check & 状態更新
+        result = check_and_update_mission(
+            state, missions, plus, lever_plus_pressed, no_count_names, none_word)
+
+        # dictからstateへ反映
+        for k in state:
+            if k in result:
+                state[k] = result[k]
+        state["mission"] = result["mission"]
 
         # display
-        old_texts = update_display_with_mission(
-            tkinter_root, labels, timer_id_dict, score, old_texts, lever_plus_pressed, mission, wait_for_all_buttons_release, alias_conf)
+        state["old_texts"] = update_display_with_mission(
+            tkinter_root, labels, timer_id_dict, state["score"], state["fail_count"], state["old_texts"], lever_plus_pressed, state["mission"], state["wait_for_all_buttons_release"], alias_conf)
         tkinter_root.update_idletasks()
         tkinter_root.update()
-
         clock.tick(60) # 60fps
 
 if __name__ == "__main__":
