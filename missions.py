@@ -46,7 +46,7 @@ def amplify_missions_left_right(missions, left_right, left_right_temp):
 
     return amplified
 
-def check_and_update_mission(state, missions, plus, lever_plus_pressed, no_count_names=None, none_word="なし"):
+def check_and_update_mission(state, missions, plus, lever_plus_pressed, no_count_names, none_word, args):
     result = state.copy()
     result["current_mission_frame_count"] += 1 # 備忘、ここでの加算が必要。もしここより後ろだと、分岐によってはフレームカウンタが増えない
     if result["wait_for_all_buttons_release"]: # issues #8
@@ -58,7 +58,7 @@ def check_and_update_mission(state, missions, plus, lever_plus_pressed, no_count
     mission_result = check_mission_success(mission, lever_plus_pressed, plus, no_count_names, none_word)
     result["status"] = mission_result
     if mission_result == "green":
-        result.update(on_green(missions, result["missions_set"], mission, result["success_missions"], result["score"], result["wait_for_all_buttons_release"], result["fail_count"], state=result))
+        result.update(on_green(missions, result["missions_set"], mission, result["success_missions"], result["score"], result["wait_for_all_buttons_release"], result["fail_count"], state=result, args=args))
     elif mission_result == "red":
         result["fail_count"], result["last_failed_input"] = on_red(result["fail_count"], lever_plus_pressed, result["last_failed_input"])
     elif mission_result == "no_count":
@@ -86,7 +86,7 @@ def on_red(fail_count, lever_plus_pressed, last_failed_input):
         last_failed_input = lever_plus_pressed
     return fail_count, last_failed_input
 
-def on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release, fail_count, state=None):
+def on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release, fail_count, state, args):
     wait_for_all_buttons_release = True
     missions_set, fail_count = update_missions_set(missions, missions_set, mission, success_missions, fail_count)
     mission_index = get_new_mission_index(missions, missions_set)
@@ -96,7 +96,7 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
     else:
         mission_value = ""
     if state is not None:
-        state = update_success_frame_stats(state, score)
+        state = update_success_frame_stats(state, score, args)
     return {
         "mission_index": mission_index,
         "missions_set": missions_set,
@@ -114,7 +114,7 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
         } if state is not None else {})
     }
 
-def update_success_frame_stats(state, score):
+def update_success_frame_stats(state, score, args):
     state["last_mission_frame_count"] = state.get("current_mission_frame_count", 0)
     last = state["last_mission_frame_count"]
     prev_min = state.get("prev_success_min_frame_count", 0)
@@ -123,6 +123,9 @@ def update_success_frame_stats(state, score):
             state["prev_success_min_frame_count"] = last
         if last > 0:
             state.setdefault("prev_success_frame_counts", []).append(last)
+            sample_count = args.histogram_mode_sample_count
+            if len(state["prev_success_frame_counts"]) > sample_count:
+                state["prev_success_frame_counts"] = state["prev_success_frame_counts"][-sample_count:]
             arr = np.array(state["prev_success_frame_counts"])
             if len(arr) > 0:
                 hist, bin_edges = np.histogram(arr, bins='auto')

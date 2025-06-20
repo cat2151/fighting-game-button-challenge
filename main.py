@@ -50,7 +50,7 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
         if not should_skip:
             # check & 状態更新
             state = check_and_update_mission(
-                state, missions, plus, lever_plus_pressed, no_count_names, none_word)
+                state, missions, plus, lever_plus_pressed, no_count_names, none_word, args)
 
         # display
         state["old_texts"] = update_display_with_mission(
