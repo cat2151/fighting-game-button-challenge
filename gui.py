@@ -4,7 +4,7 @@ def gui_init_tkinter(args):
     gui_label_count = 3
     return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count)
 
-def update_display_with_mission(tkinter_root, labels, timer_id_dict, score, fail_count, old_texts, lever_plus_pressed, mission, wait_for_all_release=None, alias_conf=None, should_skip=False, none_word=None):
+def update_display_with_mission(tkinter_root, labels, timer_id_dict, score, fail_count, old_texts, lever_plus_pressed, mission, wait_for_all_release=None, alias_conf=None, should_skip=False, none_word=None, current_mission_frame_count=None, last_mission_frame_count=None, prev_success_min_frame_count=None):
     if should_skip and none_word is not None:
         lever_plus_pressed = none_word
     if alias_conf is not None:
@@ -12,9 +12,17 @@ def update_display_with_mission(tkinter_root, labels, timer_id_dict, score, fail
         lever_plus_pressed = alias(lever_plus_pressed, alias_conf)
     text_lever_plus_pressed = f"{lever_plus_pressed}"
     if wait_for_all_release is not None and wait_for_all_release:
-        text_lever_plus_pressed += "...SUCCESS!" # 「全ボタンを離してください」の文言を入れるかは検討中
+        text_lever_plus_pressed =  f"SUCCESS {text_lever_plus_pressed} SUCCESS"
 
-    texts = [f"mission : {mission}", f"{text_lever_plus_pressed}", f"score : {score}  fail : {fail_count}"]
+    if current_mission_frame_count is not None:
+        fail_and_frame = f"{current_mission_frame_count} fail[ {fail_count}]"
+    else:
+        fail_and_frame = f"fail : {fail_count}"
+    if last_mission_frame_count is not None:
+        fail_and_frame += f"  [前回 {last_mission_frame_count}]"
+    if prev_success_min_frame_count is not None and prev_success_min_frame_count > 0:
+        fail_and_frame += f"  [min {prev_success_min_frame_count}]"
+    texts = [f"mission : {mission}", f"{text_lever_plus_pressed}", f"[score {score}] {fail_and_frame}"]
     if texts != old_texts:
         show_input(tkinter_root, labels, texts, timer_id_dict)
         old_texts = texts

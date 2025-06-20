@@ -30,6 +30,9 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
         "mission_index": mission_index,
         "missions_set": missions_set,
         "success_missions": success_missions,
+        "current_mission_frame_count": 0,
+        "last_mission_frame_count": 0,
+        "prev_success_min_frame_count": 0,
     }
     print("start!")
     while True:
@@ -41,14 +44,17 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
             state["initial_bitstring"] = buttons_bits
         lever_plus_pressed = create_button_states(names, plus, lever_names, joystick, buttons_bits)
 
-        should_skip, state["is_first_input_detected"] = should_skip_input_processing(buttons_bits, state["initial_bitstring"], state["is_first_input_detected"]) # 課題、起動直後の入力誤爆がある、対策、起動直後はボタンを押して離すまでは入力なしとみなす
+        should_skip, state["is_first_input_detected"] = should_skip_input_processing(buttons_bits, state["initial_bitstring"], state["is_first_input_detected"])
         if not should_skip:
             # check & 状態更新
             state = check_and_update_mission(
                 state, missions, plus, lever_plus_pressed, no_count_names, none_word)
 
         # display
-        state["old_texts"] = update_display_with_mission(tkinter_root, labels, timer_id_dict, state["score"], state["fail_count"], state["old_texts"], lever_plus_pressed, state["mission"], state["wait_for_all_buttons_release"], alias_conf, should_skip, none_word)
+        state["old_texts"] = update_display_with_mission(
+            tkinter_root, labels, timer_id_dict, state["score"], state["fail_count"], state["old_texts"], lever_plus_pressed, state["mission"],
+            wait_for_all_release=state["wait_for_all_buttons_release"], alias_conf=alias_conf, should_skip=should_skip, none_word=none_word,
+            current_mission_frame_count=state["current_mission_frame_count"], last_mission_frame_count=state["last_mission_frame_count"], prev_success_min_frame_count=state["prev_success_min_frame_count"])
         tkinter_root.update_idletasks()
         tkinter_root.update()
         clock.tick(60) # 60fps
