@@ -4,7 +4,7 @@ def gui_init_tkinter(args):
     gui_label_count = 3
     return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count)
 
-def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, mission, wait_for_all_release=None, alias_conf=None, should_skip=False, none_word=None, args=None):
+def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, mission, wait_for_all_release, alias_conf, should_skip, none_word, args):
     if should_skip and none_word is not None:
         lever_plus_pressed = none_word
     if alias_conf is not None:
@@ -12,7 +12,7 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         lever_plus_pressed = alias(lever_plus_pressed, alias_conf)
     text_lever_plus_pressed = f"{lever_plus_pressed}"
     if wait_for_all_release is not None and wait_for_all_release:
-        text_lever_plus_pressed =  f"SUCCESS {text_lever_plus_pressed} SUCCESS"
+        text_lever_plus_pressed =  f"SUCCESS! {text_lever_plus_pressed} !SUCCESS"
 
     display_format = args.display_format
 
@@ -33,32 +33,36 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         fmt = display_format.get(key, '') if isinstance(display_format, dict) else ''
         texts.append(fmt.format(**format_dict))
 
-    has_input = (lever_plus_pressed != state.get("old_lever_plus_pressed"))
+    has_input = lever_plus_pressed != state.get("old_lever_plus_pressed")
     if texts != state['old_texts']:
-        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input=has_input)
+        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input, state=state)
         state['old_texts'] = texts
     state["old_lever_plus_pressed"] = lever_plus_pressed  # ここで更新
     return state['old_texts']
 
-def show_input_frame_etc(root, label, text, timer, has_input=False):
+def show_input_frame_etc(root, label, text, timer, has_input, state):
     if has_input:
         do_topmost(root)
+        state['is_backmost'] = False
 
-    def set_label_text(label, text):
-        label.config(text=text)
+    if not state['is_backmost']:
+        def set_label_text(label, text):
+            label.config(text=text)
 
-    if isinstance(label, list) and isinstance(text, list):
-        for l, t in zip(label, text):
-            set_label_text(l, t)
-    else:
-        set_label_text(label, text)
-    root.update()
+        if isinstance(label, list) and isinstance(text, list):
+            for l, t in zip(label, text):
+                set_label_text(l, t)
+        else:
+            set_label_text(label, text)
 
     # 入力から指定秒数後にbackmost化する用
     if has_input:
         if timer["id"] is not None:
             root.after_cancel(timer["id"])
-        timer["id"] = root.after(1000, lambda: do_backmost(root))
+        def to_backmost():
+            do_backmost(root)
+            state['is_backmost'] = True
+        timer["id"] = root.after(1000, to_backmost)
 
 def alias(text, alias_conf):
     if text is None:

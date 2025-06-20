@@ -5,7 +5,7 @@ alias_toml        = "alias.toml"
 histogram_mode_sample_count = 50
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
-geometry = "640x120+256+256"
+geometry = "700x120+256+256"
 font_name = "Arial"
 font_size = 20
 
@@ -15,7 +15,7 @@ left_right_temp = ['ひだり', 'みぎ'] # 内部で左右反転処理時に一
 [display_format]
 label1 = "mission : {mission}"
 label2 = "{lever_plus_pressed}"
-label3 = "score:{score} fail:{fail_count} {current_mission_frame_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center}"
+label3 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
 
 [backmost_mode]
 check_interval_sec = 10
