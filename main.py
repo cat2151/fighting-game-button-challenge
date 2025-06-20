@@ -35,6 +35,7 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
         "prev_success_min_frame_count": 0,
         "prev_success_frame_counts": [],
         "prev_success_mode_frame_count": 0,
+        "old_lever_plus_pressed": None,  # 追加
     }
     print("start!")
     while True:

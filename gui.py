@@ -33,13 +33,16 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         fmt = display_format.get(key, '') if isinstance(display_format, dict) else ''
         texts.append(fmt.format(**format_dict))
 
+    has_input = (lever_plus_pressed != state.get("old_lever_plus_pressed"))
     if texts != state['old_texts']:
-        show_input(tkinter_root, labels, texts, timer_id_dict)
+        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input=has_input)
         state['old_texts'] = texts
+    state["old_lever_plus_pressed"] = lever_plus_pressed  # ここで更新
     return state['old_texts']
 
-def show_input(root, label, text, timer):
-    do_topmost(root)
+def show_input_frame_etc(root, label, text, timer, has_input=False):
+    if has_input:
+        do_topmost(root)
 
     def set_label_text(label, text):
         label.config(text=text)
@@ -52,9 +55,10 @@ def show_input(root, label, text, timer):
     root.update()
 
     # 入力から指定秒数後にbackmost化する用
-    if timer["id"] is not None:
-        root.after_cancel(timer["id"])
-    timer["id"] = root.after(1000, lambda: do_backmost(root))
+    if has_input:
+        if timer["id"] is not None:
+            root.after_cancel(timer["id"])
+        timer["id"] = root.after(1000, lambda: do_backmost(root))
 
 def alias(text, alias_conf):
     if text is None:
