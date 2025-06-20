@@ -4,7 +4,7 @@ def gui_init_tkinter(args):
     gui_label_count = 3
     return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count)
 
-def update_display_with_mission(tkinter_root, labels, timer_id_dict, score, fail_count, old_texts, lever_plus_pressed, mission, wait_for_all_release=None, alias_conf=None, should_skip=False, none_word=None, current_mission_frame_count=None, last_mission_frame_count=None, prev_success_min_frame_count=None):
+def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, mission, wait_for_all_release=None, alias_conf=None, should_skip=False, none_word=None, args=None):
     if should_skip and none_word is not None:
         lever_plus_pressed = none_word
     if alias_conf is not None:
@@ -14,19 +14,29 @@ def update_display_with_mission(tkinter_root, labels, timer_id_dict, score, fail
     if wait_for_all_release is not None and wait_for_all_release:
         text_lever_plus_pressed =  f"SUCCESS {text_lever_plus_pressed} SUCCESS"
 
-    if current_mission_frame_count is not None:
-        fail_and_frame = f"{current_mission_frame_count} fail[ {fail_count}]"
-    else:
-        fail_and_frame = f"fail : {fail_count}"
-    if last_mission_frame_count is not None:
-        fail_and_frame += f"  [前回 {last_mission_frame_count}]"
-    if prev_success_min_frame_count is not None and prev_success_min_frame_count > 0:
-        fail_and_frame += f"  [min {prev_success_min_frame_count}]"
-    texts = [f"mission : {mission}", f"{text_lever_plus_pressed}", f"[score {score}] {fail_and_frame}"]
-    if texts != old_texts:
+    display_format = args.display_format
+
+    format_dict = {
+        'mission': mission,
+        'lever_plus_pressed': text_lever_plus_pressed,
+        'score': state['score'],
+        'fail_count': state['fail_count'],
+        'current_mission_frame_count': state.get('current_mission_frame_count', ''),
+        'last_mission_frame_count': state.get('last_mission_frame_count', ''),
+        'prev_success_min_frame_count': state.get('prev_success_min_frame_count', ''),
+        'prev_success_hist_center': state.get('prev_success_hist_center', ''),
+    }
+
+    texts = []
+    for i in range(1, 4):
+        key = f'label{i}'
+        fmt = display_format.get(key, '') if isinstance(display_format, dict) else ''
+        texts.append(fmt.format(**format_dict))
+
+    if texts != state['old_texts']:
         show_input(tkinter_root, labels, texts, timer_id_dict)
-        old_texts = texts
-    return old_texts
+        state['old_texts'] = texts
+    return state['old_texts']
 
 def show_input(root, label, text, timer):
     do_topmost(root)

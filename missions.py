@@ -1,6 +1,7 @@
 import random
 import copy
 import os
+import numpy as np
 
 def initialize_mission_sets(missions, left_right, left_right_temp):
     missions = amplify_missions_left_right(missions, left_right, left_right_temp) # 左右反転したミッションを追加
@@ -95,12 +96,7 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
     else:
         mission_value = ""
     if state is not None:
-        state["last_mission_frame_count"] = state.get("current_mission_frame_count", 0)
-        last = state["last_mission_frame_count"]
-        prev_min = state.get("prev_success_min_frame_count", 0)
-        if last > 0 and (prev_min == 0 or last < prev_min):
-            state["prev_success_min_frame_count"] = last
-        state["current_mission_frame_count"] = 0
+        state = update_success_frame_stats(state, score)
     return {
         "mission_index": mission_index,
         "missions_set": missions_set,
@@ -113,9 +109,30 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
         **({
             "current_mission_frame_count": 0,
             "last_mission_frame_count": state.get("last_mission_frame_count", 0) if state is not None else 0,
-            "prev_success_min_frame_count": state.get("prev_success_min_frame_count", 0) if state is not None else 0
+            "prev_success_min_frame_count": state.get("prev_success_min_frame_count", 0) if state is not None else 0,
+            "prev_success_hist_center": state.get("prev_success_hist_center", 0) if state is not None else 0
         } if state is not None else {})
     }
+
+def update_success_frame_stats(state, score):
+    state["last_mission_frame_count"] = state.get("current_mission_frame_count", 0)
+    last = state["last_mission_frame_count"]
+    prev_min = state.get("prev_success_min_frame_count", 0)
+    if score > 1: # 課題、初回が1フレなどで記録されることがある、対策、2回目以降を集計対象にする
+        if last > 0 and (prev_min == 0 or last < prev_min):
+            state["prev_success_min_frame_count"] = last
+        if last > 0:
+            state.setdefault("prev_success_frame_counts", []).append(last)
+            arr = np.array(state["prev_success_frame_counts"])
+            if len(arr) > 0:
+                hist, bin_edges = np.histogram(arr, bins='auto')
+                max_bin_idx = np.argmax(hist)
+                bin_center = (bin_edges[max_bin_idx] + bin_edges[max_bin_idx+1]) / 2 # 備忘、これは「ヒストグラムの最頻ビンの中心」である。最も多く観測された値が属する区間の代表値として使う用。
+                state["prev_success_hist_center"] = int(round(bin_center))
+            else:
+                state["prev_success_hist_center"] = 0
+    state["current_mission_frame_count"] = 0
+    return state
 
 def update_missions_set(missions, missions_set, mission, success_missions, fail_count):
     success_missions.add(mission)

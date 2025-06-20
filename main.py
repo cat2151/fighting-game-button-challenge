@@ -33,6 +33,8 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
         "current_mission_frame_count": 0,
         "last_mission_frame_count": 0,
         "prev_success_min_frame_count": 0,
+        "prev_success_frame_counts": [],
+        "prev_success_mode_frame_count": 0,
     }
     print("start!")
     while True:
@@ -52,9 +54,9 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
 
         # display
         state["old_texts"] = update_display_with_mission(
-            tkinter_root, labels, timer_id_dict, state["score"], state["fail_count"], state["old_texts"], lever_plus_pressed, state["mission"],
-            wait_for_all_release=state["wait_for_all_buttons_release"], alias_conf=alias_conf, should_skip=should_skip, none_word=none_word,
-            current_mission_frame_count=state["current_mission_frame_count"], last_mission_frame_count=state["last_mission_frame_count"], prev_success_min_frame_count=state["prev_success_min_frame_count"])
+            state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, state["mission"],
+            state["wait_for_all_buttons_release"], alias_conf, should_skip, none_word, args
+        )
         tkinter_root.update_idletasks()
         tkinter_root.update()
         clock.tick(60) # 60fps
