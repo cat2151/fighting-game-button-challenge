@@ -29,8 +29,8 @@ Windows用の格ゲー練習用アプリ。ボタン練習ができます。ス�
 # 使い方
 - リポジトリをcloneしてください
 - `button_challenge.bat` を実行してください
-    - 終了はconsoleで`CTRL+C`
-    - 設定ファイルは`button_challenge.toml` , `button_names.toml` , `lever_names.toml`
+    - 終了は、terminalで`CTRL+C`
+    - 設定は `config/` 配下のtomlファイルを編集してください
 
 # このアプリが解決すること
 - ※この欄は、このアプリが何か？を説明する用、マイルストーンの目安にする用、ほかいろいろな用途に使うつもり
@@ -82,6 +82,8 @@ Windows用の格ゲー練習用アプリ。ボタン練習ができます。ス�
     - このアプリでボタン練習する
 
 # スコープ外
+- このアプリを動かすために必要なPythonとmoduleのimport手順の説明
+- 設定GUI
 - シーケンス入力（例、`DI` > `ア + 強`） → 別Projectで担当します：[コマンドチャレンジ](https://github.com/cat2151/command-challenge)
 - 非常に高度なmission
 - 豪華なグラフィック
