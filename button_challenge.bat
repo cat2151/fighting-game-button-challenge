@@ -1,3 +1,3 @@
 title button challenge
-python main.py --config-filename button_challenge.toml
+python src/main.py --config-filename config/button_challenge.toml
 if not %errorlevel% == 0 (pause & exit /b 1)

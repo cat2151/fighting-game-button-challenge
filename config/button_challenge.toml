@@ -1,6 +1,6 @@
-lever_toml        = "lever_names.toml"
-button_names_toml = "button_names.toml"
-alias_toml        = "alias.toml"
+lever_toml        = "config/lever_names.toml"
+button_names_toml = "config/button_names.toml"
+alias_toml        = "config/alias.toml"
 
 histogram_mode_sample_count = 50
 
