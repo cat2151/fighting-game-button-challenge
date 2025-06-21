@@ -1,0 +1,84 @@
+# mission スト6 モダン用
+
+# ひとまず方針 : 自分が今練習したい操作を優先して書く
+
+# 左右反転生成用
+    left_right      = ['左', '右']       # 左右反転対象にする文字
+    left_right_temp = ['ひだり', 'みぎ'] # 内部で左右反転処理時に一時的に使う用（missionで使われない文字にすること）
+
+# レバー
+    [[missions]]
+    input = "右"
+
+    [[missions]]
+    input = "右上"
+
+    [[missions]]
+    input = "上"
+
+    [[missions]]
+    input = "右下"
+
+# 弱中強
+    [[missions]]
+    input = "弱"
+
+    [[missions]]
+    input = "中"
+
+    [[missions]]
+    input = "強"
+
+# 投げ
+    [[missions]]
+    input = "右 + 弱 + 中"
+
+# 必殺技
+    [[missions]]
+    input = "必"
+
+    [[missions]]
+    input = "右 + 必"
+
+    [[missions]]
+    input = "下 + 必"
+
+# DI
+    [[missions]]
+    input = "DI"
+
+# DP
+    [[missions]]
+    input = "DP"
+
+    [[missions]]
+    input = "右 + DP"
+
+# アシスト
+    [[missions]]
+    input = "ア + 弱"
+
+    [[missions]]
+    input = "ア + 中"
+
+    [[missions]]
+    input = "ア + 強"
+
+    [[missions]]
+    input = "ア + 必"
+
+    [[missions]]
+    input = "下 + ア + 必"
+
+    [[missions]]
+    input = "右 + ア + 必"
+
+# SA
+    [[missions]]
+    input = "強 + 必"
+
+    [[missions]]
+    input = "下 + 強 + 必"
+
+    [[missions]]
+    input = "右 + 強 + 必"

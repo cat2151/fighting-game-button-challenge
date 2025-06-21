@@ -1,101 +1,20 @@
 lever_toml        = "config/lever_names.toml"
 button_names_toml = "config/button_names.toml"
 alias_toml        = "config/alias.toml"
-
-histogram_mode_sample_count = 50
+mission_toml      = "config/mission.toml"
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "700x120+256+256"
 font_name = "Arial"
 font_size = 20
 
-left_right      = ['左', '右']       # 左右反転対象にする文字
-left_right_temp = ['ひだり', 'みぎ'] # 内部で左右反転処理時に一時的に使う用（missionで使われない文字にすること）
+histogram_mode_sample_count = 50 # hist中心の表示用
 
 [display_format]
-label1 = "mission : {mission}"
-label2 = "{lever_plus_pressed}"
-label3 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
+    label1 = "mission : {mission}"
+    label2 = "{lever_plus_pressed}"
+    label3 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
 
 [backmost_mode]
-check_interval_sec = 10
-process_names = ['StreetFighter6.exe', 'CapcomFightingCollection.exe']
-
-# ひとまず方針 : 自分が今練習したい操作を優先して書く。
-
-# レバー
-[[missions]]
-input = "右"
-
-[[missions]]
-input = "右上"
-
-[[missions]]
-input = "上"
-
-[[missions]]
-input = "右下"
-
-# 弱中強
-[[missions]]
-input = "弱"
-
-[[missions]]
-input = "中"
-
-[[missions]]
-input = "強"
-
-# 投げ
-[[missions]]
-input = "右 + 弱 + 中"
-
-# 必殺技
-[[missions]]
-input = "必"
-
-[[missions]]
-input = "右 + 必"
-
-[[missions]]
-input = "下 + 必"
-
-# DI
-[[missions]]
-input = "DI"
-
-# DP
-[[missions]]
-input = "DP"
-
-[[missions]]
-input = "右 + DP"
-
-# アシスト
-[[missions]]
-input = "ア + 弱"
-
-[[missions]]
-input = "ア + 中"
-
-[[missions]]
-input = "ア + 強"
-
-[[missions]]
-input = "ア + 必"
-
-[[missions]]
-input = "下 + ア + 必"
-
-[[missions]]
-input = "右 + ア + 必"
-
-# SA
-[[missions]]
-input = "強 + 必"
-
-[[missions]]
-input = "下 + 強 + 必"
-
-[[missions]]
-input = "右 + 強 + 必"
+    check_interval_sec = 10
+    process_names = ['StreetFighter6.exe', 'CapcomFightingCollection.exe']

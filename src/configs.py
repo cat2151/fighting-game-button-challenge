@@ -3,6 +3,7 @@ from utils import get_args, read_toml, update_args_by_toml
 def load_game_configuration():
     args = get_args()
     args = update_args_by_toml(args, args.config_filename)
+    args = update_args_by_toml(args, args.mission_toml)
     (names, plus, lever_names, missions, none_word, alias_conf, no_count_names) = load_all_configs(args)
     return args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names
 
