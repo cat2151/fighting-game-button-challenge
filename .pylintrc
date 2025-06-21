@@ -1,3 +1,6 @@
+[MASTER]
+init-hook='import sys; sys.path.insert(0, "./src")'
+
 [MAIN]
 
 [BASIC]

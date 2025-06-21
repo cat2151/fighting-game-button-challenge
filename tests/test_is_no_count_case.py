@@ -1,7 +1,7 @@
 import sys
 import os
 import pytest
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) # テスト対象関数を親ディレクトリからimportする用
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from missions import is_no_count_case
 
 no_count_names_list = [
