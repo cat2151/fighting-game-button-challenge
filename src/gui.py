@@ -58,17 +58,19 @@ def show_input_frame_etc(root, label, text, timer, has_input, state, bg_color):
         state['is_backmost'] = False
 
     if not state['is_backmost']:
-        def set_label_text(label, text, bg_color):
-            if bg_color:
-                label.config(text=text, bg=bg_color)
-            else:
-                label.config(text=text, bg='SystemButtonFace')
+        def set_label_text(label, text):
+            label.config(text=text)
 
         if isinstance(label, list) and isinstance(text, list):
             for l, t in zip(label, text):
-                set_label_text(l, t, bg_color)
+                set_label_text(l, t)
         else:
-            set_label_text(label, text, bg_color)
+            set_label_text(label, text)
+
+        if bg_color:
+            root.config(bg=bg_color)
+        else:
+            root.config(bg='SystemButtonFace')
 
     # 入力から指定秒数後にbackmost化する用
     if has_input:

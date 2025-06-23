@@ -100,8 +100,8 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
 
     state = update_success_frame_stats(state, score, args)
 
-    state["bg_flash_color"] = "green"
-    state["bg_flash_frames"] = 5
+    state["bg_flash_color"] = "#00FF00" # 今後、framesともどもTOMLで設定できるようにする予定
+    state["bg_flash_frames"] = 8 # 5だと短い、10だと長い
     return {
         "mission_index": mission_index,
         "missions_set": missions_set,
