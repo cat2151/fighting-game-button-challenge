@@ -59,7 +59,7 @@ def check_and_update_mission(state, missions, plus, lever_plus_pressed, no_count
     if mission_result == "green":
         state.update(on_green(missions, state["missions_set"], mission, state["success_missions"], state["score"], state["wait_for_all_buttons_release"], state["fail_count"], state=state, args=args))
     elif mission_result == "red":
-        state["fail_count"], state["last_failed_input"] = on_red(state["fail_count"], lever_plus_pressed, state["last_failed_input"])
+        state["fail_count"], state["last_failed_input"] = on_red(state["fail_count"], lever_plus_pressed, state["last_failed_input"], state)
     elif mission_result == "no_count":
         pass
     return state
@@ -79,10 +79,13 @@ def handle_wait_for_all_buttons_release(result, missions, lever_plus_pressed, no
         return True, result
     raise ValueError("wait_for_all_buttons_releaseがTrueのとき、lever_plus_pressedはnone_wordでなければなりません。") # 今後仕様変更時にここに到達したら問題検知できる用
 
-def on_red(fail_count, lever_plus_pressed, last_failed_input):
+def on_red(fail_count, lever_plus_pressed, last_failed_input, state):
     if last_failed_input != lever_plus_pressed:
         fail_count += 1
         last_failed_input = lever_plus_pressed
+
+    state["bg_flash_color"] = "red"
+    state["bg_flash_frames"] = 5
     return fail_count, last_failed_input
 
 def on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release, fail_count, state, args):
@@ -94,8 +97,11 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
         mission_value = missions[mission_index]["input"] # 備忘、全ボタン離し待ち中も次のミッションをすぐ表示する用
     else:
         mission_value = ""
-    if state is not None:
-        state = update_success_frame_stats(state, score, args)
+
+    state = update_success_frame_stats(state, score, args)
+
+    state["bg_flash_color"] = "green"
+    state["bg_flash_frames"] = 5
     return {
         "mission_index": mission_index,
         "missions_set": missions_set,

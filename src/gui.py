@@ -33,27 +33,42 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         fmt = display_format.get(key, '') if isinstance(display_format, dict) else ''
         texts.append(fmt.format(**format_dict))
 
+    # 背景色フラッシュ処理
+    bg_color = None
+    if state.get('bg_flash_frames', 0) > 0:
+        bg_color = state['bg_flash_color']
+        state['bg_flash_frames'] -= 1
+    else:
+        state['bg_flash_color'] = None
+        state['bg_flash_frames'] = 0
+
     if texts != state['old_texts']:
         has_input = lever_plus_pressed != state["old_lever_plus_pressed"]
-        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input, state)
+        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input, state, bg_color)
         state['old_texts'] = texts
+    else:
+        # text変化なしで、背景色だけ更新する用
+        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, False, state, bg_color)
     state["old_lever_plus_pressed"] = lever_plus_pressed
     return state['old_texts']
 
-def show_input_frame_etc(root, label, text, timer, has_input, state):
+def show_input_frame_etc(root, label, text, timer, has_input, state, bg_color):
     if has_input:
         do_topmost(root)
         state['is_backmost'] = False
 
     if not state['is_backmost']:
-        def set_label_text(label, text):
-            label.config(text=text)
+        def set_label_text(label, text, bg_color):
+            if bg_color:
+                label.config(text=text, bg=bg_color)
+            else:
+                label.config(text=text, bg='SystemButtonFace')
 
         if isinstance(label, list) and isinstance(text, list):
             for l, t in zip(label, text):
-                set_label_text(l, t)
+                set_label_text(l, t, bg_color)
         else:
-            set_label_text(label, text)
+            set_label_text(label, text, bg_color)
 
     # 入力から指定秒数後にbackmost化する用
     if has_input:
