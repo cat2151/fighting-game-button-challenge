@@ -33,11 +33,11 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         fmt = display_format.get(key, '') if isinstance(display_format, dict) else ''
         texts.append(fmt.format(**format_dict))
 
-    has_input = lever_plus_pressed != state.get("old_lever_plus_pressed")
     if texts != state['old_texts']:
-        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input, state=state)
+        has_input = lever_plus_pressed != state["old_lever_plus_pressed"]
+        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input, state)
         state['old_texts'] = texts
-    state["old_lever_plus_pressed"] = lever_plus_pressed  # ここで更新
+    state["old_lever_plus_pressed"] = lever_plus_pressed
     return state['old_texts']
 
 def show_input_frame_etc(root, label, text, timer, has_input, state):

@@ -47,23 +47,22 @@ def amplify_missions_left_right(missions, left_right, left_right_temp):
     return amplified
 
 def check_and_update_mission(state, missions, plus, lever_plus_pressed, no_count_names, none_word, args):
-    result = state.copy()
-    result["current_mission_frame_count"] += 1 # 備忘、ここでの加算が必要。もしここより後ろだと、分岐によってはフレームカウンタが増えない
-    if result["wait_for_all_buttons_release"]: # issues #8
-        should_return, result = handle_wait_for_all_buttons_release(result, missions, lever_plus_pressed, none_word)
+    state["current_mission_frame_count"] += 1 # 備忘、ここでの加算が必要。もしここより後ろだと、分岐によってはフレームカウンタが増えない
+    if state["wait_for_all_buttons_release"]: # issues #8
+        should_return, state = handle_wait_for_all_buttons_release(state, missions, lever_plus_pressed, none_word)
         if should_return:
-            return result
+            return state
 
-    mission = missions[result["mission_index"]]["input"]
+    mission = missions[state["mission_index"]]["input"]
     mission_result = check_mission_success(mission, lever_plus_pressed, plus, no_count_names, none_word)
-    result["status"] = mission_result
+    state["status"] = mission_result
     if mission_result == "green":
-        result.update(on_green(missions, result["missions_set"], mission, result["success_missions"], result["score"], result["wait_for_all_buttons_release"], result["fail_count"], state=result, args=args))
+        state.update(on_green(missions, state["missions_set"], mission, state["success_missions"], state["score"], state["wait_for_all_buttons_release"], state["fail_count"], state=state, args=args))
     elif mission_result == "red":
-        result["fail_count"], result["last_failed_input"] = on_red(result["fail_count"], lever_plus_pressed, result["last_failed_input"])
+        state["fail_count"], state["last_failed_input"] = on_red(state["fail_count"], lever_plus_pressed, state["last_failed_input"])
     elif mission_result == "no_count":
         pass
-    return result
+    return state
 
 def handle_wait_for_all_buttons_release(result, missions, lever_plus_pressed, none_word):
     all_released = lever_plus_pressed == none_word
