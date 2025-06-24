@@ -1,7 +1,7 @@
 from configs import load_game_configuration
 from gui import gui_init_tkinter, update_display_with_mission
 from joystick import create_button_states, get_buttons_as_bitstring, setup_pygame_and_joystick, shutdown_pygame, should_skip_input_processing
-from missions import check_and_update_mission, initialize_mission_sets
+from missions import check_and_update_mission, initialize_mission_sets, on_mission_start
 from check_playing_game import check_playing_game_and_do_backmost, init_timer_for_check_playing_game
 
 def main():
@@ -37,7 +37,10 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
         "prev_success_mode_frame_count": 0,
         "old_lever_plus_pressed": None,
         "is_backmost": False,
+        "mission_start_time": None,
+        "mission_times": [],
     }
+    state = on_mission_start(state)
     print("start!")
     while True:
         last_check_msec = check_playing_game_and_do_backmost(tkinter_root, args, check_interval_msec, last_check_msec)

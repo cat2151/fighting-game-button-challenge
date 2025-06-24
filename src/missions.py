@@ -1,5 +1,6 @@
 import random
 import copy
+import time
 import os
 import numpy as np
 
@@ -89,6 +90,8 @@ def on_red(fail_count, lever_plus_pressed, last_failed_input, state):
     return fail_count, last_failed_input
 
 def on_green(missions, missions_set, mission, success_missions, score, wait_for_all_buttons_release, fail_count, state, args):
+    state = extract_mission_elapsed_time(state)
+    state = on_mission_start(state)
     wait_for_all_buttons_release = True
     missions_set, fail_count = update_missions_set(missions, missions_set, mission, success_missions, fail_count)
     mission_index = get_new_mission_index(missions, missions_set)
@@ -115,7 +118,9 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
             "current_mission_frame_count": 0,
             "last_mission_frame_count": state.get("last_mission_frame_count", 0) if state is not None else 0,
             "prev_success_min_frame_count": state.get("prev_success_min_frame_count", 0) if state is not None else 0,
-            "prev_success_hist_center": state.get("prev_success_hist_center", 0) if state is not None else 0
+            "prev_success_hist_center": state.get("prev_success_hist_center", 0) if state is not None else 0,
+            "mission_start_time": state.get("mission_start_time", 0) if state is not None else 0,
+            "mission_times": state.get("mission_times", []) if state is not None else []
         } if state is not None else {})
     }
 
@@ -140,6 +145,16 @@ def update_success_frame_stats(state, score, args):
             else:
                 state["prev_success_hist_center"] = 0
     state["current_mission_frame_count"] = 0
+    return state
+
+def extract_mission_elapsed_time(state):
+    elapsed = time.time() - state["mission_start_time"]
+    state.setdefault("mission_times", []).append(elapsed)
+    print(f"[DEBUG] mission_times: {state['mission_times']}")
+    return state
+
+def on_mission_start(state):
+    state["mission_start_time"] = time.time()
     return state
 
 def update_missions_set(missions, missions_set, mission, success_missions, fail_count):
