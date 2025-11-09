@@ -1,100 +1,111 @@
-# fighting-game-button-challenge
-A tool to practice button inputs for fighting games on Windows. Ideal for leverless controllers in games like Street Fighter 6.
+# fighting-game-button-challenge (Fighting Game Button Challenge)
+A fighting game training app for Windows. It allows you to practice button inputs. Developed specifically for Street Fighter 6 Modern controls, but may also be useful for practicing other games.
 
-[日本語 README](README.ja.md)
+[English README](README.md)
 
-# TL;DR
-- A button practice app for fighting games
-- Random challenges are displayed
-- Press the buttons matching the challenge to score points and move to the next challenge
+# App Summary in 3 Lines
+- A fighting game button practice app.
+- Random challenges are displayed.
+- Pressing the correct button for the challenge earns you a score and displays the next challenge.
 
-# Details
+# More Details
 - Features
     - Resident
-        - The app runs in the background, so you can use it instantly as soon as you input a lever or button—usable in 1 frame
-        - The app comes to the front only when there is lever or button input
-        - It automatically moves to the back 1 second after input stops, so it doesn't get in the way
-        - While playing a fighting game, it automatically stays in the background, so it doesn't interfere
+        - As a resident application, it's ready for use the moment you feel like practicing and input a lever or button; it's available in 1 frame.
+        - It comes to the foreground only when there's a lever or button input.
+        - It moves to the background 1 second after input stops, so it won't get in your way.
+        - It automatically moves to the background while you're playing a fighting game, ensuring it doesn't interfere.
     - Random
-        - After each successful mission, the next mission is randomly selected
-        - Train your flexibility to respond instantly to unexpected situations
+        - After each successful mission, the next mission appears randomly.
+        - Train your flexibility to react instantly to unexpected situations.
+    - Time
+        - Compete to see how many frames it took you to input.
+        - * 30 frames is considered fast. This is because reading Japanese and the delay from not being able to narrow down from 30 choices could take about 15 frames.
+        - * For example, if you focus your attention solely on Drive Impact, you can quickly reduce it to about 24 frames, but your reaction to anything other than Drive Impact will slow down. Give it a try.
     - Score
-        - Use the score as a goal, e.g., practice until you reach 10 points
-- Tested Environment
+        - Can be used as a benchmark, e.g., "Practice until you get 10 points."
+    - Settings
+        - Classic controls, not just Modern, are likely possible if configured.
+        - Fighting games other than SF6, or even games other than fighting games, are likely possible if configured.
+        - There are no configuration files for anything other than SF6 Modern. Try creating your own.
+- Environment Confirmed to Work
     - Windows
     - XInput
-    - Arcade controller
-        - Leverless controller (4 buttons + 10 buttons = 14 buttons)
+    - Arcade Controller
+        - Leverless Controller (4 buttons + 10 buttons = 14 buttons)
 
-# How to Use
-- Clone the repository
-- Run `button_challenge.bat`
-    - To exit, press `CTRL+C` in the console
-    - Configuration files: `button_challenge.toml`, `button_names.toml`, `lever_names.toml`
-
-# Under Consideration
-- Random left/right, simplifying toml
-    - For entries in `button_challenge.toml` with "left" or "right", for now only "right" is used and "left" is removed
-    - In `button_challenge.toml`, `left_right = ['Left', 'Right']`
-    - During play, use `left_right` to randomly flip left/right with 50% probability
-    - (After alias implementation) Instead of left/right, you can specify front/back or 123456789
-- Alias, display both `SA2` and `Right + Strong + Special`
-
-# Future Plans
-- Will decide next steps after some dogfooding
-- There are many issues and plans, but they are omitted here
-    - Will do what I want to do
-
-# Issues
-- The input descriptions and feedback are not intuitive
-    - Ideally:
-        - The input description would be an image like "The opponent jumps in while you have SA3 charged, so press the one-button SA3"
-        - The feedback would be an image of SA3 hitting
-    - Realistically:
-        - For now, will observe with the current descriptions
-    - Notes:
-        - Making it juicier with sound effects or visual effects will be considered in the future
+# Usage
+## Installation
+- Clone the repository.
+- Run `pip install -r requirements.txt`.
+## Configuration
+- Edit `config/button_names.toml` to match your game's button assignments.
+- * There are several other configuration files. You can change display button name aliases and fonts.
+## Launch
+- Run `button_challenge.bat`.
+- To exit, press `CTRL+C` in the terminal.
 
 # What This App Solves
-- *This section is for explaining what this app is, as a milestone reference, and for various other uses*
-- Previous Issues
-    - Startup time
-        - Most fighting games take about a minute from launch to training mode
-        - What I want is something that shows button prompts instantly when I press a controller button—zero seconds
-            - This app does that. Resident type. Doesn't get in the way. Returns to the background 1 second after pressing a button.
-    - Getting used to each game's controls
-        - Most fighting game tutorials are split into explanation parts (where you can't move the character) and operation parts (where you can't quickly choose which move to learn). Or there is no operation part at all.
-        - After clearing, there is a period where you can't operate for a few seconds, which wastes time and breaks the tempo.
-            - Not enough for quickly learning all moves as a beginner.
-            - Not enough for thoroughly mastering each move as a beginner.
-            - Not enough for quick warm-up during daily training.
-        - There is no quick warm-up recipe for daily training in the game, so you have to write it in a notebook and practice manually in training mode.
-    - What I want is:
-        - To know what button does what, in a mission format, with success/failure judgment
-        - To play one mission per second for quick practice
-        - To cover all necessary button combinations for the game
-        - To have a mode for repetitive practice to master them
-        - To have a random mission mode to practice responding quickly in any situation
-        - To be able to share and learn smoothly from missions defined by others without making your own
-        - This app aims for that
-            - But will focus on what is realistically possible. Will narrow the scope. Not all-purpose. Actual matches and training mode are still essential.
+- * This section is intended to explain what this app is, serve as a milestone guideline, and for various other purposes.
+- Previous Challenges
+    - Startup Time
+        - Most fighting games take about a minute from launching to reaching training mode.
+        - What's needed is something that takes 0 seconds, where pressing a controller button immediately displays a button prompt.
+            - This app achieves that. It's resident, unobtrusive, and returns to the background 1 second after a button press.
+    - Getting used to controls for each fighting game.
+        - Most fighting game tutorials are:
+            - Divided into an explanation part (where you can't move the character) and an operation part (where you can't quickly select which operation to learn). Or sometimes, there's no operation part at all.
+            - After clearing, there's a several-second period of inactivity, which wastes time. It takes too long, and the tempo is poor.
+                - Insufficient for quickly grasping all moves when starting out.
+                - Insufficient for thoroughly mastering individual moves when starting out.
+                - Insufficient for quick warm-ups during daily training.
+            - There are no quick warm-up routines built into the game, nor are they displayed automatically. It requires manual effort: writing them down, referring to notes, and self-practicing in training mode.
+        - What's needed is a way to learn "what happens when I press which button" that:
+            - Uses a mission format, with success/failure judgments.
+            - Allows quick play of one mission per second.
+            - Covers all necessary button combinations for that game.
+            - Provides a mode for repetitive practice to master them.
+            - Features random missions, aiming to enable quick, responsive operations in any situation.
+            - If shared, allows smooth learning from predefined missions by predecessors, without needing to create your own.
+            - This app aims to achieve that.
+                - However, it focuses on what is feasible, narrows down specifications, and is not a panacea. The fundamental premise is to utilize both actual matches and training mode.
 
-# Example Usage with Matches & Training Mode
-- *Just an example*
-- If you don't know which button does which move:
-    - Get used to the buttons with this app
-- Once you get used to the buttons:
-    - Use training mode
-    - Play actual matches
-- If you can't launch the game right now but want to practice buttons:
-    - Practice with this app
+# Approach
+- * Relates to the app's policy/direction.
+- Musical Instrument
+    - Similar to practicing a musical instrument.
+    - Through repetitive practice, you'll eventually be able to press buttons unconsciously.
+        - Idea: It would be good if users could feel this progress by seeing their app score gradually increase.
+            - Idea: Provide a score type better suited for measuring actual skill.
+            - Idea: It would also be good to provide a parallel score (like a cookie clicker) that increases simply by continuing, serving as motivation. The current score follows this approach.
+- Attention Allocation
+    - * The following are based on experience.
+    - When you're not yet accustomed to the buttons, pressing them consumes a large portion of your attention, often leading to an inability to grasp the situation or make decisions.
+    - For example, grasping "what move did I choose and what was the result?" or "why did I get hit by the opponent's move and what's the countermeasure?" and reacting instantly to such situations is often impossible when your attention is consumed by button inputs.
+    - As you become able to press buttons without conscious thought, the attention previously allocated to buttons can be redirected to the match itself, leading to a more favorable match development.
+
+# Example Usage with Actual Matches & Training Mode
+- * This is just one example.
+- If you're at the stage where you don't immediately know "which button does which move?":
+    - Get accustomed to the buttons with this app.
+- Once you're familiar with the buttons:
+    - Play in Training Mode.
+    - Play Actual Matches.
+- If you can't launch the main game during a break, but want to at least practice buttons:
+    - Practice buttons with this app.
 
 # Out of Scope
-- Sequence inputs (e.g., `DI` > `Arc + Strong`) → Handled in a separate project: [Command Challenge](https://github.com/cat2151/command-challenge)
-- Very advanced missions
-- Fancy graphics
-- Fancy sounds (e.g., mission success fanfare)
-- Wide controller support
-- Multi-platform
-- Browser app
-- Everything that browser-based typing apps can do
+- Instructions for Python and module import steps required to run this app: [issue-notes/12.md](https://github.com/cat2151/fighting-game-button-challenge/blob/main/issue-notes/12.md)
+- Configuration files for anything other than SF6 Modern.
+- Settings GUI
+- Sequence input (e.g., `DI` > `A + Heavy`) → This will be handled by a separate project: [command-challenge](https://github.com/cat2151/command-challenge)
+- Highly advanced missions
+- Elaborate graphics
+- Elaborate sounds (e.g., mission success fanfare)
+- Broad controller recognition
+- Multi-platform support
+- Web app conversion
+- All features of browser-based typing apps.
+
+# Automatic English Translation
+README.md is automatically generated from README.ja.md using Gemini's translation via GitHub Actions.
