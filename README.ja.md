@@ -1,7 +1,15 @@
 # fighting-game-button-challenge（格ゲーボタンチャレンジ）
 Windows用の格ゲー練習用アプリ。ボタン練習ができます。スト6モダン用に作りました。他のゲームの練習にも使えるかもしれません。
 
-[English README](README.md)
+<p align="left">
+  <a href="README.ja.md"><img src="https://img.shields.io/badge/🇯🇵-Japanese-red.svg" alt="Japanese"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸-English-blue.svg" alt="English"></a>
+</p>
+
+## Quick Links
+| 項目 | リンク |
+|------|--------|
+| 📊 開発状況 | [generated-docs/development-status](generated-docs/development-status.md) |
 
 # どんなアプリか3行で説明
 - 格ゲーのボタン練習アプリ
