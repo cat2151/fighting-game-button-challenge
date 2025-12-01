@@ -1,4 +1,4 @@
-Last updated: 2025-11-10
+Last updated: 2025-12-02
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -203,6 +203,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 lever_names.toml
   📄 mission.toml
 📁 generated-docs/
+🌐 googled947dc864c270e07.html
 📁 issue-notes/
   📖 10.md
   📖 11.md
@@ -232,7 +233,9 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 test_is_no_count_case.py
 
 ## ファイル詳細分析
-
+**googled947dc864c270e07.html** (1行, 53バイト)
+  - 関数: なし
+  - インポート: なし
 
 ## 関数呼び出し階層
 関数呼び出し階層を分析できませんでした
@@ -241,6 +244,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 .vscode/settings.json
 README.ja.md
 README.md
+googled947dc864c270e07.html
 issue-notes/10.md
 issue-notes/11.md
 issue-notes/12.md
@@ -262,4 +266,4 @@ issue-notes/8.md
 
 
 ---
-Generated at: 2025-11-10 08:01:00 JST
+Generated at: 2025-12-02 07:03:37 JST

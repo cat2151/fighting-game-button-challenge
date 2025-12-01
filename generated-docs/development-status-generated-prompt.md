@@ -1,4 +1,4 @@
-Last updated: 2025-11-10
+Last updated: 2025-12-02
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -162,6 +162,7 @@ Last updated: 2025-11-10
 - .github/actions-tmp/generated-docs/project-overview-generated-prompt.md
 - .github/actions-tmp/generated-docs/project-overview.md
 - .github/actions-tmp/generated-docs/style.css
+- .github/actions-tmp/googled947dc864c270e07.html
 - .github/actions-tmp/issue-notes/10.md
 - .github/actions-tmp/issue-notes/11.md
 - .github/actions-tmp/issue-notes/12.md
@@ -209,6 +210,7 @@ Last updated: 2025-11-10
 - config/lever_names.toml
 - config/mission.toml
 - generated-docs/project-overview-generated-prompt.md
+- googled947dc864c270e07.html
 - issue-notes/10.md
 - issue-notes/11.md
 - issue-notes/12.md
@@ -2426,24 +2428,19 @@ def test_is_no_count_case(mission_success, input_name, no_count_names_param, exp
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-614af66 Auto-translate README.ja.md to README.md [auto]
-a93c556 Merge branch 'main' of github.com:cat2151/fighting-game-button-challenge into main
-c25c37f READMEにクイックリンクと言語選択のバッジを追加
-3df82d9 Auto-translate README.ja.md to README.md [auto]
-66a8ad8 READMEに自動英訳の説明を追加
-9547962 jekyll settings
-87e5065 github-actionsリポジトリの共通ワークフローを導入したので、削除
-a2ad073 github-actionsリポジトリの共通ワークフローを導入
+1f4799f Google検索にindexさせる用
+76bc6dd Google検索にindexさせる用
 
 ### 変更されたファイル:
-.github/workflows/call-daily-project-summary.yml
-.github/workflows/call-issue-note.yml
-.github/workflows/call-translate-readme.yml
-.github/workflows/issue-note.yml
 README.ja.md
 README.md
 _config.yml
+generated-docs/development-status-generated-prompt.md
+generated-docs/development-status.md
+generated-docs/project-overview-generated-prompt.md
+generated-docs/project-overview.md
+googled947dc864c270e07.html
 
 
 ---
-Generated at: 2025-11-10 08:01:00 JST
+Generated at: 2025-12-02 07:03:37 JST
