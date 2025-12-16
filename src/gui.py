@@ -1,10 +1,10 @@
 from gui_utils import do_backmost, do_topmost, init_tkinter
 
 def gui_init_tkinter(args):
-    gui_label_count = 3
+    gui_label_count = 4
     return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count)
 
-def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, mission, wait_for_all_release, alias_conf, should_skip, none_word, args):
+def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, mission, wait_for_all_release, alias_conf, should_skip, none_word, args, move_name=""):
     if should_skip and none_word is not None:
         lever_plus_pressed = none_word
     if alias_conf is not None:
@@ -18,6 +18,7 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
 
     format_dict = {
         'mission': mission,
+        'move_name': move_name,
         'lever_plus_pressed': text_lever_plus_pressed,
         'score': state['score'],
         'fail_count': state['fail_count'],
@@ -28,7 +29,7 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
     }
 
     texts = []
-    for i in range(1, 4):
+    for i in range(1, 5):
         key = f'label{i}'
         fmt = display_format.get(key, '') if isinstance(display_format, dict) else ''
         texts.append(fmt.format(**format_dict))

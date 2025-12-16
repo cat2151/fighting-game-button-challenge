@@ -2,6 +2,7 @@ lever_toml        = "config/lever_names.toml"
 button_names_toml = "config/button_names.toml"
 alias_toml        = "config/alias.toml"
 mission_toml      = "config/mission.toml"
+moves_toml        = "config/moves.toml"
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "700x120+256+256"
@@ -12,8 +13,9 @@ histogram_mode_sample_count = 50 # hist中心の表示用
 
 [display_format]
     label1 = "mission : {mission}"
-    label2 = "{lever_plus_pressed}"
-    label3 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
+    label2 = "move : {move_name}"
+    label3 = "{lever_plus_pressed}"
+    label4 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
 
 [backmost_mode]
     check_interval_sec = 10

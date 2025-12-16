@@ -4,8 +4,8 @@ def load_game_configuration():
     args = get_args()
     args = update_args_by_toml(args, args.config_filename)
     args = update_args_by_toml(args, args.mission_toml)
-    (names, plus, lever_names, missions, none_word, alias_conf, no_count_names) = load_all_configs(args)
-    return args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names
+    (names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves) = load_all_configs(args)
+    return args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves
 
 def load_all_configs(args):
     config = read_toml(args.button_names_toml)
@@ -22,4 +22,11 @@ def load_all_configs(args):
 
     alias_conf = read_toml(args.alias_toml)
 
-    return names, plus, lever_names, args.missions, none_word, alias_conf, no_count_names
+    # Load moves configuration if moves_toml is defined
+    moves = []
+    if hasattr(args, 'moves_toml') and args.moves_toml:
+        moves_config = read_toml(args.moves_toml)
+        moves = moves_config.get("moves", [])
+        print(f"読み込まれた技設定: {moves}")
+
+    return names, plus, lever_names, args.missions, none_word, alias_conf, no_count_names, moves
