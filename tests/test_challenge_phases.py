@@ -3,7 +3,13 @@ import sys
 import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from missions import initialize_mission_sets, generate_missions_for_direction, toggle_direction_and_regenerate_missions
+from missions import (
+    initialize_mission_sets, 
+    generate_missions_for_direction, 
+    toggle_direction_and_regenerate_missions,
+    PHASE_1_BUTTONS,
+    PHASE_2_MOVES
+)
 
 
 def test_initialize_mission_sets_phase1():
@@ -14,7 +20,7 @@ def test_initialize_mission_sets_phase1():
     ]
     left_right = ["右", "左"]
     left_right_temp = ["みぎ", "ひだり"]
-    challenge_phase = "1_buttons"
+    challenge_phase = PHASE_1_BUTTONS
     current_direction = "right"
     
     result_missions, missions_set, success_missions, mission_index, result_direction, original_missions = initialize_mission_sets(
@@ -38,7 +44,7 @@ def test_initialize_mission_sets_phase2_right():
     ]
     left_right = ["右", "左"]
     left_right_temp = ["みぎ", "ひだり"]
-    challenge_phase = "2_moves"
+    challenge_phase = PHASE_2_MOVES
     current_direction = "right"
     
     result_missions, missions_set, success_missions, mission_index, result_direction, original_missions = initialize_mission_sets(
@@ -61,7 +67,7 @@ def test_initialize_mission_sets_phase2_left():
     ]
     left_right = ["右", "左"]
     left_right_temp = ["みぎ", "ひだり"]
-    challenge_phase = "2_moves"
+    challenge_phase = PHASE_2_MOVES
     current_direction = "left"
     
     result_missions, missions_set, success_missions, mission_index, result_direction, original_missions = initialize_mission_sets(

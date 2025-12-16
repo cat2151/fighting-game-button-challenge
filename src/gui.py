@@ -1,8 +1,5 @@
 from gui_utils import do_backmost, do_topmost, init_tkinter
-
-# Challenge phase constants (must match missions.py)
-PHASE_1_BUTTONS = "1_buttons"
-PHASE_2_MOVES = "2_moves"
+from missions import PHASE_1_BUTTONS, PHASE_2_MOVES
 
 def gui_init_tkinter(args):
     gui_label_count = 4
