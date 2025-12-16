@@ -215,3 +215,24 @@ def is_no_count_case(
     allowed = create_allowed(mission_success, no_count_names_list, plus)
     input_parts = set(x.strip() for x in input_name.split(plus))
     return input_parts.issubset(allowed)
+
+def get_move_name_for_input(input_str: str, moves: list, plus: str) -> str:
+    """
+    Get the move name for a given input string.
+    Returns the move name if found, otherwise returns an empty string.
+    """
+    if not moves:
+        return ""
+    
+    # Format the input string for comparison
+    formatted_input = format_mission_string(input_str, plus)
+    
+    # Search for matching move
+    for move in moves:
+        move_input = move.get("input", "")
+        formatted_move_input = format_mission_string(move_input, plus)
+        if formatted_input == formatted_move_input:
+            return move.get("name", "")
+    
+    return ""
+

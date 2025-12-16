@@ -1,0 +1,18 @@
+# 技名とボタン入力の対応表
+# Move names mapped to button combinations
+
+[[moves]]
+name = "SA1"
+input = "強 + 必"
+
+[[moves]]
+name = "SA1"
+input = "下 + 強 + 必"
+
+[[moves]]
+name = "SA2"
+input = "右 + 強 + 必"
+
+[[moves]]
+name = "SA2"
+input = "左 + 強 + 必"

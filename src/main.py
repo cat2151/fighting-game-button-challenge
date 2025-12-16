@@ -1,23 +1,23 @@
 from configs import load_game_configuration
 from gui import gui_init_tkinter, update_display_with_mission
 from joystick import create_button_states, get_buttons_as_bitstring, setup_pygame_and_joystick, shutdown_pygame, should_skip_input_processing
-from missions import check_and_update_mission, initialize_mission_sets, on_mission_start
+from missions import check_and_update_mission, initialize_mission_sets, on_mission_start, get_move_name_for_input
 from check_playing_game import check_playing_game_and_do_backmost, init_timer_for_check_playing_game
 
 def main():
-    (args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names) = load_game_configuration()
+    (args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves) = load_game_configuration()
     (tkinter_root, labels) = gui_init_tkinter(args)
     joystick = setup_pygame_and_joystick()
     (missions, missions_set, success_missions, mission_index) = initialize_mission_sets(missions, args.left_right, args.left_right_temp)
     (timer_id_dict, clock, check_interval_msec, last_check_msec) = init_timer_for_check_playing_game(args)
     try:
-        main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, none_word, alias_conf, no_count_names)
+        main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, none_word, alias_conf, no_count_names, moves)
     except KeyboardInterrupt:
         print("プログラムを終了します。")
     finally:
         shutdown_pygame()
 
-def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, none_word, alias_conf, no_count_names):
+def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, none_word, alias_conf, no_count_names, moves):
     state = {
         "score": 0,
         "fail_count": 0,
@@ -58,9 +58,10 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
                 state, missions, plus, lever_plus_pressed, no_count_names, none_word, args)
 
         # display
+        move_name = get_move_name_for_input(state["mission"], moves, plus)
         state["old_texts"] = update_display_with_mission(
             state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, state["mission"],
-            state["wait_for_all_buttons_release"], alias_conf, should_skip, none_word, args
+            state["wait_for_all_buttons_release"], alias_conf, should_skip, none_word, args, move_name
         )
         tkinter_root.update_idletasks()
         tkinter_root.update()
