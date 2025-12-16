@@ -27,6 +27,5 @@ def load_all_configs(args):
     if hasattr(args, 'moves_toml') and args.moves_toml:
         moves_config = read_toml(args.moves_toml)
         moves = moves_config.get("moves", [])
-        print(f"読み込まれた技設定: {moves}")
 
     return names, plus, lever_names, args.missions, none_word, alias_conf, no_count_names, moves
