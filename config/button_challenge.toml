@@ -4,6 +4,8 @@ alias_toml        = "config/alias.toml"
 mission_toml      = "config/mission.toml"
 moves_toml        = "config/moves.toml"
 
+challenge_phase = "1_buttons"  # "1_buttons" or "2_moves"
+
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "700x150+256+256"
 font_name = "Arial"

@@ -8,16 +8,26 @@ def main():
     (args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves) = load_game_configuration()
     (tkinter_root, labels) = gui_init_tkinter(args)
     joystick = setup_pygame_and_joystick()
-    (missions, missions_set, success_missions, mission_index) = initialize_mission_sets(missions, args.left_right, args.left_right_temp)
+    
+    # Get challenge_phase from config, default to "1_buttons" if not set
+    challenge_phase = getattr(args, 'challenge_phase', "1_buttons")
+    current_direction = "right"  # Default direction for phase 2
+    
+    (missions, missions_set, success_missions, mission_index, current_direction, original_missions) = initialize_mission_sets(
+        missions, args.left_right, args.left_right_temp, challenge_phase, current_direction
+    )
+    
     (timer_id_dict, clock, check_interval_msec, last_check_msec) = init_timer_for_check_playing_game(args)
     try:
-        main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, none_word, alias_conf, no_count_names, moves)
+        main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, 
+                  missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, 
+                  none_word, alias_conf, no_count_names, moves, challenge_phase, current_direction, original_missions)
     except KeyboardInterrupt:
         print("プログラムを終了します。")
     finally:
         shutdown_pygame()
 
-def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, none_word, alias_conf, no_count_names, moves):
+def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick, names, plus, lever_names, missions, mission_index, missions_set, success_missions, labels, timer_id_dict, clock, none_word, alias_conf, no_count_names, moves, challenge_phase, current_direction, original_missions):
     state = {
         "score": 0,
         "fail_count": 0,
@@ -39,12 +49,19 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
         "is_backmost": False,
         "mission_start_time": None,
         "mission_times": [],
+        "challenge_phase": challenge_phase,
+        "current_direction": current_direction,
+        "original_missions": original_missions,
+        "missions": missions,
     }
     state = on_mission_start(state)
     print("start!")
     while True:
         last_check_msec = check_playing_game_and_do_backmost(tkinter_root, args, check_interval_msec, last_check_msec)
 
+        # Get current missions from state (may have been regenerated)
+        missions = state["missions"]
+        
         # input
         buttons_bits = get_buttons_as_bitstring(joystick)
         if state["initial_bitstring"] is None:

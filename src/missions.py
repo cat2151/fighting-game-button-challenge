@@ -4,12 +4,36 @@ import time
 import os
 import numpy as np
 
-def initialize_mission_sets(missions, left_right, left_right_temp):
-    missions = amplify_missions_left_right(missions, left_right, left_right_temp) # 左右反転したミッションを追加
+def initialize_mission_sets(missions, left_right, left_right_temp, challenge_phase="1_buttons", current_direction="right"):
+    """
+    Initialize mission sets based on challenge phase.
+    
+    Args:
+        missions: List of mission dictionaries
+        left_right: Left/right characters for swapping
+        left_right_temp: Temporary characters for safe swapping
+        challenge_phase: "1_buttons" or "2_moves"
+        current_direction: "right" or "left" (used in phase 2)
+    
+    Returns:
+        Tuple of (missions, missions_set, success_missions, mission_index, current_direction, original_missions)
+    """
+    # Store original missions for phase 2 direction toggling
+    original_missions = copy.deepcopy(missions)
+    
+    if challenge_phase == "1_buttons":
+        # Phase 1: Amplify missions with left/right variants
+        missions = amplify_missions_left_right(missions, left_right, left_right_temp)
+    elif challenge_phase == "2_moves":
+        # Phase 2: Generate missions for current direction
+        missions = generate_missions_for_direction(missions, left_right, left_right_temp, current_direction)
+    else:
+        raise ValueError(f"Invalid challenge_phase: {challenge_phase}. Must be '1_buttons' or '2_moves'")
+    
     missions_set = set(mission["input"] for mission in missions)
     success_missions = set()
     mission_index = get_new_mission_index(missions, missions_set)
-    return missions, missions_set, success_missions, mission_index
+    return missions, missions_set, success_missions, mission_index, current_direction, original_missions
 
 def amplify_missions_left_right(missions, left_right, left_right_temp):
     def validate_left_right_temp(missions, left_right_temp):
@@ -46,6 +70,52 @@ def amplify_missions_left_right(missions, left_right, left_right_temp):
     print(f"[amplify_missions_left_right] 変更後 amplified:\n{os.linesep.join(f'  {a}' for a in amplified)}")
 
     return amplified
+
+def generate_missions_for_direction(missions, left_right, left_right_temp, direction):
+    """
+    Generate missions for a specific direction (phase 2).
+    
+    Args:
+        missions: List of original mission dictionaries
+        left_right: Left/right characters for swapping
+        left_right_temp: Temporary characters for safe swapping
+        direction: "right" or "left"
+    
+    Returns:
+        List of missions adjusted for the specified direction
+    """
+    def validate_left_right_temp(missions, left_right_temp):
+        for temp in left_right_temp:
+            for mission in missions:
+                if temp in mission["input"]:
+                    raise ValueError(f"left_right_tempの値 '{temp}' がmission '{mission['input']}' に含まれています。安全な一時置換のため、他のmission文字列と被らない値にしてください。")
+
+    def swap_left_right(input_str):
+        if len(left_right) != len(left_right_temp):
+            raise ValueError("left_rightとleft_right_tempの要素数が一致していません。どちらも2要素にしてください。")
+        swapped = input_str
+        for orig, temp in zip(left_right, left_right_temp):
+            swapped = swapped.replace(orig, temp)
+        for temp, repl in zip(left_right_temp, reversed(left_right)):
+            swapped = swapped.replace(temp, repl)
+        return swapped
+
+    validate_left_right_temp(missions, left_right_temp)
+    
+    generated = []
+    for mission in missions:
+        input_str = mission["input"]
+        if direction == "left":
+            # For left direction, swap left/right in the mission
+            input_str = swap_left_right(input_str)
+        # For right direction, use as-is (assuming missions are right-facing by default)
+        generated.append({**copy.deepcopy(mission), "input": input_str})
+    
+    print(f"[generate_missions_for_direction] direction={direction}")
+    print(f"[generate_missions_for_direction] 変更前 missions:\n{os.linesep.join(f'  {m}' for m in missions)}")
+    print(f"[generate_missions_for_direction] 変更後 generated:\n{os.linesep.join(f'  {g}' for g in generated)}")
+    
+    return generated
 
 def check_and_update_mission(state, missions, plus, lever_plus_pressed, no_count_names, none_word, args):
     state["current_mission_frame_count"] += 1 # 備忘、ここでの加算が必要。もしここより後ろだと、分岐によってはフレームカウンタが増えない
@@ -93,7 +163,20 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
     state = extract_mission_elapsed_time(state)
     state = on_mission_start(state)
     wait_for_all_buttons_release = True
-    missions_set, fail_count = update_missions_set(missions, missions_set, mission, success_missions, fail_count)
+    missions_set, fail_count, should_toggle_direction = update_missions_set(missions, missions_set, mission, success_missions, fail_count, state)
+    
+    # Handle phase 2 direction toggle
+    if should_toggle_direction:
+        missions, new_direction = toggle_direction_and_regenerate_missions(
+            state["original_missions"],
+            args.left_right,
+            args.left_right_temp,
+            state["current_direction"]
+        )
+        state["current_direction"] = new_direction
+        state["missions"] = missions
+        missions_set = set(m["input"] for m in missions)
+    
     mission_index = get_new_mission_index(missions, missions_set)
     score += 1
     if 0 <= mission_index < len(missions):
@@ -157,12 +240,32 @@ def on_mission_start(state):
     state["mission_start_time"] = time.time()
     return state
 
-def update_missions_set(missions, missions_set, mission, success_missions, fail_count):
+def update_missions_set(missions, missions_set, mission, success_missions, fail_count, state=None):
+    """
+    Update missions set after successful mission completion.
+    
+    Args:
+        missions: List of all missions
+        missions_set: Set of remaining missions
+        mission: The completed mission
+        success_missions: Set of successfully completed missions
+        fail_count: Current fail count
+        state: Optional state dict containing phase 2 info
+    
+    Returns:
+        Tuple of (missions_set, fail_count, should_toggle_direction)
+    """
     success_missions.add(mission)
     missions_set.remove(mission)
+    should_toggle_direction = False
+    
     if not missions_set:
         missions_set, fail_count = on_all_mission_green(missions, success_missions, fail_count)
-    return missions_set, fail_count
+        # Check if we need to toggle direction for phase 2
+        if state and state.get("challenge_phase") == "2_moves":
+            should_toggle_direction = True
+    
+    return missions_set, fail_count, should_toggle_direction
 
 def on_all_mission_green(missions, success_missions, fail_count):
     print("すべてのmissionを成功しました")
@@ -170,6 +273,28 @@ def on_all_mission_green(missions, success_missions, fail_count):
     missions_set = set(m["input"] for m in missions)
     fail_count = 0  # 1周したらfail_countをリセット
     return missions_set, fail_count
+
+def toggle_direction_and_regenerate_missions(original_missions, left_right, left_right_temp, current_direction):
+    """
+    Toggle direction and regenerate missions for phase 2.
+    
+    Args:
+        original_missions: Original list of missions (not amplified)
+        left_right: Left/right characters for swapping
+        left_right_temp: Temporary characters for safe swapping
+        current_direction: Current direction ("right" or "left")
+    
+    Returns:
+        Tuple of (new_missions, new_direction)
+    """
+    # Toggle direction
+    new_direction = "left" if current_direction == "right" else "right"
+    print(f"[toggle_direction_and_regenerate_missions] {current_direction} -> {new_direction}")
+    
+    # Regenerate missions for new direction
+    new_missions = generate_missions_for_direction(original_missions, left_right, left_right_temp, new_direction)
+    
+    return new_missions, new_direction
 
 def get_new_mission_index(missions, missions_set):
     mission = random.choice(list(missions_set))
