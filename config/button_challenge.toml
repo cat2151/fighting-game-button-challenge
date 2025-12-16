@@ -5,7 +5,7 @@ mission_toml      = "config/mission.toml"
 moves_toml        = "config/moves.toml"
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
-geometry = "700x120+256+256"
+geometry = "700x150+256+256"
 font_name = "Arial"
 font_size = 20
 
