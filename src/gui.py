@@ -16,16 +16,22 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
 
     display_format = args.display_format
     
-    # Add direction indicator for phase 2
-    direction_indicator = ""
+    # Handle move name display based on challenge phase
     challenge_phase = state.get('challenge_phase', '1_buttons')
-    if challenge_phase == '2_moves':
+    displayed_move_name = ""
+    
+    if challenge_phase == '1_buttons':
+        # Phase 1: Don't display moves (仕様: ただしmovesは表示しない)
+        displayed_move_name = ""
+    elif challenge_phase == '2_moves':
+        # Phase 2: Display moves with direction indicator
         current_direction = state.get('current_direction', 'right')
         direction_indicator = "（右向き）" if current_direction == "right" else "（左向き）"
+        displayed_move_name = f"{direction_indicator}{move_name}" if move_name else ""
 
     format_dict = {
         'mission': mission,
-        'move_name': f"{direction_indicator}{move_name}" if challenge_phase == '2_moves' and move_name else move_name,
+        'move_name': displayed_move_name,
         'lever_plus_pressed': text_lever_plus_pressed,
         'score': state['score'],
         'fail_count': state['fail_count'],
