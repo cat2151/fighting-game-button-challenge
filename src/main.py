@@ -1,7 +1,7 @@
 from configs import load_game_configuration
 from gui import gui_init_tkinter, update_display_with_mission
 from joystick import create_button_states, get_buttons_as_bitstring, setup_pygame_and_joystick, shutdown_pygame, should_skip_input_processing
-from missions import check_and_update_mission, initialize_mission_sets, on_mission_start, get_move_name_for_input
+from missions import check_and_update_mission, initialize_mission_sets, on_mission_start, get_move_name_for_input, PHASE_1_BUTTONS
 from check_playing_game import check_playing_game_and_do_backmost, init_timer_for_check_playing_game
 
 def main():
@@ -9,8 +9,8 @@ def main():
     (tkinter_root, labels) = gui_init_tkinter(args)
     joystick = setup_pygame_and_joystick()
     
-    # Get challenge_phase from config, default to "1_buttons" if not set
-    challenge_phase = getattr(args, 'challenge_phase', "1_buttons")
+    # Get challenge_phase from config, default to PHASE_1_BUTTONS if not set
+    challenge_phase = getattr(args, 'challenge_phase', PHASE_1_BUTTONS)
     current_direction = "right"  # Default direction for phase 2
     
     (missions, missions_set, success_missions, mission_index, current_direction, original_missions) = initialize_mission_sets(

@@ -4,7 +4,29 @@ import time
 import os
 import numpy as np
 
-def initialize_mission_sets(missions, left_right, left_right_temp, challenge_phase="1_buttons", current_direction="right"):
+# Challenge phase constants
+PHASE_1_BUTTONS = "1_buttons"
+PHASE_2_MOVES = "2_moves"
+
+def _validate_left_right_temp(missions, left_right_temp):
+    """Validate that left_right_temp values don't appear in missions."""
+    for temp in left_right_temp:
+        for mission in missions:
+            if temp in mission["input"]:
+                raise ValueError(f"left_right_tempの値 '{temp}' がmission '{mission['input']}' に含まれています。安全な一時置換のため、他のmission文字列と被らない値にしてください。")
+
+def _swap_left_right(input_str, left_right, left_right_temp):
+    """Swap left and right characters in input string."""
+    if len(left_right) != len(left_right_temp):
+        raise ValueError("left_rightとleft_right_tempの要素数が一致していません。どちらも2要素にしてください。")
+    swapped = input_str
+    for orig, temp in zip(left_right, left_right_temp):
+        swapped = swapped.replace(orig, temp)
+    for temp, repl in zip(left_right_temp, reversed(left_right)):
+        swapped = swapped.replace(temp, repl)
+    return swapped
+
+def initialize_mission_sets(missions, left_right, left_right_temp, challenge_phase=PHASE_1_BUTTONS, current_direction="right"):
     """
     Initialize mission sets based on challenge phase.
     
@@ -12,7 +34,7 @@ def initialize_mission_sets(missions, left_right, left_right_temp, challenge_pha
         missions: List of mission dictionaries
         left_right: Left/right characters for swapping
         left_right_temp: Temporary characters for safe swapping
-        challenge_phase: "1_buttons" or "2_moves"
+        challenge_phase: PHASE_1_BUTTONS or PHASE_2_MOVES
         current_direction: "right" or "left" (used in phase 2)
     
     Returns:
@@ -21,14 +43,14 @@ def initialize_mission_sets(missions, left_right, left_right_temp, challenge_pha
     # Store original missions for phase 2 direction toggling
     original_missions = copy.deepcopy(missions)
     
-    if challenge_phase == "1_buttons":
+    if challenge_phase == PHASE_1_BUTTONS:
         # Phase 1: Amplify missions with left/right variants
         missions = amplify_missions_left_right(missions, left_right, left_right_temp)
-    elif challenge_phase == "2_moves":
+    elif challenge_phase == PHASE_2_MOVES:
         # Phase 2: Generate missions for current direction
         missions = generate_missions_for_direction(missions, left_right, left_right_temp, current_direction)
     else:
-        raise ValueError(f"Invalid challenge_phase: {challenge_phase}. Must be '1_buttons' or '2_moves'")
+        raise ValueError(f"Invalid challenge_phase: {challenge_phase}. Must be '{PHASE_1_BUTTONS}' or '{PHASE_2_MOVES}'")
     
     missions_set = set(mission["input"] for mission in missions)
     success_missions = set()
@@ -36,23 +58,8 @@ def initialize_mission_sets(missions, left_right, left_right_temp, challenge_pha
     return missions, missions_set, success_missions, mission_index, current_direction, original_missions
 
 def amplify_missions_left_right(missions, left_right, left_right_temp):
-    def validate_left_right_temp(missions, left_right_temp):
-        for temp in left_right_temp:
-            for mission in missions:
-                if temp in mission["input"]:
-                    raise ValueError(f"left_right_tempの値 '{temp}' がmission '{mission['input']}' に含まれています。安全な一時置換のため、他のmission文字列と被らない値にしてください。")
-
-    def swap_left_right(input_str):
-        if len(left_right) != len(left_right_temp):
-            raise ValueError("left_rightとleft_right_tempの要素数が一致していません。どちらも2要素にしてください。")
-        swapped = input_str
-        for orig, temp in zip(left_right, left_right_temp):
-            swapped = swapped.replace(orig, temp)
-        for temp, repl in zip(left_right_temp, reversed(left_right)):
-            swapped = swapped.replace(temp, repl)
-        return swapped
-
-    validate_left_right_temp(missions, left_right_temp)
+    """Amplify missions by adding left/right variants."""
+    _validate_left_right_temp(missions, left_right_temp)
 
     amplified = []
     seen = set()
@@ -61,7 +68,7 @@ def amplify_missions_left_right(missions, left_right, left_right_temp):
         if input_str not in seen:
             amplified.append(copy.deepcopy(mission))
             seen.add(input_str)
-        swapped = swap_left_right(input_str)
+        swapped = _swap_left_right(input_str, left_right, left_right_temp)
         if swapped != input_str and swapped not in seen:
             amplified.append({**copy.deepcopy(mission), "input": swapped})
             seen.add(swapped)
@@ -84,30 +91,14 @@ def generate_missions_for_direction(missions, left_right, left_right_temp, direc
     Returns:
         List of missions adjusted for the specified direction
     """
-    def validate_left_right_temp(missions, left_right_temp):
-        for temp in left_right_temp:
-            for mission in missions:
-                if temp in mission["input"]:
-                    raise ValueError(f"left_right_tempの値 '{temp}' がmission '{mission['input']}' に含まれています。安全な一時置換のため、他のmission文字列と被らない値にしてください。")
-
-    def swap_left_right(input_str):
-        if len(left_right) != len(left_right_temp):
-            raise ValueError("left_rightとleft_right_tempの要素数が一致していません。どちらも2要素にしてください。")
-        swapped = input_str
-        for orig, temp in zip(left_right, left_right_temp):
-            swapped = swapped.replace(orig, temp)
-        for temp, repl in zip(left_right_temp, reversed(left_right)):
-            swapped = swapped.replace(temp, repl)
-        return swapped
-
-    validate_left_right_temp(missions, left_right_temp)
+    _validate_left_right_temp(missions, left_right_temp)
     
     generated = []
     for mission in missions:
         input_str = mission["input"]
         if direction == "left":
             # For left direction, swap left/right in the mission
-            input_str = swap_left_right(input_str)
+            input_str = _swap_left_right(input_str, left_right, left_right_temp)
         # For right direction, use as-is (assuming missions are right-facing by default)
         generated.append({**copy.deepcopy(mission), "input": input_str})
     
@@ -262,7 +253,7 @@ def update_missions_set(missions, missions_set, mission, success_missions, fail_
     if not missions_set:
         missions_set, fail_count = on_all_mission_green(missions, success_missions, fail_count)
         # Check if we need to toggle direction for phase 2
-        if state and state.get("challenge_phase") == "2_moves":
+        if state and state.get("challenge_phase") == PHASE_2_MOVES:
             should_toggle_direction = True
     
     return missions_set, fail_count, should_toggle_direction
