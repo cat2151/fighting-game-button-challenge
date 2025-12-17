@@ -1,4 +1,4 @@
-Last updated: 2025-12-02
+Last updated: 2025-12-18
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -107,11 +107,13 @@ Last updated: 2025-12-02
 - .github/actions-tmp/.github/workflows/call-callgraph.yml
 - .github/actions-tmp/.github/workflows/call-daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/call-issue-note.yml
+- .github/actions-tmp/.github/workflows/call-rust-windows-check.yml
 - .github/actions-tmp/.github/workflows/call-translate-readme.yml
 - .github/actions-tmp/.github/workflows/callgraph.yml
 - .github/actions-tmp/.github/workflows/check-recent-human-commit.yml
 - .github/actions-tmp/.github/workflows/daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/issue-note.yml
+- .github/actions-tmp/.github/workflows/rust-windows-check.yml
 - .github/actions-tmp/.github/workflows/translate-readme.yml
 - .github/actions-tmp/.github_automation/callgraph/codeql-queries/callgraph.ql
 - .github/actions-tmp/.github_automation/callgraph/codeql-queries/codeql-pack.lock.yml
@@ -209,6 +211,7 @@ Last updated: 2025-12-02
 - config/button_names.toml
 - config/lever_names.toml
 - config/mission.toml
+- config/moves.toml
 - generated-docs/project-overview-generated-prompt.md
 - googled947dc864c270e07.html
 - issue-notes/10.md
@@ -218,6 +221,7 @@ Last updated: 2025-12-02
 - issue-notes/14.md
 - issue-notes/15.md
 - issue-notes/16.md
+- issue-notes/18.md
 - issue-notes/2.md
 - issue-notes/5.md
 - issue-notes/8.md
@@ -232,7 +236,9 @@ Last updated: 2025-12-02
 - src/missions.py
 - src/utils.py
 - tests/test_amplify_missions_left_right.py
+- tests/test_challenge_phases.py
 - tests/test_format_mission_string.py
+- tests/test_get_move_name_for_input.py
 - tests/test_get_pressed_buttons.py
 - tests/test_is_no_count_case.py
 
@@ -759,42 +765,6 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 
 ```
 
-## [Issue #6](../issue-notes/6.md): 「右 + 強 + 必」だけでなくその上に「SA2」という表示がほしい
-# これまでの課題
-- 「右 + 強 + 必」という文言を見てボタンを押すのは、見る認知負荷が高い
-- そこで、「SA2」 という表示があれば、それを見てボタンを押せてよさげ
-# 案
-- moveとbuttonを両方表示、つまり `SA2`と`右 + 強 + 必`を両方表示
-    - 表示行数を増やす
-    - 用途は、`SA2`を見ただけで`右 + 強 + 必`ボタンを押す練習用
-        - `右 + 強 + 必`を表示するのはあくまでヒント用
-            - 場合によっては`右 + 強 + 必`はdelayで表示するのもよさげ、そのほうが練習になるかも、tomlでo...
-ラベル: 
---- issue-notes/6.md の内容 ---
-
-```markdown
-
-```
-
-## [Issue #4](../issue-notes/4.md): mission successしたかどうかがわかりづらいし、手応えが薄いため達成感が薄く、再playのモチベが低い
-# 言い換えると
-- mission successしたかどうか？わかりやすくすれば、以下のメリットが期待できる
-    - 手応えup、達成感up、再playのモチベup
-# ブレインストーミング
-- green
-    - テスト駆動開発を基準に、success時にgreen iconを1秒表示
-- 効果音
-    - 適切な音は手応えupになる、ただしmuteで使う用途が多い（自分は）、なので優先度は低い
-- ご褒美画像
-    - display image 1sec py （別アプリ）とeasyに連動できるつもりなので実装して検証するとよさげ
-        - 例、successご...
-ラベル: 
---- issue-notes/4.md の内容 ---
-
-```markdown
-
-```
-
 ## [Issue #3](../issue-notes/3.md): もっと実戦に近く「SA3が溜まってる自分に、相手が飛び込んできたので、ワンボタンSA3」などが映像でわかると嬉しい
 # 補足
 - mission提示画像 : SA3が溜まってる自分に、相手が飛び込んできた
@@ -829,6 +799,7 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 ## ドキュメントで言及されているファイルの内容
 ### .github/actions-tmp/issue-notes/10.md
 ```md
+{% raw %}
 # issue callgraph を他projectから使いやすくする #10
 [issues #10](https://github.com/cat2151/github-actions/issues/10)
 
@@ -858,10 +829,12 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 
 # closeとする
 
+{% endraw %}
 ```
 
 ### issue-notes/10.md
 ```md
+{% raw %}
 # issue scoreで上達をわかるようにしたい #10
 [issues #10](https://github.com/cat2151/fighting-game-button-challenge/issues/10)
 
@@ -1246,10 +1219,12 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 
 ↑あとでやる
 
+{% endraw %}
 ```
 
 ### .github/actions-tmp/issue-notes/12.md
 ```md
+{% raw %}
 # issue project-summary を他projectから使いやすくする #12
 [issues #12](https://github.com/cat2151/github-actions/issues/12)
 
@@ -1275,10 +1250,12 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 
 # closeとする
 
+{% endraw %}
 ```
 
 ### issue-notes/12.md
 ```md
+{% raw %}
 # issue 訪れたuserがGitHub慣れしていない場合の補助ドキュメントを用意するか、案を洗い出して整理する #12
 [issues #12](https://github.com/cat2151/fighting-game-button-challenge/issues/12)
 
@@ -1302,10 +1279,12 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 - agentに上記とcodeを元に生成させると、開発者の作業コストを下げつつ、userの導入コストも下げられる可能性がある。試すかも。ひとまず保留。
 - 今すぐREADMEを充実させるか？いいえ。ほかの優先タスクをやる
 
+{% endraw %}
 ```
 
 ### .github/actions-tmp/issue-notes/15.md
 ```md
+{% raw %}
 # issue project_summary scripts cjs を分解し、できるだけ1ファイル200行未満にし、agentによるメンテをしやすくする #15
 [issues #15](https://github.com/cat2151/github-actions/issues/15)
 
@@ -1434,10 +1413,12 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 - これでagentによるメンテは十分しやすくなった、と判断する
 - closeとする
 
+{% endraw %}
 ```
 
 ### issue-notes/15.md
 ```md
+{% raw %}
 # issue コンボ表示を試す #15
 [issues #15](https://github.com/cat2151/fighting-game-button-challenge/issues/15)
 
@@ -1458,10 +1439,12 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 
 ↑あとでやる
 
+{% endraw %}
 ```
 
 ### .github/actions-tmp/issue-notes/16.md
 ```md
+{% raw %}
 # issue issue-note / project-summary / translate / callgraph をtonejs-mml-to-jsonから呼び出す #16
 [issues #16](https://github.com/cat2151/github-actions/issues/16)
 
@@ -1539,10 +1522,12 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 
 # closeとする
 
+{% endraw %}
 ```
 
 ### issue-notes/16.md
 ```md
+{% raw %}
 # issue 2択モードを試すか、整理して検討する #16
 [issues #16](https://github.com/cat2151/fighting-game-button-challenge/issues/16)
 
@@ -1574,10 +1559,12 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
         - より普段の40フレの根拠を得て、説明（30択だから時間かかる）
         - がしやすくなることなので
 
+{% endraw %}
 ```
 
 ### .github/actions-tmp/issue-notes/2.md
 ```md
+{% raw %}
 # issue GitHub Actions「関数コールグラフhtmlビジュアライズ生成」を共通ワークフロー化する #2
 [issues #2](https://github.com/cat2151/github-actions/issues/2)
 
@@ -1747,10 +1734,12 @@ jobs:
 # closeとする
 - もしhtml内容が0件NG、などになったら、別issueとするつもり
 
+{% endraw %}
 ```
 
 ### issue-notes/2.md
 ```md
+{% raw %}
 # issue #2 入力で「左 + ア + 必」 のとき左か右かがパッと見てわかりづらい #2
 [issues #2](https://github.com/cat2151/fighting-game-button-challenge/issues/2)
 
@@ -1828,10 +1817,12 @@ jobs:
 - 課題、想定外のファイルや関数が登場。
     - 対策、userがソースのおおまかな調査をして、TODOコメントで補足し、プロンプトをより具体的に記述
 
+{% endraw %}
 ```
 
 ### .github/actions-tmp/issue-notes/3.md
 ```md
+{% raw %}
 # issue GitHub Actions「issue note生成」を共通ワークフロー化する #3
 [issues #3](https://github.com/cat2151/github-actions/issues/3)
 
@@ -1907,164 +1898,24 @@ env: で値を渡し、process.env で参照するのが正しい
 - test green
 - closeとする
 
-```
-
-### .github/actions-tmp/issue-notes/4.md
-```md
-# issue GitHub Actions「project概要生成」を共通ワークフロー化する #4
-[issues #4](https://github.com/cat2151/github-actions/issues/4)
-
-# prompt
-```
-あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
-このymlファイルを、以下の2つのファイルに分割してください。
-1. 共通ワークフロー       cat2151/github-actions/.github/workflows/daily-project-summary.yml
-2. 呼び出し元ワークフロー cat2151/github-actions/.github/workflows/call-daily-project-summary.yml
-まずplanしてください
-```
-
-# 結果、あちこちハルシネーションのあるymlが生成された
-- agentの挙動があからさまにハルシネーション
-    - インデントが修正できない、「失敗した」という
-    - 構文誤りを認識できない
-- 人力で修正した
-
-# このagentによるセルフレビューが信頼できないため、別のLLMによるセカンドオピニオンを試す
-```
-あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
-以下の2つのファイルをレビューしてください。最優先で、エラーが発生するかどうかだけレビューてください。エラー以外の改善事項のチェックをするかわりに、エラー発生有無チェックに最大限注力してください。
-
---- 呼び出し元
-
-name: Call Daily Project Summary
-
-on:
-  schedule:
-    # 日本時間 07:00 (UTC 22:00 前日)
-    - cron: '0 22 * * *'
-  workflow_dispatch:
-
-jobs:
-  call-daily-project-summary:
-    uses: cat2151/github-actions/.github/workflows/daily-project-summary.yml
-    secrets:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-
---- 共通ワークフロー
-name: Daily Project Summary
-on:
-  workflow_call:
-
-jobs:
-  generate-summary:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      issues: read
-      pull-requests: read
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0  # 履歴を取得するため
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: |
-          # 一時的なディレクトリで依存関係をインストール
-          mkdir -p /tmp/summary-deps
-          cd /tmp/summary-deps
-          npm init -y
-          npm install @google/generative-ai @octokit/rest
-          # generated-docsディレクトリを作成
-          mkdir -p $GITHUB_WORKSPACE/generated-docs
-
-      - name: Generate project summary
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          NODE_PATH: /tmp/summary-deps/node_modules
-        run: |
-          node .github/scripts/generate-project-summary.cjs
-
-      - name: Check for generated summaries
-        id: check_summaries
-        run: |
-          if [ -f "generated-docs/project-overview.md" ] && [ -f "generated-docs/development-status.md" ]; then
-            echo "summaries_generated=true" >> $GITHUB_OUTPUT
-          else
-            echo "summaries_generated=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Commit and push summaries
-        if: steps.check_summaries.outputs.summaries_generated == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          # package.jsonの変更のみリセット（generated-docsは保持）
-          git restore package.json 2>/dev/null || true
-          # サマリーファイルのみを追加
-          git add generated-docs/project-overview.md
-          git add generated-docs/development-status.md
-          git commit -m "Update project summaries (overview & development status)"
-          git push
-
-      - name: Summary generation result
-        run: |
-          if [ "${{ steps.check_summaries.outputs.summaries_generated }}" == "true" ]; then
-            echo "✅ Project summaries updated successfully"
-            echo "📊 Generated: project-overview.md & development-status.md"
-          else
-            echo "ℹ️ No summaries generated (likely no user commits in the last 24 hours)"
-          fi
-```
-
-# 上記promptで、2つのLLMにレビューさせ、合格した
-
-# 細部を、先行する2つのymlを参照に手直しした
-
-# ローカルtestをしてからcommitできるとよい。方法を検討する
-- ローカルtestのメリット
-    - 素早く修正のサイクルをまわせる
-    - ムダにgit historyを汚さない
-        - これまでの事例：「実装したつもり」「エラー。修正したつもり」「エラー。修正したつもり」...（以降エラー多数）
-- 方法
-    - ※検討、WSL + act を環境構築済みである。test可能であると判断する
-    - 呼び出し元のURLをコメントアウトし、相対パス記述にする
-    - ※備考、テスト成功すると結果がcommit pushされる。それでよしとする
-- 結果
-    - OK
-    - secretsを簡略化できるか試した、できなかった、現状のsecrets記述が今わかっている範囲でベストと判断する
-    - OK
-
-# test green
-
-# commit用に、yml 呼び出し元 uses をlocal用から本番用に書き換える
-
-# closeとする
-
+{% endraw %}
 ```
 
 ### .github/actions-tmp/issue-notes/7.md
 ```md
+{% raw %}
 # issue issue note生成できるかのtest用 #7
 [issues #7](https://github.com/cat2151/github-actions/issues/7)
 
 - 生成できた
 - closeとする
 
+{% endraw %}
 ```
 
 ### .github/actions-tmp/issue-notes/9.md
 ```md
+{% raw %}
 # issue 関数コールグラフhtmlビジュアライズが0件なので、原因を可視化する #9
 [issues #9](https://github.com/cat2151/github-actions/issues/9)
 
@@ -2077,17 +1928,22 @@ jobs:
 
 # closeとする
 
+{% endraw %}
 ```
 
 ### config/button_challenge.toml
 ```toml
+{% raw %}
 lever_toml        = "config/lever_names.toml"
 button_names_toml = "config/button_names.toml"
 alias_toml        = "config/alias.toml"
 mission_toml      = "config/mission.toml"
+moves_toml        = "config/moves.toml"
+
+challenge_phase = "1_buttons"  # "1_buttons" or "2_moves"
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
-geometry = "700x120+256+256"
+geometry = "700x150+256+256"
 font_name = "Arial"
 font_size = 20
 
@@ -2095,17 +1951,20 @@ histogram_mode_sample_count = 50 # hist中心の表示用
 
 [display_format]
     label1 = "mission : {mission}"
-    label2 = "{lever_plus_pressed}"
-    label3 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
+    label2 = "move : {move_name}"
+    label3 = "{lever_plus_pressed}"
+    label4 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
 
 [backmost_mode]
     check_interval_sec = 10
     process_names = ['StreetFighter6.exe', 'CapcomFightingCollection.exe']
 
+{% endraw %}
 ```
 
 ### config/lever_names.toml
 ```toml
+{% raw %}
 # missionで使う用のレバー名称定義
 
 names = [
@@ -2137,10 +1996,12 @@ no_count = ["右", "下"] # 下は許容する。垂直ジャンプと違って�
 success  = "左下"
 no_count = ["左", "下"] # 下は許容する。垂直ジャンプと違って取り返しがつくので。
 
+{% endraw %}
 ```
 
 ### issue-notes/5.md
 ```md
+{% raw %}
 # issue tomlに左右どちらも記述するのは、tomlメンテコストが高い #5
 [issues #5](https://github.com/cat2151/fighting-game-button-challenge/issues/5)
 
@@ -2327,28 +2188,32 @@ def main_loop(..., left_right, left_right_temp):
 - 影響範囲はTOML読込直後のミッションセット生成に限定。
 - LLMによる可視化・認知負荷低減の実験を継続予定。
 
+{% endraw %}
 ```
 
 ### requirements.txt
 ```txt
+{% raw %}
 pygame
 toml
 numpy
 psutil
 pywin32
 
+{% endraw %}
 ```
 
 ### src/configs.py
 ```py
+{% raw %}
 from utils import get_args, read_toml, update_args_by_toml
 
 def load_game_configuration():
     args = get_args()
     args = update_args_by_toml(args, args.config_filename)
     args = update_args_by_toml(args, args.mission_toml)
-    (names, plus, lever_names, missions, none_word, alias_conf, no_count_names) = load_all_configs(args)
-    return args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names
+    (names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves) = load_all_configs(args)
+    return args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves
 
 def load_all_configs(args):
     config = read_toml(args.button_names_toml)
@@ -2365,12 +2230,20 @@ def load_all_configs(args):
 
     alias_conf = read_toml(args.alias_toml)
 
-    return names, plus, lever_names, args.missions, none_word, alias_conf, no_count_names
+    # Load moves configuration if moves_toml is defined
+    moves = []
+    if hasattr(args, 'moves_toml') and args.moves_toml:
+        moves_config = read_toml(args.moves_toml)
+        moves = moves_config.get("moves", [])
 
+    return names, plus, lever_names, args.missions, none_word, alias_conf, no_count_names, moves
+
+{% endraw %}
 ```
 
 ### tests/test_is_no_count_case.py
 ```py
+{% raw %}
 import sys
 import os
 import pytest
@@ -2424,23 +2297,35 @@ def test_is_no_count_case(mission_success, input_name, no_count_names_param, exp
     else:
         assert is_no_count_case(mission_success, input_name, no_count_names_param, plus) == expected
 
+{% endraw %}
 ```
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-1f4799f Google検索にindexさせる用
-76bc6dd Google検索にindexさせる用
+3cc8125 Merge pull request #19 from cat2151/copilot/fix-moves-direction-requirement
+64d5e06 Use imported constants throughout codebase for consistency
+d2f48d6 Refactor: Extract constants and utilities to reduce code duplication
+cbc0e7c Hide move display in phase 1 as per spec - moves should only show in phase 2
+ef30d9e Implement challenge phase functionality for phase 1 (buttons) and phase 2 (moves)
+ed91d01 Initial plan
+32f7c25 Expand issue #18 with implementation details
+2dbad5e Auto-translate README.ja.md to README.md [auto]
+7ab78d4 Add project status section to README.ja.md
+1ccf775 Add issue note for #18 [auto]
 
 ### 変更されたファイル:
 README.ja.md
 README.md
-_config.yml
-generated-docs/development-status-generated-prompt.md
-generated-docs/development-status.md
-generated-docs/project-overview-generated-prompt.md
-generated-docs/project-overview.md
-googled947dc864c270e07.html
+config/button_challenge.toml
+config/moves.toml
+issue-notes/18.md
+src/configs.py
+src/gui.py
+src/main.py
+src/missions.py
+tests/test_challenge_phases.py
+tests/test_get_move_name_for_input.py
 
 
 ---
-Generated at: 2025-12-02 07:03:37 JST
+Generated at: 2025-12-18 07:04:06 JST

@@ -1,4 +1,4 @@
-Last updated: 2025-12-02
+Last updated: 2025-12-18
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -73,6 +73,9 @@ Windows用の格ゲー練習用アプリ。ボタン練習ができます。ス�
 | 項目 | リンク |
 |------|--------|
 | 📊 開発状況 | [generated-docs/development-status](generated-docs/development-status.md) |
+
+# 状況
+- 頻繁に破壊的変更をしています
 
 # どんなアプリか3行で説明
 - 格ゲーのボタン練習アプリ
@@ -202,6 +205,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 button_names.toml
   📄 lever_names.toml
   📄 mission.toml
+  📄 moves.toml
 📁 generated-docs/
 🌐 googled947dc864c270e07.html
 📁 issue-notes/
@@ -212,6 +216,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 14.md
   📖 15.md
   📖 16.md
+  📖 18.md
   📖 2.md
   📖 5.md
   📖 8.md
@@ -228,7 +233,9 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 utils.py
 📁 tests/
   📄 test_amplify_missions_left_right.py
+  📄 test_challenge_phases.py
   📄 test_format_mission_string.py
+  📄 test_get_move_name_for_input.py
   📄 test_get_pressed_buttons.py
   📄 test_is_no_count_case.py
 
@@ -252,6 +259,7 @@ issue-notes/13.md
 issue-notes/14.md
 issue-notes/15.md
 issue-notes/16.md
+issue-notes/18.md
 issue-notes/2.md
 issue-notes/5.md
 issue-notes/8.md
@@ -266,4 +274,4 @@ issue-notes/8.md
 
 
 ---
-Generated at: 2025-12-02 07:03:37 JST
+Generated at: 2025-12-18 07:04:06 JST
