@@ -1,4 +1,5 @@
 from gui_utils import do_backmost, do_topmost, init_tkinter
+from missions import PHASE_1_BUTTONS, PHASE_2_MOVES
 
 def gui_init_tkinter(args):
     gui_label_count = 4
@@ -15,10 +16,23 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         text_lever_plus_pressed =  f"SUCCESS! {text_lever_plus_pressed} !SUCCESS"
 
     display_format = args.display_format
+    
+    # Handle move name display based on challenge phase
+    challenge_phase = state.get('challenge_phase', PHASE_1_BUTTONS)
+    displayed_move_name = ""
+    
+    if challenge_phase == PHASE_1_BUTTONS:
+        # Phase 1: Don't display moves (仕様: ただしmovesは表示しない)
+        displayed_move_name = ""
+    elif challenge_phase == PHASE_2_MOVES:
+        # Phase 2: Display moves with direction indicator
+        current_direction = state.get('current_direction', 'right')
+        direction_indicator = "（右向き）" if current_direction == "right" else "（左向き）"
+        displayed_move_name = f"{direction_indicator}{move_name}" if move_name else ""
 
     format_dict = {
         'mission': mission,
-        'move_name': move_name,
+        'move_name': displayed_move_name,
         'lever_plus_pressed': text_lever_plus_pressed,
         'score': state['score'],
         'fail_count': state['fail_count'],
