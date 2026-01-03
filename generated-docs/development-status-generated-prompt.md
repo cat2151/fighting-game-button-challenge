@@ -1,4 +1,4 @@
-Last updated: 2025-12-18
+Last updated: 2026-01-04
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -223,6 +223,7 @@ Last updated: 2025-12-18
 - issue-notes/16.md
 - issue-notes/18.md
 - issue-notes/2.md
+- issue-notes/20.md
 - issue-notes/5.md
 - issue-notes/8.md
 - requirements.txt
@@ -243,6 +244,21 @@ Last updated: 2025-12-18
 - tests/test_is_no_count_case.py
 
 ## 現在のオープンIssues
+## [Issue #20](../issue-notes/20.md): localでドッグフーディングする
+[issue-notes/20.md](https://github.com/cat2151/fighting-game-button-challenge/blob/main/issue-notes/20.md)
+
+...
+ラベル: 
+--- issue-notes/20.md の内容 ---
+
+```markdown
+# issue localでドッグフーディングする #20
+[issues #20](https://github.com/cat2151/fighting-game-button-challenge/issues/20)
+
+
+
+```
+
 ## [Issue #16](../issue-notes/16.md): 2択モードを試すか、整理して検討する
 [issue-notes/16.md](https://github.com/cat2151/fighting-game-button-challenge/blob/main/issue-notes/16.md)
 
@@ -1820,6 +1836,92 @@ jobs:
 {% endraw %}
 ```
 
+### .github/actions-tmp/issue-notes/20.md
+```md
+{% raw %}
+# issue project-summary の development-status 生成時、issue-notes/ 配下のmdにファイル名が書いてあれば、そのファイル内容もpromptに添付、を試す #20
+[issues #20](https://github.com/cat2151/github-actions/issues/20)
+
+# 何が困るの？
+- Geminiに次の一手を生成させるとき、cjsの内容も添付したほうが、生成品質が改善できる可能性がある。
+
+# 案
+## outputのimage
+- promptが言及するfilename、について、そのfileの内容もすべてpromptに含める。
+    - 軸は、projectのfilename一覧である。
+        - 一覧それぞれのfilenameについて、promptで言及されているものをfile内容埋め込み、とする。
+- 方向性
+    - シンプルで明確なルール、曖昧さのないルールで、メンテを楽にすることを優先する
+    - 余分なファイルが出てしまうが割り切ってOKとし、欠落リスクを減らせることを優先する
+- 備考
+    - 曖昧でメンテが必要な「documentからのfilename抽出」をやめ、
+        - かわりに、逆に、「今のprojectにあるfileすべてのうち、promptで言及されているもの」を軸とする
+## 実現方法の案
+- project全体について、filenameと、filepath配列（複数ありうる）、のmapを取得する。そういう関数Aをまず実装する。
+    - filepathは、agentが扱えるよう、github上のworkの絶対pathではなく、projectRootからの相対パス表記とする。
+- そして、そのfilenameにmatchするfilepath配列について、filepathとファイル内容を記したmarkdown文字列を返却、という関数Bを実装する。
+- さらに、Geminiにわたすpromptについて、前述の関数Aのfilenameそれぞれについて、prompt内を検索し、filenameが存在する場合は、そのfilenameについて、関数Bを用いてmarkdown文字列を取得する。そうして得られたmarkdown文字列群を返却する、という関数Cを実装する。
+- さらに、promptの末尾に書いてあるプレースホルダー「`${file_contents}`」を、関数Cの結果で置き換える、という関数Dを実装する。
+- 実際には、Geminiにわたすpromptのプレースホルダー展開は、2回にわたる必要がある。1回目でissues-note内容をpromptに埋め込む。2回目でそのpromptに対して関数Dを適用する。
+## 備忘
+- 上記は、agentにplanさせてレビューし、context不足と感じたら上記をメンテ、というサイクルで書いた。
+
+# どうする？
+- 上記をagentに投げる。documentやtestについてのplanもしてくるかもしれないがそこは時間の都合で省略して実施させるつもり。
+- 投げた、実装させた、レビューして人力リファクタリングした
+- testする
+
+# 結果
+- バグ
+    - この20.mdにあるプレースホルダーが置換されてしまっている
+    - issue-notesで言及されていないfileまで添付されてしまっている
+- 分析
+    - この20.mdにあるプレースホルダーが置換されてしまっている
+        - 原因
+            - 20.mdにあるプレースホルダーまで置換対象としてしまっていたため。
+            - prompt全体のプレースホルダーを置換対象としてしまっていたため。
+            - issue-notesを埋め込んだあとでの、プレースホルダー処理だったので、
+                - 20.md が置換対象となってしまったため。
+        - 対策案
+            - プレースホルダーはすべて、「行頭と行末で囲まれている」ときだけ置換対象とする。
+                - つまり文中やcode中のプレースホルダーは置換対象外とする。
+            - さらに、2つ以上プレースホルダーが出たら想定外なので早期エラー終了させ、検知させる。
+    - issue-notesで言及されていないfileまで添付されてしまっている
+        - 原因
+            - promptに、既にprojectの全file listが書き込まれたあとなので、
+                - issue-noteで言及されていなくても、
+                - promptの全file listを対象に検索してしまっている
+        - 対策案の候補
+            - プレースホルダー置換の順番を変更し、全file listは最後に置換する
+            - file添付の対象を変更し、promptでなく、issue-notesとする
+                - これが範囲が絞られているので安全である、と考える
+        - 備忘
+            - 全fileの対象は、リモートリポジトリ側のfileなので、secretsの心配はないし、実際に検索して確認済み
+
+# どうする？
+- agent半分、人力が半分（agentがハルシネーションでソース破壊したので、関数切り分けしたり、リファクタリングしたり）。
+- で実装した。
+- testする
+
+# 結果
+- test green
+
+# closeとする
+
+{% endraw %}
+```
+
+### issue-notes/20.md
+```md
+{% raw %}
+# issue localでドッグフーディングする #20
+[issues #20](https://github.com/cat2151/fighting-game-button-challenge/issues/20)
+
+
+
+{% endraw %}
+```
+
 ### .github/actions-tmp/issue-notes/3.md
 ```md
 {% raw %}
@@ -2302,30 +2404,24 @@ def test_is_no_count_case(mission_success, input_name, no_count_names_param, exp
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-3cc8125 Merge pull request #19 from cat2151/copilot/fix-moves-direction-requirement
-64d5e06 Use imported constants throughout codebase for consistency
-d2f48d6 Refactor: Extract constants and utilities to reduce code duplication
-cbc0e7c Hide move display in phase 1 as per spec - moves should only show in phase 2
-ef30d9e Implement challenge phase functionality for phase 1 (buttons) and phase 2 (moves)
-ed91d01 Initial plan
-32f7c25 Expand issue #18 with implementation details
-2dbad5e Auto-translate README.ja.md to README.md [auto]
-7ab78d4 Add project status section to README.ja.md
-1ccf775 Add issue note for #18 [auto]
+aff7f90 Auto-translate README.ja.md to README.md [auto]
+7bd785c Add DeepWiki badge to Japanese README
 
 ### 変更されたファイル:
 README.ja.md
 README.md
 config/button_challenge.toml
-config/moves.toml
+generated-docs/development-status-generated-prompt.md
+generated-docs/development-status.md
+generated-docs/project-overview-generated-prompt.md
+generated-docs/project-overview.md
 issue-notes/18.md
-src/configs.py
+issue-notes/20.md
 src/gui.py
 src/main.py
 src/missions.py
 tests/test_challenge_phases.py
-tests/test_get_move_name_for_input.py
 
 
 ---
-Generated at: 2025-12-18 07:04:06 JST
+Generated at: 2026-01-04 07:03:48 JST
