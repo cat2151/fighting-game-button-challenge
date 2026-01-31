@@ -1,76 +1,79 @@
-Last updated: 2026-01-04
+Last updated: 2026-02-01
 
 # Development Status
 
 ## 現在のIssues
-- [Issue #10](../issue-notes/10.md) では、失敗判定の厳格化と失敗時の成績反映が完了し、現在はミッションごとのタイマー計測とラップタイム算出・表示機能の実装を進めている。
-- [Issue #16](../issue-notes/16.md) では30択の反応速度課題に対し2択モードの導入を検討しており、[Issue #15](../issue-notes/15.md) ではコンボ表示で達成感向上を目指している。
-- [Issue #20](../issue-notes/20.md) はローカルでのドッグフーディングに着手しており、その他 ([#12](../issue-notes/12.md), [#9](../issue-notes/9.md), [#7](../issue-notes/7.md), [#3](../issue-notes/3.md), [#1](../issue-notes/1.md)) は検討中または塩漬けとなっている。
+- GUIのPhase1とPhase2におけるUI表示の不一致([Issue #25](../issue-notes/25.md), [Issue #24](../issue-notes/24.md), [Issue #21](../issue-notes/21.md))に関する複数の課題がオープン中。
+- プレイヤーの上達度を可視化するスコアリング改善([Issue #10](../issue-notes/10.md))は進行中で、失敗判定とミッションごとの時間計測は完了、ラップタイム表示が次のステップ。
+- 新しい練習モードの検討([Issue #16](../issue-notes/16.md))、コンボ表示([Issue #15](../issue-notes/15.md))、ローカルでのドッグフーディング([Issue #20](../issue-notes/20.md))といった機能改善・運用課題も残る。
 
 ## 次の一手候補
-1. [Issue #10](../issue-notes/10.md) ラップタイムの算出と表示
-   - 最初の小さな一歩: `main.py`の`main_loop`内で、全ミッション成功時 (`on_all_mission_green`相当のタイミング) に、`state.mission_times`から合計時間と平均時間を計算し、その結果をGUIのラベルに表示する。ラップタイム計測の開始を示す`all_mission_start_time`を`main_loop`の開始時と全ミッションクリア時にリセットする処理も追加する。
+1. Phase1とPhase2でのGUI表示の不一致を解消 [Issue #25](../issue-notes/25.md), [Issue #24](../issue-notes/24.md), [Issue #21](../issue-notes/21.md)
+   - 最初の小さな一歩: `src/gui.py`の`update_display_with_mission`関数内で`challenge_phase`に応じて`label1`（ボタンガイド）と`label2`（ムーブ行）の表示内容を適切に制御する。
+   - Agent実行プロンプト:
+     ```
+     対象ファイル: `src/gui.py`
+
+     実行内容: `src/gui.py`内の`update_display_with_mission`関数を修正してください。
+     関数内で`state`から取得される`challenge_phase`の値（`PHASE_1_BUTTONS`または`PHASE_2_MOVES`）に基づいて、`format_dict`に渡す`mission`と`move_name`の値を適切に制御します。
+     具体的には：
+     1.  現在の`mission`変数を`displayed_mission`という新しい変数に格納します。
+     2.  現在の`displayed_move_name`変数を`displayed_move`という新しい変数に格納します。
+     3.  `challenge_phase`が`PHASE_1_BUTTONS`の場合：
+         -   `displayed_move`を空文字列に設定します。
+     4.  `challenge_phase`が`PHASE_2_MOVES`の場合：
+         -   `displayed_mission`を空文字列に設定します。
+         -   `current_direction`に基づいた方向インジケータ（例: 「（右向き）」）を`displayed_move`の先頭に追加します。
+     5.  `format_dict`の`mission`キーには`displayed_mission`を、`move_name`キーには`displayed_move`を設定します。
+
+     確認事項:
+     - `PHASE_1_BUTTONS`と`PHASE_2_MOVES`の定数が`missions.py`から正しくインポートされていることを確認してください。
+     - `config/button_challenge.toml`の`display_format`で`label1`が`{mission}`を、`label2`が`{move_name}`を使用していることを前提とします。
+     - Phase1ではボタンガイド（`label1`）のみが表示され、ムーブ行（`label2`）は表示されないこと。
+     - Phase2ではムーブ行（`label2`）のみが表示され、ボタンガイド（`label1`）は表示されないこと。
+
+     期待する出力: `update_display_with_mission`関数が修正された`src/gui.py`の更新内容と、変更点の詳細を説明するMarkdown形式のレポート。
+     ```
+
+2. ラップタイムの算出とデバッグ表示 [Issue #10](../issue-notes/10.md)
+   - 最初の小さな一歩: `src/main.py`の`main`関数で`state["all_mission_start_time"]`を初期化し、`main_loop`内で全ミッションサイクル開始時に時刻を記録、全ミッション成功時にラップタイムを計算してコンソールにデバッグ出力する。
    - Agent実行プロンプ:
-     ```
-     対象ファイル: `src/main.py`, `src/gui.py`
-
-     実行内容:
-     1. `src/main.py`の`main_loop`関数内で、状態管理を行う`state`オブジェクト（またはそれに相当する変数）に`all_mission_start_time`という新しいメンバを追加し、これを初期化（例えば`time.time()`）する処理を、`main_loop`の開始時と全ミッションクリア時（`on_all_mission_green`相当のロジックが実行される箇所）にそれぞれ追加してください。
-     2. 全ミッションクリア時に、`state.mission_times`（ミッションごとの経過時間が格納されているリスト）から合計時間と平均時間をミリ秒単位で計算してください。
-     3. 計算した合計時間と平均時間を、`src/gui.py`の`update_display_with_mission`関数内で表示されるラベル（例: label4の`current_mission_frame_count`の右側）に「Lap:{合計時間:.2f}s Avg:{平均時間:.2f}s」のような形式で追加表示するように修正してください。既存のフレーム数表示との兼ね合いも考慮し、見やすい位置を検討してください。
-
-     確認事項:
-     - `state`オブジェクトがどのように管理されているか、その構造とライフサイクルを確認してください。
-     - `state.mission_times`がどのタイミングでリセット・更新されるかを確認してください。
-     - `src/gui.py`の`update_display_with_mission`関数がどのように引数を受け取り、UIを更新しているかを確認し、新しい表示要素を追加しても既存のレイアウトが崩れないように配慮してください。
-     - 時間計測には`time.time()`を使用していることを前提とします。
-
-     期待する出力:
-     `src/main.py`と`src/gui.py`の変更箇所を示すコードブロック。
-     変更後のコードが、ラップタイムと平均時間をUIに表示できるようになっていること。
-     ```
-
-2. [Issue #16](../issue-notes/16.md) 2択モードの実装検討
-   - 最初の小さな一歩: `config/button_challenge.toml`に`challenge_mode = "default"`という設定を追加し、`src/configs.py`でこの設定を読み込めるようにする。デフォルトは"default"だが、将来的に"2_choices"などが指定できるよう、文字列として読み込む。
-   - Agent実行プロンプト:
-     ```
-     対象ファイル: `config/button_challenge.toml`, `src/configs.py`
-
-     実行内容:
-     1. `config/button_challenge.toml`の`[display_format]`セクションの下、または既存の`challenge_phase`設定の近くに、`challenge_mode = "default"`という新しいキーバリューペアを追加してください。
-     2. `src/configs.py`の`load_game_configuration`関数および`load_all_configs`関数を修正し、`challenge_mode`の値を読み込み、その値を`load_game_configuration`の戻り値に追加してください。`challenge_mode`は文字列として扱われ、デフォルト値は"default"とします。
-
-     確認事項:
-     - `config/button_challenge.toml`の既存の構造を崩さないように新しい設定を追加してください。
-     - `src/configs.py`内で既存のtoml読み込みロジックとの整合性を保ち、新しい設定が正しくパースされることを確認してください。
-     - `load_game_configuration`の戻り値の順番が変わる場合、呼び出し元への影響を最小限にするように注意してください。
-
-     期待する出力:
-     `config/button_challenge.toml`と`src/configs.py`の変更箇所を示すコードブロック。
-     変更後のコードが`challenge_mode`設定を正しく読み込めるようになっていること。
-     ```
-
-3. [Issue #15](../issue-notes/15.md) コンボ表示を試す
-   - 最初の小さな一歩: `src/main.py`内の`main_loop`関数で、ミッション成功時(`on_green`相当のタイミング)に、現在のコンボ数をカウントし、それをデバッグ用にコンソールにprintする処理を追加する。コンボは「REDが発生せずに連続でGREENになった回数」とし、REDが発生したら0にリセットされるシンプルなロジックとする。
-   - Agent実行プロンプト:
      ```
      対象ファイル: `src/main.py`
 
-     実行内容:
-     1. `src/main.py`の`main_loop`関数内で、現在のコンボ数を保持するための変数（例: `current_combo_count`）を初期化（0）してください。この変数は`main_loop`のローカル変数または`state`オブジェクトのメンバとして管理することを検討してください。
-     2. `check_and_update_mission`関数からの戻り値（またはその後の処理）でミッションが「GREEN」（成功）と判定された場合、`current_combo_count`をインクリメントしてください。
-     3. `check_and_update_mission`関数からの戻り値（またはその後の処理）でミッションが「RED」（失敗、ノーカンではない）と判定された場合、`current_combo_count`を0にリセットしてください。
-     4. `current_combo_count`が更新されるたびに、その値をデバッグ用にコンソールにprintするようにしてください。
+     実行内容: `src/main.py`を修正し、全ミッションサイクルにおけるラップタイムを計測・表示する機能を実装してください。
+     1.  `main`関数内の`state`オブジェクトの初期化時に、`"all_mission_start_time": None`を追加してください。
+     2.  `main_loop`関数内で、`check_and_update_mission`の呼び出し直後に、`on_all_mission_green`が`False`で`mission_index`が`0`であるなど、全ミッションサイクルが開始されることを検出する適切なタイミングで、`state["all_mission_start_time"]`が`None`であれば、現在の時刻（ミリ秒単位）を`state["all_mission_start_time"]`に記録してください。
+     3.  `check_and_update_mission`の返り値である`on_all_mission_green`が`True`になったとき（全ミッションが成功したとき）、`state["all_mission_start_time"]`が`None`でなければ、現在の時刻との差分を計算して`lap_time`（ミリ秒単位）を算出し、コンソールに`"Lap Time: [lap_time]ms"`の形式でデバッグ出力してください。その後、`state["all_mission_start_time"]`を`None`にリセットしてください。
+     時刻の取得には`time.time() * 1000`を使用するため、`time`モジュールをインポートしてください。
 
      確認事項:
-     - `check_and_update_mission`関数がどのようにミッションの結果（GREEN/RED/ノーカン）を返しているか、またはその結果をどのように判断できるかを確認してください。
-     - `current_combo_count`変数のスコープとライフサイクルが適切であることを確認してください。
-     - 既存のロジックに影響を与えないように注意してください。
+     - `state`オブジェクト内の`all_mission_start_time`が正しく初期化、記録、リセットされることを確認してください。
+     - 全ミッションサイクル開始と終了のタイミングが正確に検出され、ラップタイムが正しく計測されること。
+     - `time`モジュールが適切にインポートされていること。
 
-     期待する出力:
-     `src/main.py`の変更箇所を示すコードブロック。
-     変更後のコードが、ミッション成功時にコンボ数をカウントし、失敗時にリセットし、その値をコンソールにprintできるようになっていること。
+     期待する出力: `main`関数および`main_loop`関数が修正された`src/main.py`の更新内容と、変更点の詳細を説明するMarkdown形式のレポート。
      ```
 
+3. コンボ表示機能の初期実装（データ管理とデバッグ出力） [Issue #15](../issue-notes/15.md)
+   - 最初の小さな一歩: `src/main.py`の`state`にコンボ関連のメンバーを追加し、`src/missions.py`の`check_and_update_mission`関数内でミッション成功・失敗時、および全ミッション成功時にコンボ数を更新・リセットし、デバッグ出力を行う。
+   - Agent実行プロンプト:
+     ```
+     対象ファイル: `src/missions.py`と`src/main.py`
+
+     実行内容: コンボ表示機能の初期実装として、以下の修正を行ってください。
+     1.  `src/main.py`の`main`関数内にある`state`オブジェクトの初期化時に、`"current_combo": 0`, `"max_combo_in_lap": 0`, `"lifetime_max_combo": 0`を追加してください。
+     2.  `src/missions.py`内の`check_and_update_mission`関数を修正し、ミッションが成功（green）したときに、`state["current_combo"]`をインクリメントしてください。同時に、`state["max_combo_in_lap"]`と`state["lifetime_max_combo"]`を`state["current_combo"]`と比較して最大値を更新してください。
+     3.  ミッションが失敗（red判定）した場合、`state["current_combo"]`を`0`にリセットしてください。
+     4.  `on_all_mission_green`（全ミッションが成功し、ラップが終了したとき）の場合、`state["current_combo"]`と`state["max_combo_in_lap"]`を`0`にリセットしてください。
+     5.  `check_and_update_mission`関数内で、`current_combo`、`max_combo_in_lap`、`lifetime_max_combo`の現在値をデバッグ目的でコンソールにprintする処理を、ミッション成功時または失敗時に追加してください。
+
+     確認事項:
+     - `state`オブジェクトが`main.py`と`missions.py`間で適切に共有・更新されることを確認してください。
+     - コンボのインクリメント、リセット、最大値更新のロジックが期待通りに動作すること。
+     - デバッグ出力が適切に行われ、コンボ数の変化が確認できること。
+
+     期待する出力: `src/main.py`と`src/missions.py`が修正された更新内容と、変更点の詳細を説明するMarkdown形式のレポート。
+
 ---
-Generated at: 2026-01-04 07:04:13 JST
+Generated at: 2026-02-01 07:04:44 JST

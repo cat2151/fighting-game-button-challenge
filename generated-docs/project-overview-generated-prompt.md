@@ -1,4 +1,4 @@
-Last updated: 2026-01-04
+Last updated: 2026-02-01
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -207,6 +207,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 lever_names.toml
   📄 mission.toml
   📄 moves.toml
+  📄 moves_sf6lily.toml
 📁 generated-docs/
 🌐 googled947dc864c270e07.html
 📁 issue-notes/
@@ -220,6 +221,9 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 18.md
   📖 2.md
   📖 20.md
+  📖 21.md
+  📖 22.md
+  📖 24.md
   📖 5.md
   📖 8.md
 📄 requirements.txt
@@ -240,6 +244,7 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 test_get_move_name_for_input.py
   📄 test_get_pressed_buttons.py
   📄 test_is_no_count_case.py
+  📄 test_phase_transition_integration.py
 
 ## ファイル詳細分析
 **googled947dc864c270e07.html** (1行, 53バイト)
@@ -264,6 +269,9 @@ issue-notes/16.md
 issue-notes/18.md
 issue-notes/2.md
 issue-notes/20.md
+issue-notes/21.md
+issue-notes/22.md
+issue-notes/24.md
 issue-notes/5.md
 issue-notes/8.md
 
@@ -277,4 +285,4 @@ issue-notes/8.md
 
 
 ---
-Generated at: 2026-01-04 07:03:48 JST
+Generated at: 2026-02-01 07:04:03 JST
