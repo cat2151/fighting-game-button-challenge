@@ -7,6 +7,8 @@ from missions import (
     initialize_mission_sets, 
     generate_missions_for_direction, 
     toggle_direction_and_regenerate_missions,
+    should_transition_to_phase2,
+    transition_to_phase2,
     PHASE_1_BUTTONS,
     PHASE_2_MOVES
 )
@@ -150,3 +152,38 @@ def test_toggle_direction_and_regenerate_missions():
     mission_inputs2 = [m["input"] for m in new_missions2]
     assert "右上" in mission_inputs2
     assert "右 + 強" in mission_inputs2
+
+
+def test_should_transition_to_phase2_from_phase1():
+    """Test that transition should happen from Phase 1"""
+    state = {"challenge_phase": PHASE_1_BUTTONS}
+    assert should_transition_to_phase2(state)
+
+
+def test_should_transition_to_phase2_not_from_phase2():
+    """Test that transition should not happen from Phase 2"""
+    state = {"challenge_phase": PHASE_2_MOVES}
+    assert not should_transition_to_phase2(state)
+
+
+def test_transition_to_phase2():
+    """Test transitioning from Phase 1 to Phase 2"""
+    state = {"challenge_phase": PHASE_1_BUTTONS}
+    original_missions = [
+        {"input": "右上"},
+        {"input": "右 + 強"},
+    ]
+    left_right = ["右", "左"]
+    left_right_temp = ["みぎ", "ひだり"]
+    
+    new_missions, new_direction, new_phase = transition_to_phase2(
+        original_missions, left_right, left_right_temp
+    )
+    
+    assert new_phase == PHASE_2_MOVES
+    assert new_direction == "right"
+    assert len(new_missions) == 2
+    mission_inputs = [m["input"] for m in new_missions]
+    assert "右上" in mission_inputs
+    assert "右 + 強" in mission_inputs
+    assert "右 + 強" in mission_inputs

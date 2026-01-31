@@ -154,10 +154,21 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
     state = extract_mission_elapsed_time(state)
     state = on_mission_start(state)
     wait_for_all_buttons_release = True
-    missions_set, fail_count, should_toggle_direction = update_missions_set(missions, missions_set, mission, success_missions, fail_count, state)
+    missions_set, fail_count, should_toggle_direction, should_transition_phase = update_missions_set(missions, missions_set, mission, success_missions, fail_count, state)
     
+    # Handle phase transition from Phase 1 to Phase 2
+    if should_transition_phase:
+        missions, new_direction, new_phase = transition_to_phase2(
+            state["original_missions"],
+            args.left_right,
+            args.left_right_temp
+        )
+        state["current_direction"] = new_direction
+        state["challenge_phase"] = new_phase
+        state["missions"] = missions
+        missions_set = set(m["input"] for m in missions)
     # Handle phase 2 direction toggle
-    if should_toggle_direction:
+    elif should_toggle_direction:
         missions, new_direction = toggle_direction_and_regenerate_missions(
             state["original_missions"],
             args.left_right,
@@ -244,19 +255,27 @@ def update_missions_set(missions, missions_set, mission, success_missions, fail_
         state: Optional state dict containing phase 2 info
     
     Returns:
-        Tuple of (missions_set, fail_count, should_toggle_direction)
+        Tuple of (missions_set, fail_count, should_toggle_direction, should_transition_phase)
     """
     success_missions.add(mission)
     missions_set.remove(mission)
     should_toggle_direction = False
+    should_transition_phase = False
     
     if not missions_set:
         missions_set, fail_count = on_all_mission_green(missions, success_missions, fail_count)
-        # Check if we need to toggle direction for phase 2
-        if state and state.get("challenge_phase") == PHASE_2_MOVES:
-            should_toggle_direction = True
+        
+        if state:
+            current_phase = state.get("challenge_phase", PHASE_1_BUTTONS)
+            
+            # Check if we need to transition from Phase 1 to Phase 2
+            if current_phase == PHASE_1_BUTTONS and should_transition_to_phase2(state):
+                should_transition_phase = True
+            # Check if we need to toggle direction for phase 2
+            elif current_phase == PHASE_2_MOVES:
+                should_toggle_direction = True
     
-    return missions_set, fail_count, should_toggle_direction
+    return missions_set, fail_count, should_toggle_direction, should_transition_phase
 
 def on_all_mission_green(missions, success_missions, fail_count):
     print("すべてのmissionを成功しました")
@@ -264,6 +283,51 @@ def on_all_mission_green(missions, success_missions, fail_count):
     missions_set = set(m["input"] for m in missions)
     fail_count = 0  # 1周したらfail_countをリセット
     return missions_set, fail_count
+
+def should_transition_to_phase2(state):
+    """
+    Check if we should transition from Phase 1 to Phase 2.
+    
+    Although the caller checks current_phase == PHASE_1_BUTTONS before calling
+    this function (line 273), we keep the phase check here for defensive programming
+    and to maintain a clear API contract that this function can safely be called
+    with any state.
+    
+    The phase transition happens exactly once because after transitioning
+    to Phase 2, the phase is permanently PHASE_2_MOVES and never goes back.
+    
+    Args:
+        state: Current state dict
+    
+    Returns:
+        True if in Phase 1 (should transition), False otherwise
+    """
+    current_phase = state.get("challenge_phase", PHASE_1_BUTTONS)
+    # Only transition if we're in Phase 1
+    return current_phase == PHASE_1_BUTTONS
+
+def transition_to_phase2(original_missions, left_right, left_right_temp):
+    """
+    Transition from Phase 1 to Phase 2.
+    
+    Args:
+        original_missions: Original list of missions
+        left_right: Left/right characters for swapping
+        left_right_temp: Temporary characters for safe swapping
+    
+    Returns:
+        Tuple of (new_missions, new_direction, new_phase)
+    """
+    print("[transition_to_phase2] Phase 1 -> Phase 2")
+    new_phase = PHASE_2_MOVES
+    new_direction = "right"  # Start with right direction
+    
+    # Generate missions for Phase 2
+    new_missions = generate_missions_for_direction(
+        original_missions, left_right, left_right_temp, new_direction
+    )
+    
+    return new_missions, new_direction, new_phase
 
 def toggle_direction_and_regenerate_missions(original_missions, left_right, left_right_temp, current_direction):
     """
