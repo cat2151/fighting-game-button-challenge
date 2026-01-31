@@ -2,7 +2,8 @@ lever_toml        = "config/lever_names.toml"
 button_names_toml = "config/button_names.toml"
 alias_toml        = "config/alias.toml"
 mission_toml      = "config/mission.toml"
-moves_toml        = "config/moves.toml"
+#moves_toml        = "config/moves.toml"
+moves_toml        = "config/moves_sf6lily.toml"
 
 challenge_phase = "1_buttons"  # "1_buttons" or "2_moves"
 

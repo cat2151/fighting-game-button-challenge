@@ -1,0 +1,107 @@
+# 技名とボタン入力の対応表 スト6 モダン リリー用
+# ひとまず方針 : 自分が今練習したい操作を優先して書く
+
+# 課題、これだと左右ランダムの考慮が漏れている。対策、別issueで対策する
+#  例、トマホークとコンドルウィンドの問題出しわけができない
+# 課題、しゃがみ基本技の追加が漏れている。対策、別issueで対策する
+# 課題、しゃがみジャストパリイの追加が漏れている。対策、別issueで対策する
+
+# レバー
+    [[moves]]
+    name = "前移動 or 後ろ移動"
+    input = "右"
+
+    [[moves]]
+    name = "前ジャンプ or 後ろジャンプ"
+    input = "右上"
+
+    [[moves]]
+    name = "垂直J"
+    input = "上"
+
+    [[moves]]
+    name = "（左向き）しゃがみガード or （右向き）意味なし"
+    input = "右下"
+
+# 弱中強
+    [[moves]]
+    name = "基本技（弱）"
+    input = "弱"
+
+    [[moves]]
+    name = "基本技（中）"
+    input = "中"
+
+    [[moves]]
+    name = "基本技（強）"
+    input = "強"
+
+# 投げ
+    [[moves]]
+    name = "前投げ or 後ろ投げ"
+    input = "右 + 弱 + 中"
+
+# 必殺技
+    [[moves]]
+    name = "メキシカンタイフーン"
+    input = "必"
+
+    [[moves]]
+    name = "トマホークバスター or コンドルウィンド"
+    input = "右 + 必"
+
+    [[moves]]
+    name = "コンドルスパイア"
+    input = "下 + 必"
+
+# DI
+    [[moves]]
+    name = "インパクト"
+    input = "DI"
+
+# DP
+    [[moves]]
+    name = "パリィ"
+    input = "DP"
+
+    [[moves]]
+    name = "（右向き）ラッシュ準備 or （左向き）立ちジャストパリイ"
+    input = "右 + DP"
+
+# アシスト
+    [[moves]]
+    name = "アシストコンボ（弱）"
+    input = "ア + 弱"
+
+    [[moves]]
+    name = "アシストコンボ（中）"
+    input = "ア + 中"
+
+    [[moves]]
+    name = "アシストコンボ（強）"
+    input = "ア + 強"
+
+    [[moves]]
+    name = "ODメキシカンタイフーン"
+    input = "ア + 必"
+
+    [[moves]]
+    name = "ODコンドルスパイア"
+    input = "下 + ア + 必"
+
+    [[moves]]
+    name = "ODトマホークバスター or ODコンドルウィンド"
+    input = "右 + ア + 必"
+
+# SA
+    [[moves]]
+    name = "SA1"
+    input = "強 + 必"
+
+    [[moves]]
+    name = "SA3"
+    input = "下 + 強 + 必"
+
+    [[moves]]
+    name = "（右向き）SA1 or （左向き）SA2"
+    input = "右 + 強 + 必"
