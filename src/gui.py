@@ -16,12 +16,12 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         text_lever_plus_pressed =  f"SUCCESS! {text_lever_plus_pressed} !SUCCESS"
 
     display_format = args.display_format
-    
+
     # Handle move name display based on challenge phase
     challenge_phase = state.get('challenge_phase', PHASE_1_BUTTONS)
     displayed_move_name = ""
     displayed_mission = mission
-    
+
     if challenge_phase == PHASE_1_BUTTONS:
         # Phase 1: Don't display moves (仕様: ただしmovesは表示しない)
         displayed_move_name = ""
