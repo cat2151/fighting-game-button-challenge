@@ -157,13 +157,13 @@ def test_toggle_direction_and_regenerate_missions():
 def test_should_transition_to_phase2_from_phase1():
     """Test that transition should happen from Phase 1"""
     state = {"challenge_phase": PHASE_1_BUTTONS}
-    assert should_transition_to_phase2(state) == True
+    assert should_transition_to_phase2(state)
 
 
 def test_should_transition_to_phase2_not_from_phase2():
     """Test that transition should not happen from Phase 2"""
     state = {"challenge_phase": PHASE_2_MOVES}
-    assert should_transition_to_phase2(state) == False
+    assert not should_transition_to_phase2(state)
 
 
 def test_transition_to_phase2():

@@ -289,6 +289,12 @@ def should_transition_to_phase2(state):
     """
     Check if we should transition from Phase 1 to Phase 2.
     
+    This function is intentionally simple: it returns True whenever called
+    from Phase 1. The phase transition happens exactly once because:
+    1. It's only called when current_phase == PHASE_1_BUTTONS
+    2. After transitioning to Phase 2, the phase is permanently PHASE_2_MOVES
+    3. Phase 2 never transitions back to Phase 1
+    
     Args:
         state: Current state dict
     
@@ -300,8 +306,8 @@ def should_transition_to_phase2(state):
     if current_phase != PHASE_1_BUTTONS:
         return False
     
-    # Check if this is the first cycle completion
-    # We transition after the first cycle of Phase 1
+    # If we're in Phase 1 and all missions completed, transition to Phase 2
+    # This happens exactly once because after transition, we're permanently in Phase 2
     return True
 
 def transition_to_phase2(state, original_missions, left_right, left_right_temp):
