@@ -177,7 +177,7 @@ def test_transition_to_phase2():
     left_right_temp = ["みぎ", "ひだり"]
     
     new_missions, new_direction, new_phase = transition_to_phase2(
-        state, original_missions, left_right, left_right_temp
+        original_missions, left_right, left_right_temp
     )
     
     assert new_phase == PHASE_2_MOVES
@@ -185,4 +185,5 @@ def test_transition_to_phase2():
     assert len(new_missions) == 2
     mission_inputs = [m["input"] for m in new_missions]
     assert "右上" in mission_inputs
+    assert "右 + 強" in mission_inputs
     assert "右 + 強" in mission_inputs

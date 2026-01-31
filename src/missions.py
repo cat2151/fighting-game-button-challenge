@@ -159,7 +159,6 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
     # Handle phase transition from Phase 1 to Phase 2
     if should_transition_phase:
         missions, new_direction, new_phase = transition_to_phase2(
-            state,
             state["original_missions"],
             args.left_right,
             args.left_right_temp
@@ -289,33 +288,29 @@ def should_transition_to_phase2(state):
     """
     Check if we should transition from Phase 1 to Phase 2.
     
-    This function is intentionally simple: it returns True whenever called
-    from Phase 1. The phase transition happens exactly once because:
-    1. It's only called when current_phase == PHASE_1_BUTTONS
-    2. After transitioning to Phase 2, the phase is permanently PHASE_2_MOVES
-    3. Phase 2 never transitions back to Phase 1
+    Although the caller checks current_phase == PHASE_1_BUTTONS before calling
+    this function (line 273), we keep the phase check here for defensive programming
+    and to maintain a clear API contract that this function can safely be called
+    with any state.
+    
+    The phase transition happens exactly once because after transitioning
+    to Phase 2, the phase is permanently PHASE_2_MOVES and never goes back.
     
     Args:
         state: Current state dict
     
     Returns:
-        True if we should transition to Phase 2, False otherwise
+        True if in Phase 1 (should transition), False otherwise
     """
     current_phase = state.get("challenge_phase", PHASE_1_BUTTONS)
     # Only transition if we're in Phase 1
-    if current_phase != PHASE_1_BUTTONS:
-        return False
-    
-    # If we're in Phase 1 and all missions completed, transition to Phase 2
-    # This happens exactly once because after transition, we're permanently in Phase 2
-    return True
+    return current_phase == PHASE_1_BUTTONS
 
-def transition_to_phase2(state, original_missions, left_right, left_right_temp):
+def transition_to_phase2(original_missions, left_right, left_right_temp):
     """
     Transition from Phase 1 to Phase 2.
     
     Args:
-        state: Current state dict
         original_missions: Original list of missions
         left_right: Left/right characters for swapping
         left_right_temp: Temporary characters for safe swapping
