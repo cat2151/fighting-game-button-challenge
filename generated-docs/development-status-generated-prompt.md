@@ -1,4 +1,4 @@
-Last updated: 2026-02-01
+Last updated: 2026-02-02
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -195,6 +195,7 @@ Last updated: 2026-02-01
 - .github/actions-tmp/package-lock.json
 - .github/actions-tmp/package.json
 - .github/actions-tmp/src/main.js
+- .github/copilot-instructions.md
 - .github/workflows/call-daily-project-summary.yml
 - .github/workflows/call-issue-note.yml
 - .github/workflows/call-translate-readme.yml
@@ -228,6 +229,7 @@ Last updated: 2026-02-01
 - issue-notes/21.md
 - issue-notes/22.md
 - issue-notes/24.md
+- issue-notes/26.md
 - issue-notes/5.md
 - issue-notes/8.md
 - requirements.txt
@@ -245,65 +247,21 @@ Last updated: 2026-02-01
 - tests/test_format_mission_string.py
 - tests/test_get_move_name_for_input.py
 - tests/test_get_pressed_buttons.py
+- tests/test_gui_phase2_mission_display.py
 - tests/test_is_no_count_case.py
 - tests/test_phase_transition_integration.py
 
 ## 現在のオープンIssues
-## [Issue #25](../issue-notes/25.md): Hide phase1 button guide in phase2 to enforce move practice
-In phase2 (move training), the phase1 button operation guide was displayed in label1, allowing users to complete challenges by reading the guide rather than practicing move recall.
-
-## Changes
-
-**src/gui.py**
-- Conditionally hide mission (button guide) based on `challenge_phase`
-- Phase1: Display mi...
-ラベル: 
---- issue-notes/25.md の内容 ---
-
-```markdown
-
-```
-
-## [Issue #24](../issue-notes/24.md): phase2のとき、phase1用ボタン操作ガイドが先頭に表示されてしまっており、それを見たほうが楽なので、phase2ムーブの練習にならない
-[issue-notes/24.md](https://github.com/cat2151/fighting-game-button-challenge/blob/main/issue-notes/24.md)
+## [Issue #26](../issue-notes/26.md): （人力）localでphase2 move練習モード の動作確認をする
+[issue-notes/26.md](https://github.com/cat2151/fighting-game-button-challenge/blob/main/issue-notes/26.md)
 
 ...
 ラベル: 
---- issue-notes/24.md の内容 ---
+--- issue-notes/26.md の内容 ---
 
 ```markdown
-# issue phase2のとき、phase1用ボタン操作ガイドが先頭に表示されてしまっており、それを見たほうが楽なので、phase2ムーブの練習にならない #24
-[issues #24](https://github.com/cat2151/fighting-game-button-challenge/issues/24)
-
-
-
-```
-
-## [Issue #21](../issue-notes/21.md): 「phase1：ボタン練習モード」なのに、「phase2 : move練習モード」用のmove行が表示されてしまっている
-[issue-notes/21.md](https://github.com/cat2151/fighting-game-button-challenge/blob/main/issue-notes/21.md)
-
-...
-ラベル: 
---- issue-notes/21.md の内容 ---
-
-```markdown
-# issue 「phase1：ボタン練習モード」なのに、「phase2 : move練習モード」用のmove行が表示されてしまっている #21
-[issues #21](https://github.com/cat2151/fighting-game-button-challenge/issues/21)
-
-
-
-```
-
-## [Issue #20](../issue-notes/20.md): localでドッグフーディングする
-[issue-notes/20.md](https://github.com/cat2151/fighting-game-button-challenge/blob/main/issue-notes/20.md)
-
-...
-ラベル: 
---- issue-notes/20.md の内容 ---
-
-```markdown
-# issue localでドッグフーディングする #20
-[issues #20](https://github.com/cat2151/fighting-game-button-challenge/issues/20)
+# issue localでphase2 move練習モード の動作確認をする #26
+[issues #26](https://github.com/cat2151/fighting-game-button-challenge/issues/26)
 
 
 
@@ -826,6 +784,37 @@ def is_no_count_case(mission_success, input_name, no_count_names_list):
 - まずsystemに追従だけで十分そう、自分の他repositoryでやってたはず（コマンドパレットアプリで）、参考にするつもり...
 ラベル: 
 --- issue-notes/7.md の内容 ---
+
+```markdown
+
+```
+
+## [Issue #3](../issue-notes/3.md): もっと実戦に近く「SA3が溜まってる自分に、相手が飛び込んできたので、ワンボタンSA3」などが映像でわかると嬉しい
+# 補足
+- mission提示画像 : SA3が溜まってる自分に、相手が飛び込んできた
+- mission成功画像 : SA3が相手にhitした
+# 実現可能性
+- ほぼゼロ
+- なぜ？
+- 画像を現実的な時間で用意する方法がない
+- testや検証ができないのなら実装はできない
+# どうする？
+- 塩漬け
+...
+ラベル: 
+--- issue-notes/3.md の内容 ---
+
+```markdown
+
+```
+
+## [Issue #1](../issue-notes/1.md): 使える時間が限られておりメンテの時間が取れない
+# 対策
+- 都度トリアージする
+- 自分のやりたいissueを優先する
+...
+ラベル: 
+--- issue-notes/1.md の内容 ---
 
 ```markdown
 
@@ -1855,386 +1844,151 @@ jobs:
 {% endraw %}
 ```
 
-### .github/actions-tmp/issue-notes/20.md
+### .github/actions-tmp/issue-notes/26.md
 ```md
 {% raw %}
-# issue project-summary の development-status 生成時、issue-notes/ 配下のmdにファイル名が書いてあれば、そのファイル内容もpromptに添付、を試す #20
-[issues #20](https://github.com/cat2151/github-actions/issues/20)
-
-# 何が困るの？
-- Geminiに次の一手を生成させるとき、cjsの内容も添付したほうが、生成品質が改善できる可能性がある。
-
-# 案
-## outputのimage
-- promptが言及するfilename、について、そのfileの内容もすべてpromptに含める。
-    - 軸は、projectのfilename一覧である。
-        - 一覧それぞれのfilenameについて、promptで言及されているものをfile内容埋め込み、とする。
-- 方向性
-    - シンプルで明確なルール、曖昧さのないルールで、メンテを楽にすることを優先する
-    - 余分なファイルが出てしまうが割り切ってOKとし、欠落リスクを減らせることを優先する
-- 備考
-    - 曖昧でメンテが必要な「documentからのfilename抽出」をやめ、
-        - かわりに、逆に、「今のprojectにあるfileすべてのうち、promptで言及されているもの」を軸とする
-## 実現方法の案
-- project全体について、filenameと、filepath配列（複数ありうる）、のmapを取得する。そういう関数Aをまず実装する。
-    - filepathは、agentが扱えるよう、github上のworkの絶対pathではなく、projectRootからの相対パス表記とする。
-- そして、そのfilenameにmatchするfilepath配列について、filepathとファイル内容を記したmarkdown文字列を返却、という関数Bを実装する。
-- さらに、Geminiにわたすpromptについて、前述の関数Aのfilenameそれぞれについて、prompt内を検索し、filenameが存在する場合は、そのfilenameについて、関数Bを用いてmarkdown文字列を取得する。そうして得られたmarkdown文字列群を返却する、という関数Cを実装する。
-- さらに、promptの末尾に書いてあるプレースホルダー「`${file_contents}`」を、関数Cの結果で置き換える、という関数Dを実装する。
-- 実際には、Geminiにわたすpromptのプレースホルダー展開は、2回にわたる必要がある。1回目でissues-note内容をpromptに埋め込む。2回目でそのpromptに対して関数Dを適用する。
-## 備忘
-- 上記は、agentにplanさせてレビューし、context不足と感じたら上記をメンテ、というサイクルで書いた。
+# issue userによるcommitがなくなって24時間超経過しているのに、毎日ムダにproject summaryとcallgraphの自動生成が行われてしまっている #26
+[issues #26](https://github.com/cat2151/github-actions/issues/26)
 
 # どうする？
-- 上記をagentに投げる。documentやtestについてのplanもしてくるかもしれないがそこは時間の都合で省略して実施させるつもり。
-- 投げた、実装させた、レビューして人力リファクタリングした
-- testする
+- logを確認する。24時間チェックがバグっている想定。
+- もしlogから判別できない場合は、logを改善する。
 
-# 結果
-- バグ
-    - この20.mdにあるプレースホルダーが置換されてしまっている
-    - issue-notesで言及されていないfileまで添付されてしまっている
-- 分析
-    - この20.mdにあるプレースホルダーが置換されてしまっている
-        - 原因
-            - 20.mdにあるプレースホルダーまで置換対象としてしまっていたため。
-            - prompt全体のプレースホルダーを置換対象としてしまっていたため。
-            - issue-notesを埋め込んだあとでの、プレースホルダー処理だったので、
-                - 20.md が置換対象となってしまったため。
-        - 対策案
-            - プレースホルダーはすべて、「行頭と行末で囲まれている」ときだけ置換対象とする。
-                - つまり文中やcode中のプレースホルダーは置換対象外とする。
-            - さらに、2つ以上プレースホルダーが出たら想定外なので早期エラー終了させ、検知させる。
-    - issue-notesで言及されていないfileまで添付されてしまっている
-        - 原因
-            - promptに、既にprojectの全file listが書き込まれたあとなので、
-                - issue-noteで言及されていなくても、
-                - promptの全file listを対象に検索してしまっている
-        - 対策案の候補
-            - プレースホルダー置換の順番を変更し、全file listは最後に置換する
-            - file添付の対象を変更し、promptでなく、issue-notesとする
-                - これが範囲が絞られているので安全である、と考える
-        - 備忘
-            - 全fileの対象は、リモートリポジトリ側のfileなので、secretsの心配はないし、実際に検索して確認済み
+# log確認結果
+- botによるcommitなのに、user commitとして誤判別されている
+```
+Checking for user commits in the last 24 hours...
+User commits found: true
+Recent user commits:
+7654bf7 Update callgraph.html [auto]
+abd2f2d Update project summaries (overview & development status)
+```
+
+# ざっくり調査結果
+- #27 が判明した
 
 # どうする？
-- agent半分、人力が半分（agentがハルシネーションでソース破壊したので、関数切り分けしたり、リファクタリングしたり）。
-- で実装した。
-- testする
+- [x] #27 を修正する。これで自動的に #26 も修正される想定。
+    - 当該処理を修正する。
+    - もしデータ不足なら、より詳細なlog生成を実装する。
+- 別件として、このチェックはむしろworkflow ymlの先頭で行うのが適切と考える。なぜなら、以降のムダな処理をカットできるのでエコ。
+    - [x] #28 を起票したので、そちらで実施する。
+
+# close条件は？
+- 前提
+    - [x] 先行タスクである #27 と #28 が完了済みであること
+- 誤爆がなくなること。
+    - つまり、userによるcommitがなくなって24時間超経過後の日次バッチにて、
+        - ムダなdevelopment status生成、等がないこと
+        - jobのlogに「commitがないので処理しません」的なmessageが出ること
+- どうする？
+    - 日次バッチを本番を流して本番testする
 
 # 結果
-- test green
+- github-actions logより：
+    - 直近24hのcommitはbotによる1件のみであった
+    - よって後続jobはskipとなった
+    - ことを確認した
+- close条件を満たした、と判断する
+```
+Run node .github_automation/check_recent_human_commit/scripts/check-recent-human-commit.cjs
+BOT: Commit 5897f0c6df6bc2489f9ce3579b4f351754ee0551 | Author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com> | Message: Update project summaries (overview & development status) [auto]
+has_recent_human_commit=false
+```
 
 # closeとする
 
 {% endraw %}
 ```
 
-### issue-notes/20.md
+### issue-notes/26.md
 ```md
 {% raw %}
-# issue localでドッグフーディングする #20
-[issues #20](https://github.com/cat2151/fighting-game-button-challenge/issues/20)
+# issue localでphase2 move練習モード の動作確認をする #26
+[issues #26](https://github.com/cat2151/fighting-game-button-challenge/issues/26)
 
 
 
 {% endraw %}
 ```
 
-### .github/actions-tmp/issue-notes/21.md
+### .github/actions-tmp/issue-notes/3.md
 ```md
 {% raw %}
-# issue project-summary の development-status 生成時、project-overviewが生成済みのproject-overview.mdもpromptに添付、を試す #21
-[issues #21](https://github.com/cat2151/github-actions/issues/21)
+# issue GitHub Actions「issue note生成」を共通ワークフロー化する #3
+[issues #3](https://github.com/cat2151/github-actions/issues/3)
 
-# 何が困るの？
-- project-overview.mdがpromptに添付されていたほうが、Geminiの生成品質が改善できる可能性がある。
-    - メリットは、ファイル一覧、関数一覧、をGeminiにわたせること
+- 前提
+  - userは、translateのworkflowを共通ワークフロー化し、動くようにしたので、共通ワークフロー化の知識がある
+  - よって、今回は、promptでplanさせ、そのplanをuserがレビューし、planの改善を指示できるので、ハルシネーションのリスクを下げることができる
 
-# 検討事項
-- 課題、その一覧に付記されている「ファイルや関数の要約」は、Geminiが「ファイル名や関数名を元に生成しただけ」で、「ファイル内容や関数内容を参照せずに生成した」可能性が高い
-    - 対策、project-overview.mdに依存しない。
-        - 方法、新規関数をagentに実装させる
-            - 新規関数で、ファイル一覧と関数一覧を生成する
-        - 根拠、そのほうが、シンプルに目的を達成できる可能性が高そう。
-        - 根拠、project-overview.mdだと、不具合として.github 配下のymlがlistに含まれておらず、ymlに関するissue、に関する生成、をするとき不具合の可能性がありそう。そういった、別機能の不具合に影響されがち。
-- 課題、早期に実施したほうが毎日好影響が出る可能性がある
-    - 対策、上記検討事項の対処は後回しにして、先に実装してみる
-    - agentに投げる
-- 課題、ProjectSummaryCoordinator をみたところ、並列処理されている
-    - なので、project-overview.mdを参照したいときに、まだ生成されていない、という可能性が高い
-    - 対策、前述の、新規関数で、ファイル一覧と関数一覧を生成させる
-
-# agentに投げるための整理
-- 編集対象ファイル
-    - prompt
-        - .github_automation/project_summary/prompts/development-status-prompt.md
-        - 編集内容
-            - projectのファイル一覧を埋め込む用の、プレースホルダーを追加する
-    - source
-        - .github_automation/project_summary/scripts/development/DevelopmentStatusGenerator.cjs
-        - 編集内容
-            - projectのファイル一覧を生成する関数、を実装し、
-            - それを前述のプレースホルダーに埋め込む
-
-# agentに投げて実装させた
-
-# test結果
-- 以下が不要
-    - .git/
-    - node_modules/
-
-# どうする？
-- agentに上記を変更させた
-- testする
-
-# 結果
-- test greenとなった
-
-# まとめ
-- issueのtitleからは仕様変更した。
-    - projectのfile一覧をpromptに含める、とした。
-    - そのほうがpromptとして、よい生成結果が期待できる、と判断した。
-- test greenとなった
-
-# closeとする
-
-{% endraw %}
-```
-
-### issue-notes/21.md
-```md
-{% raw %}
-# issue 「phase1：ボタン練習モード」なのに、「phase2 : move練習モード」用のmove行が表示されてしまっている #21
-[issues #21](https://github.com/cat2151/fighting-game-button-challenge/issues/21)
-
-
-
-{% endraw %}
-```
-
-### .github/actions-tmp/issue-notes/24.md
-```md
-{% raw %}
-# issue Geminiが503で落ちたのでretryを実装する #24
-[issues #24](https://github.com/cat2151/github-actions/issues/24)
-
-# 何が困るの？
-- 朝起きて、development statusがgenerateされてないのは困る
-    - それをタスク実施のヒントにしているので
-    - 毎朝generatedな状態を維持したい
-
-# 方法
-- retryを実装する
-    - 現在は `this.model.generateContent(developmentPrompt);`
-    - 実装後は `this.generateContent(developmentPrompt);`
-    - BaseGenerator 側に、
-        - generateContent関数を実装する
-            - そこで、
-                - `this.model.generateContent(developmentPrompt);` する
-                - 503のとき、
-                    - retryあり
-                    - Exponential Backoff
-
-# 結果
-- 直近の実行結果をlog確認した
-    - 本番で503が発生しなかったことをlog確認した
-- 本番の503 testは、今回発生しなかったので、できず
-- ここ1週間で2回発生しているので、次の1週間で1回発生する想定
-- ソース机上確認した
-
-# どうする？
-- このissueはcloseしたほうがわかりやすい、と判断する
-- 1週間503を毎日チェック、は省略とする
-- もし今後503が発生したら別issueとする
-- 2日チェックして503なし
-
-# closeとする
-
-{% endraw %}
-```
-
-### issue-notes/24.md
-```md
-{% raw %}
-# issue phase2のとき、phase1用ボタン操作ガイドが先頭に表示されてしまっており、それを見たほうが楽なので、phase2ムーブの練習にならない #24
-[issues #24](https://github.com/cat2151/fighting-game-button-challenge/issues/24)
-
-
-
-{% endraw %}
-```
-
-### .github/actions-tmp/issue-notes/25.md
-```md
-{% raw %}
-# issue project summaryを他projectからcallしたところ、issue-notes参照ディレクトリ誤りが発覚した #25
-[issues #25](https://github.com/cat2151/github-actions/issues/25)
-
-# 事象
-- `Issueノートが存在しません: /home/runner/work/tonejs-mml-to-json/tonejs-mml-to-json/.github/actions-tmp/issue-notes/6.md`
-
-# どうする？
-- 当該処理のディレクトリ部分を確認する
-- 日次バッチでGeminiに確認させてみる
-- 結果
-    - Geminiに確認させてpromptを生成させ、agentに投げた
-    - 結果、projectRootの扱いの誤り、と判明
-        - 共通workflow側のdirを引数でわたしてしまっていた
-        - target repository側のdirを引数でわたすべき
-- 修正したつもり
-- 次の日次バッチで動作確認させるつもり
-
-# 結果
-- test green
-
-# closeとする
-
-{% endraw %}
-```
-
-### .github/actions-tmp/issue-notes/4.md
-```md
-{% raw %}
-# issue GitHub Actions「project概要生成」を共通ワークフロー化する #4
-[issues #4](https://github.com/cat2151/github-actions/issues/4)
-
-# prompt
+- prompt
 ```
 あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
-このymlファイルを、以下の2つのファイルに分割してください。
-1. 共通ワークフロー       cat2151/github-actions/.github/workflows/daily-project-summary.yml
-2. 呼び出し元ワークフロー cat2151/github-actions/.github/workflows/call-daily-project-summary.yml
+このymlはまだ共通ワークフロー化されず、
+呼び出し元からコピーされたままの状態です。
+このymlファイル名のまま、
+中身を共通ワークフロー化してください。
+呼び出し元ymlは別途書きますので気にしないでください。
 まずplanしてください
 ```
 
-# 結果、あちこちハルシネーションのあるymlが生成された
-- agentの挙動があからさまにハルシネーション
-    - インデントが修正できない、「失敗した」という
-    - 構文誤りを認識できない
-- 人力で修正した
-
-# このagentによるセルフレビューが信頼できないため、別のLLMによるセカンドオピニオンを試す
+- plan 生成結果
 ```
-あなたはGitHub Actionsと共通ワークフローのスペシャリストです。
-以下の2つのファイルをレビューしてください。最優先で、エラーが発生するかどうかだけレビューてください。エラー以外の改善事項のチェックをするかわりに、エラー発生有無チェックに最大限注力してください。
+共通ワークフロー化のためのplanは以下の通りです。
 
---- 呼び出し元
-
-name: Call Daily Project Summary
-
-on:
-  schedule:
-    # 日本時間 07:00 (UTC 22:00 前日)
-    - cron: '0 22 * * *'
-  workflow_dispatch:
-
-jobs:
-  call-daily-project-summary:
-    uses: cat2151/github-actions/.github/workflows/daily-project-summary.yml
-    secrets:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-
---- 共通ワークフロー
-name: Daily Project Summary
-on:
-  workflow_call:
-
-jobs:
-  generate-summary:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      issues: read
-      pull-requests: read
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0  # 履歴を取得するため
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: |
-          # 一時的なディレクトリで依存関係をインストール
-          mkdir -p /tmp/summary-deps
-          cd /tmp/summary-deps
-          npm init -y
-          npm install @google/generative-ai @octokit/rest
-          # generated-docsディレクトリを作成
-          mkdir -p $GITHUB_WORKSPACE/generated-docs
-
-      - name: Generate project summary
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          NODE_PATH: /tmp/summary-deps/node_modules
-        run: |
-          node .github/scripts/generate-project-summary.cjs
-
-      - name: Check for generated summaries
-        id: check_summaries
-        run: |
-          if [ -f "generated-docs/project-overview.md" ] && [ -f "generated-docs/development-status.md" ]; then
-            echo "summaries_generated=true" >> $GITHUB_OUTPUT
-          else
-            echo "summaries_generated=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Commit and push summaries
-        if: steps.check_summaries.outputs.summaries_generated == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          # package.jsonの変更のみリセット（generated-docsは保持）
-          git restore package.json 2>/dev/null || true
-          # サマリーファイルのみを追加
-          git add generated-docs/project-overview.md
-          git add generated-docs/development-status.md
-          git commit -m "Update project summaries (overview & development status)"
-          git push
-
-      - name: Summary generation result
-        run: |
-          if [ "${{ steps.check_summaries.outputs.summaries_generated }}" == "true" ]; then
-            echo "✅ Project summaries updated successfully"
-            echo "📊 Generated: project-overview.md & development-status.md"
-          else
-            echo "ℹ️ No summaries generated (likely no user commits in the last 24 hours)"
-          fi
+1. 目的
+現在の issue-note.yml を「共通ワークフロー」として再設計し、他リポジトリや他ワークフローから workflow_call で呼び出せるようにする。
+2. 主な変更点
+on: トリガーを workflow_call に変更（直接イベントで起動しない）。
+必要な入力（inputs）やシークレット（secrets）を workflow_call セクションで定義。
+github.event.issue などのイベント依存部分を、inputs経由で受け取る形に修正。
+既存の処理（issueノート生成、コミット、issue body更新）はそのまま活かすが、パラメータ化する。
+3. 具体的な修正内容
+on: issues: → on: workflow_call: に変更。
+inputs で必要な値（例: issue_title, issue_number, issue_body, issue_url など）を受け取る。
+スクリプト内の ${{ github.event.issue.xxx }} を ${{ inputs.xxx }} に置換。
+github-script ステップも同様にinputsを参照。
+必要に応じて secrets も workflow_call で受け取れるようにする。
+4. ファイル名・配置
+ファイル名はそのまま issue-note.yml。
+配置場所は workflows でOK（共通ワークフローとしてもこの場所で良い）。
+5. 呼び出し元への影響
+呼び出し元ワークフローで uses: <repo>/.github/workflows/issue-note.yml@main のように参照し、inputsを渡す形になる。
+このplanで進めます。次に、実際の共通ワークフロー化のためのyml修正案を作成しますか？
 ```
 
-# 上記promptで、2つのLLMにレビューさせ、合格した
+- userがplanレビューし、OKを出した
+- agentに生成結果ymlをレビューさせた、OKとなった
+  - userはこのレビューは認知負荷が高いのでskipとする（単純な細かい間違い探し作業になるので、それはagentに任せた）
+-  エラー。呼び出し元ymlのエラーがあり修正。共通ワークフローのエラー指摘があり、共通ワークフロー側の修正が必要となった
+```
+原因の分析：
 
-# 細部を、先行する2つのymlを参照に手直しした
+呼び出し元（tonejs-mml-to-jsonのissue-note.yml）は、reusable workflow（cat2151/github-actions/.github/workflows/issue-note.yml@main）をusesで呼び出し、inputsをwithで渡しています。
+共通ワークフロー（reusable workflow）は inputs を workflow_call で受け取り、各ステップで ${{ inputs.xxx }} で参照しています。
+しかし、エラーが発生したのは actions/github-script@v7 の script 内です。
+エラーの本質的な原因：
 
-# ローカルtestをしてからcommitできるとよい。方法を検討する
-- ローカルtestのメリット
-    - 素早く修正のサイクルをまわせる
-    - ムダにgit historyを汚さない
-        - これまでの事例：「実装したつもり」「エラー。修正したつもり」「エラー。修正したつもり」...（以降エラー多数）
-- 方法
-    - ※検討、WSL + act を環境構築済みである。test可能であると判断する
-    - 呼び出し元のURLをコメントアウトし、相対パス記述にする
-    - ※備考、テスト成功すると結果がcommit pushされる。それでよしとする
-- 結果
-    - OK
-    - secretsを簡略化できるか試した、できなかった、現状のsecrets記述が今わかっている範囲でベストと判断する
-    - OK
+actions/github-script の script: で ${{ inputs.issue_number }} のような式を直接 JavaScript テンプレートリテラル内で使っていますが、これはサポートされていません。
+script: の中は JavaScript であり、YAMLの ${{ ... }} は展開されません（または意図通りに展開されません）。
+そのため、inputs 変数は script 内の JavaScript で未定義となり、ReferenceError になります。
+正しい書き方：
 
-# test green
+actions/github-script の script: でワークフローの inputs を使いたい場合は、with: で input を environment 変数や script の引数として渡し、JavaScript で process.env から取得するか、github-script の input 機能を使う必要があります。
+例（修正版）：
 
-# commit用に、yml 呼び出し元 uses をlocal用から本番用に書き換える
+このように、inputs の値を env で渡し、script 内では process.env で参照してください。
 
-# closeとする
+まとめ：
+
+actions/github-script の script 内で ${{ inputs.xxx }} を直接使うと ReferenceError になる
+env: で値を渡し、process.env で参照するのが正しい
+修正が必要です。修正版のワークフローが必要な場合はお知らせください。
+```
+
+- test green
+- closeとする
 
 {% endraw %}
 ```
@@ -2580,125 +2334,6 @@ def load_all_configs(args):
 {% endraw %}
 ```
 
-### src/gui.py
-```py
-{% raw %}
-from gui_utils import do_backmost, do_topmost, init_tkinter
-from missions import PHASE_1_BUTTONS, PHASE_2_MOVES
-
-def gui_init_tkinter(args):
-    gui_label_count = 4
-    return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count)
-
-def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, mission, wait_for_all_release, alias_conf, should_skip, none_word, args, move_name=""):
-    if should_skip and none_word is not None:
-        lever_plus_pressed = none_word
-    if alias_conf is not None:
-        mission = alias(mission, alias_conf)
-        lever_plus_pressed = alias(lever_plus_pressed, alias_conf)
-    text_lever_plus_pressed = f"{lever_plus_pressed}"
-    if wait_for_all_release is not None and wait_for_all_release:
-        text_lever_plus_pressed =  f"SUCCESS! {text_lever_plus_pressed} !SUCCESS"
-
-    display_format = args.display_format
-    
-    # Handle move name display based on challenge phase
-    challenge_phase = state.get('challenge_phase', PHASE_1_BUTTONS)
-    displayed_move_name = ""
-    
-    if challenge_phase == PHASE_1_BUTTONS:
-        # Phase 1: Don't display moves (仕様: ただしmovesは表示しない)
-        displayed_move_name = ""
-    elif challenge_phase == PHASE_2_MOVES:
-        # Phase 2: Display moves with direction indicator
-        current_direction = state.get('current_direction', 'right')
-        direction_indicator = "（右向き）" if current_direction == "right" else "（左向き）"
-        displayed_move_name = f"{direction_indicator}{move_name}" if move_name else ""
-
-    format_dict = {
-        'mission': mission,
-        'move_name': displayed_move_name,
-        'lever_plus_pressed': text_lever_plus_pressed,
-        'score': state['score'],
-        'fail_count': state['fail_count'],
-        'current_mission_frame_count': state.get('current_mission_frame_count', ''),
-        'last_mission_frame_count': state.get('last_mission_frame_count', ''),
-        'prev_success_min_frame_count': state.get('prev_success_min_frame_count', ''),
-        'prev_success_hist_center': state.get('prev_success_hist_center', ''),
-    }
-
-    texts = []
-    for i in range(1, 5):
-        key = f'label{i}'
-        fmt = display_format.get(key, '') if isinstance(display_format, dict) else ''
-        texts.append(fmt.format(**format_dict))
-
-    # 背景色フラッシュ処理
-    bg_color = None
-    if state.get('bg_flash_frames', 0) > 0:
-        bg_color = state['bg_flash_color']
-        state['bg_flash_frames'] -= 1
-    else:
-        state['bg_flash_color'] = None
-        state['bg_flash_frames'] = 0
-
-    if texts != state['old_texts']:
-        has_input = lever_plus_pressed != state["old_lever_plus_pressed"]
-        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input, state, bg_color)
-        state['old_texts'] = texts
-    else:
-        # text変化なしで、背景色だけ更新する用
-        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, False, state, bg_color)
-    state["old_lever_plus_pressed"] = lever_plus_pressed
-    return state['old_texts']
-
-def show_input_frame_etc(root, label, text, timer, has_input, state, bg_color):
-    if has_input:
-        do_topmost(root)
-        state['is_backmost'] = False
-
-    if not state['is_backmost']:
-        def set_label_text(label, text):
-            label.config(text=text)
-
-        if isinstance(label, list) and isinstance(text, list):
-            for l, t in zip(label, text):
-                set_label_text(l, t)
-        else:
-            set_label_text(label, text)
-
-        if bg_color:
-            root.config(bg=bg_color)
-        else:
-            root.config(bg='SystemButtonFace')
-
-    # 入力から指定秒数後にbackmost化する用
-    if has_input:
-        if timer["id"] is not None:
-            root.after_cancel(timer["id"])
-        def to_backmost():
-            do_backmost(root)
-            state['is_backmost'] = True
-        timer["id"] = root.after(1000, to_backmost)
-
-def alias(text, alias_conf):
-    if text is None:
-        return text
-    if not alias_conf or not alias_conf.get('use_alias', False):
-        return text
-    rules = alias_conf.get('alias', [])
-    rules_sorted_by_len = sorted(rules, key=lambda r: len(r.get('from', '')), reverse=True)
-    result = text
-    for rule in rules_sorted_by_len:
-        frm = rule.get('from')
-        to = rule.get('to')
-        if frm and to:
-            result = result.replace(frm, to)
-    return result
-
-{% endraw %}
-```
-
 ### tests/test_is_no_count_case.py
 ```py
 {% raw %}
@@ -2760,30 +2395,33 @@ def test_is_no_count_case(mission_success, input_name, no_count_names_param, exp
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
+007f9b6 Add issue note for #26 [auto]
+974b613 first
+41331a6 Merge pull request #25 from cat2151/copilot/remove-phase1-guide-display
+f279604 Address PR review comments: refactor test helper, remove redundant code, add validation
+93c01fa Update project summaries (overview & development status) [auto]
+4c9ef9a Refactor tests to use helper function and reduce duplication
+0906f22 Fix trailing whitespace in gui.py
+2b09dbc Hide phase1 button operation guide in phase2
+68ccf6c Initial plan
 ab3d5f1 Add issue note for #24 [auto]
-e67c73f 検証用に、デフォルトをスト6モダンリリー用の設定にした
-c50c935 Merge pull request #23 from cat2151/copilot/implement-phase2-move-transition
-9baa597 Address PR review feedback: simplify logic and remove unused code
-6536706 Address code review feedback - improve documentation and test style
-1359ed9 Add integration tests for phase transitions
-0ae340a Implement phase transition logic from Phase 1 to Phase 2
-42e47d9 Initial plan
 
 ### 変更されたファイル:
-README.md
+.github/copilot-instructions.md
 config/button_challenge.toml
 config/moves_sf6lily.toml
 generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
-issue-notes/21.md
-issue-notes/22.md
 issue-notes/24.md
+issue-notes/26.md
+src/gui.py
 src/missions.py
 tests/test_challenge_phases.py
+tests/test_gui_phase2_mission_display.py
 tests/test_phase_transition_integration.py
 
 
 ---
-Generated at: 2026-02-01 07:04:03 JST
+Generated at: 2026-02-02 07:04:08 JST
