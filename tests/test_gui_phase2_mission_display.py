@@ -1,6 +1,5 @@
 import os
 import sys
-import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from missions import PHASE_1_BUTTONS, PHASE_2_MOVES
@@ -8,21 +7,29 @@ from missions import PHASE_1_BUTTONS, PHASE_2_MOVES
 
 def compute_display_values(challenge_phase, mission, move_name, current_direction):
     """
-    Helper function that simulates the display logic from gui.py.
-    Returns (displayed_mission, displayed_move_name).
+    Helper function that defines the expected mission and move text
+    for a given phase and direction.
+
+    It returns a tuple (displayed_mission, displayed_move_name).
     """
-    displayed_mission = mission
-    displayed_move_name = ""
-
+    # Phase 1: show the mission text only.
     if challenge_phase == PHASE_1_BUTTONS:
-        displayed_move_name = ""
-        displayed_mission = mission
-    elif challenge_phase == PHASE_2_MOVES:
-        direction_indicator = "（右向き）" if current_direction == "right" else "（左向き）"
-        displayed_move_name = f"{direction_indicator}{move_name}" if move_name else ""
-        displayed_mission = ""
+        return mission, ""
 
-    return displayed_mission, displayed_move_name
+    # Phase 2: hide the mission text and, if present, show the move
+    # name prefixed with a direction indicator.
+    if challenge_phase == PHASE_2_MOVES:
+        if not move_name:
+            return "", ""
+        indicators = {
+            "right": "（右向き）",
+            "left": "（左向き）",
+        }
+        direction_indicator = indicators.get(current_direction, "")
+        return "", f"{direction_indicator}{move_name}"
+
+    # Default: no mission or move text.
+    return "", ""
 
 
 def test_mission_display_logic_phase1():

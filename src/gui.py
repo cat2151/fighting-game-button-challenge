@@ -19,8 +19,6 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
 
     # Handle move name display based on challenge phase
     challenge_phase = state.get('challenge_phase', PHASE_1_BUTTONS)
-    displayed_move_name = ""
-    displayed_mission = mission
 
     if challenge_phase == PHASE_1_BUTTONS:
         # Phase 1: Don't display moves (仕様: ただしmovesは表示しない)
@@ -32,6 +30,12 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         direction_indicator = "（右向き）" if current_direction == "right" else "（左向き）"
         displayed_move_name = f"{direction_indicator}{move_name}" if move_name else ""
         displayed_mission = ""  # Hide mission (button operation guide) in phase2
+    else:
+        # Unexpected phase value: fail fast to aid debugging, mirroring missions.initialize_mission_sets
+        raise ValueError(
+            f"Invalid challenge_phase: {challenge_phase!r}. "
+            f"Expected {PHASE_1_BUTTONS!r} or {PHASE_2_MOVES!r}."
+        )
 
     format_dict = {
         'mission': displayed_mission,
