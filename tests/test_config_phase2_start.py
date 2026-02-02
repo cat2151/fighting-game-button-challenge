@@ -1,7 +1,5 @@
 import os
 import sys
-import pytest
-import tempfile
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from missions import initialize_mission_sets, PHASE_1_BUTTONS, PHASE_2_MOVES
