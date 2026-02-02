@@ -15,20 +15,25 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
     if wait_for_all_release is not None and wait_for_all_release:
         text_lever_plus_pressed =  f"SUCCESS! {text_lever_plus_pressed} !SUCCESS"
 
-    display_format = args.display_format
-
     # Handle move name display based on challenge phase
     challenge_phase = state.get('challenge_phase', PHASE_1_BUTTONS)
 
+    # Initialize direction_arrow for use in format_dict (used in phase2 only)
+    direction_arrow = ""
+
     if challenge_phase == PHASE_1_BUTTONS:
+        # Phase 1: Use phase1 display format, fallback to display_format for backward compatibility
+        display_format = getattr(args, 'display_format_phase1', None) or getattr(args, 'display_format', {})
         # Phase 1: Don't display moves (仕様: ただしmovesは表示しない)
         displayed_move_name = ""
         displayed_mission = mission
     elif challenge_phase == PHASE_2_MOVES:
-        # Phase 2: Display moves with direction indicator, but hide mission (button guide)
+        # Phase 2: Use phase2 display format, fallback to display_format for backward compatibility
+        display_format = getattr(args, 'display_format_phase2', None) or getattr(args, 'display_format', {})
+        # Phase 2: Display only direction arrow, hide mission and move name
         current_direction = state.get('current_direction', 'right')
-        direction_indicator = "（右向き）" if current_direction == "right" else "（左向き）"
-        displayed_move_name = f"{direction_indicator}{move_name}" if move_name else ""
+        direction_arrow = "→" if current_direction == "right" else "←"
+        displayed_move_name = ""
         displayed_mission = ""  # Hide mission (button operation guide) in phase2
     else:
         # Unexpected phase value: fail fast to aid debugging, mirroring missions.initialize_mission_sets
@@ -40,6 +45,7 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
     format_dict = {
         'mission': displayed_mission,
         'move_name': displayed_move_name,
+        'direction_arrow': direction_arrow,
         'lever_plus_pressed': text_lever_plus_pressed,
         'score': state['score'],
         'fail_count': state['fail_count'],
