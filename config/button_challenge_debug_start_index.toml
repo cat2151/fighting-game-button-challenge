@@ -5,17 +5,20 @@ mission_toml      = "config/mission.toml"
 #moves_toml        = "config/moves.toml"
 moves_toml        = "config/moves_sf6lily.toml"
 
-challenge_phase = "1_buttons"  # "1_buttons" or "2_moves" - Phase to start from (for debugging)
+# DEBUG CONFIGURATION: Start from specific mission index
+# This configuration file is for debugging purposes.
+# With use_random_mission = false and start_mission_index set, you can start
+# from a specific mission (e.g., 2nd mission, 5th mission, etc.)
+challenge_phase = "1_buttons"  # "1_buttons" or "2_moves"
                                # "1_buttons": ボタン練習フェーズ (amplifies missions with left/right variants)
                                # "2_moves": 技練習フェーズ (missions with directional awareness, toggles left/right each cycle)
 
-use_random_mission = true      # true: random mission selection (default), false: deterministic selection (for debugging)
+use_random_mission = false     # DEBUG: Disable random mission selection for reproducible testing
 
-start_mission_index = 0        # Starting mission index (0-based). 0: first mission, 1: second mission, etc. (for debugging)
-                               # Only used when use_random_mission = false
+start_mission_index = 5        # DEBUG: Start from 6th mission (0-based index, so 5 = 6th mission)
                                # If index is out of range, wraps around using modulo
 
-title = "ボタンチャレンジ 終了はterminalでCTRL+C"
+title = "ボタンチャレンジ [DEBUG: Start Index=5] 終了はterminalでCTRL+C"
 geometry = "700x150+256+256"
 font_name = "Arial"
 font_size = 20
