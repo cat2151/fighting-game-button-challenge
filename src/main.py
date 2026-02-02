@@ -12,9 +12,10 @@ def main():
     # Get challenge_phase from config, default to PHASE_1_BUTTONS if not set
     challenge_phase = getattr(args, 'challenge_phase', PHASE_1_BUTTONS)
     current_direction = "right"  # Default direction for phase 2
+    use_random_mission = getattr(args, 'use_random_mission', True)  # Default to random if not set
     
     (missions, missions_set, success_missions, mission_index, current_direction, original_missions) = initialize_mission_sets(
-        missions, args.left_right, args.left_right_temp, challenge_phase, current_direction
+        missions, args.left_right, args.left_right_temp, challenge_phase, current_direction, use_random_mission
     )
     
     (timer_id_dict, clock, check_interval_msec, last_check_msec) = init_timer_for_check_playing_game(args)

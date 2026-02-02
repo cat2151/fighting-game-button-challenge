@@ -5,13 +5,17 @@ mission_toml      = "config/mission.toml"
 #moves_toml        = "config/moves.toml"
 moves_toml        = "config/moves_sf6lily.toml"
 
-challenge_phase = "1_buttons"  # "1_buttons" or "2_moves" - Phase to start from (for debugging)
+# DEBUG CONFIGURATION: Deterministic mission order
+# This configuration file is for debugging purposes.
+# With use_random_mission = false, missions will be selected deterministically
+# (in sorted alphabetical order) instead of randomly, making testing reproducible.
+challenge_phase = "1_buttons"  # "1_buttons" or "2_moves"
                                # "1_buttons": ボタン練習フェーズ (amplifies missions with left/right variants)
                                # "2_moves": 技練習フェーズ (missions with directional awareness, toggles left/right each cycle)
 
-use_random_mission = true      # true: random mission selection (default), false: deterministic selection (for debugging)
+use_random_mission = false     # DEBUG: Disable random mission selection for reproducible testing
 
-title = "ボタンチャレンジ 終了はterminalでCTRL+C"
+title = "ボタンチャレンジ [DEBUG: Deterministic] 終了はterminalでCTRL+C"
 geometry = "700x150+256+256"
 font_name = "Arial"
 font_size = 20
