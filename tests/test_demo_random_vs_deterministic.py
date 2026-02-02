@@ -66,8 +66,9 @@ def test_random_mode_demo():
     print(f"\nUnique missions selected: {set(results)}")
     print(f"Number of unique selections: {len(set(results))}")
     
-    # With random mode, we expect to see variety (though not guaranteed)
-    assert len(set(results)) >= 1, "Should select at least one mission"
+    # With random mode, we expect to see variety in 10 selections from 4 options
+    # While not guaranteed, the probability of selecting only 1 mission in 10 tries is (1/4)^10 ≈ 0.0001%
+    assert len(set(results)) > 1, "Random mode should select multiple different missions"
 
 
 if __name__ == "__main__":

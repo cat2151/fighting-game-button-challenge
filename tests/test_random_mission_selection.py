@@ -17,15 +17,15 @@ def test_get_new_mission_index_random():
     missions_set = set(m["input"] for m in missions)
     
     # Run multiple times to increase likelihood of getting different results
+    # Using 100 iterations to make the probability of false negatives negligible
     results = set()
-    for _ in range(20):
+    for _ in range(100):
         mission_index = get_new_mission_index(missions, missions_set, use_random=True)
         assert 0 <= mission_index < len(missions)
         results.add(missions[mission_index]["input"])
     
-    # With random=True, we should get different missions (high probability with 20 iterations)
-    # Note: This test could theoretically fail if random picks the same mission 20 times,
-    # but the probability is extremely low
+    # With random=True, we should get different missions (extremely high probability with 100 iterations)
+    # Probability of picking only one mission in 100 tries from 4 options = (1/4)^100 ≈ 0
     assert len(results) > 1
 
 
@@ -63,8 +63,14 @@ def test_get_new_mission_index_deterministic_picks_sorted_first():
     
     mission_index = get_new_mission_index(missions, missions_set, use_random=False)
     
-    # Should pick "A" (first alphabetically)
-    assert missions[mission_index]["input"] == "A"
+    # Should pick "A" (first alphabetically) consistently
+    selected_mission = missions[mission_index]["input"]
+    assert selected_mission == "A"
+    
+    # Verify it's always "A" by running multiple times
+    for _ in range(5):
+        mission_index = get_new_mission_index(missions, missions_set, use_random=False)
+        assert missions[mission_index]["input"] == "A"
 
 
 def test_initialize_mission_sets_with_random():
