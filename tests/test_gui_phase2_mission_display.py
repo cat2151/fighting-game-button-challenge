@@ -96,7 +96,7 @@ def test_mission_display_logic_phase2_with_move_name():
     """Test that direction arrow is shown in phase 2 even when move_name is present"""
     challenge_phase = PHASE_2_MOVES
     mission = "右 + 強"
-    move_name = "Drive Impact"  # Non-empty move name
+    move_name = "Drive Impact"  # Non-empty move name to verify it doesn't affect direction_arrow
     current_direction = "left"
 
     displayed_mission, direction_arrow = compute_display_values(
@@ -106,4 +106,5 @@ def test_mission_display_logic_phase2_with_move_name():
     # In phase 2, mission should be hidden
     assert displayed_mission == "", f"Expected mission to be hidden (empty) in phase 2"
     # In phase 2, direction arrow should be displayed independently of move_name
+    # (move_name is passed but should not affect the arrow output)
     assert direction_arrow == "←", f"Expected '←' for left direction, got: {direction_arrow}"
