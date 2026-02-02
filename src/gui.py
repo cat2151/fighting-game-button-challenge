@@ -18,13 +18,15 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
     # Handle move name display based on challenge phase
     challenge_phase = state.get('challenge_phase', PHASE_1_BUTTONS)
 
+    # Initialize direction_arrow for use in format_dict (used in phase2 only)
+    direction_arrow = ""
+
     if challenge_phase == PHASE_1_BUTTONS:
         # Phase 1: Use phase1 display format, fallback to display_format for backward compatibility
         display_format = getattr(args, 'display_format_phase1', None) or getattr(args, 'display_format', {})
         # Phase 1: Don't display moves (仕様: ただしmovesは表示しない)
         displayed_move_name = ""
         displayed_mission = mission
-        direction_arrow = ""
     elif challenge_phase == PHASE_2_MOVES:
         # Phase 2: Use phase2 display format, fallback to display_format for backward compatibility
         display_format = getattr(args, 'display_format_phase2', None) or getattr(args, 'display_format', {})
