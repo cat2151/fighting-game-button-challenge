@@ -9,6 +9,8 @@ challenge_phase = "1_buttons"  # "1_buttons" or "2_moves" - Phase to start from 
                                # "1_buttons": ボタン練習フェーズ (amplifies missions with left/right variants)
                                # "2_moves": 技練習フェーズ (missions with directional awareness, toggles left/right each cycle)
 
+use_random_mission = true      # true: random mission selection (default), false: deterministic selection (for debugging)
+
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "700x150+256+256"
 font_name = "Arial"
