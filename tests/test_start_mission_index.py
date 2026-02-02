@@ -127,3 +127,16 @@ def test_get_new_mission_index_with_japanese_characters():
     idx = get_new_mission_index(missions, missions_set, use_random=False, start_index=2)
     sorted_list = sorted(list(missions_set))
     assert missions[idx]["input"] == sorted_list[2], "Should select third mission in sorted order"
+
+def test_get_new_mission_index_with_negative_start_index():
+    """Test that negative start_index wraps around correctly with modulo."""
+    missions = [
+        {"input": "a"},
+        {"input": "b"},
+        {"input": "c"}
+    ]
+    missions_set = {"a", "b", "c"}
+    
+    # Test start_index = -1 (should wrap to index 2: -1 % 3 = 2 in Python)
+    idx = get_new_mission_index(missions, missions_set, use_random=False, start_index=-1)
+    assert missions[idx]["input"] == "c", "Negative index should wrap using modulo (-1 % 3 = 2)"
