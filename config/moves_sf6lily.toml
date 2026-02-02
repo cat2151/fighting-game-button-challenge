@@ -1,57 +1,105 @@
 # 技名とボタン入力の対応表 スト6 モダン リリー用
 # ひとまず方針 : 自分が今練習したい操作を優先して書く
 
-# 課題、これだと左右ランダムの考慮が漏れている。対策、別issueで対策する
-#  例、トマホークとコンドルウィンドの問題出しわけができない
-# 課題、しゃがみ基本技の追加が漏れている。対策、別issueで対策する
-# 課題、しゃがみジャストパリイの追加が漏れている。対策、別issueで対策する
-
 # レバー
     [[moves]]
-    name = "前移動 or 後ろ移動"
+    name = "前進"
     input = "右"
 
     [[moves]]
-    name = "前ジャンプ or 後ろジャンプ"
+    name = "立ちガード"
+    input = "左"
+
+    [[moves]]
+    name = "前ジャンプ"
     input = "右上"
 
     [[moves]]
-    name = "垂直J"
+    name = "バックジャンプ"
+    input = "左上"
+
+    [[moves]]
+    name = "垂直ジャンプ"
     input = "上"
 
     [[moves]]
-    name = "（左向き）しゃがみガード or （右向き）意味なし"
-    input = "右下"
+    name = "しゃがみガード"
+    input = "左下"
 
 # 弱中強
     [[moves]]
-    name = "基本技（弱）"
+    name = "弱"
     input = "弱"
 
     [[moves]]
-    name = "基本技（中）"
+    name = "中"
     input = "中"
 
     [[moves]]
-    name = "基本技（強）"
+    name = "強"
     input = "強"
+
+    [[moves]]
+    name = "しゃがみ弱"
+    input = "下 + 弱"
+
+    [[moves]]
+    name = "しゃがみ中"
+    input = "下 + 中"
+
+    [[moves]]
+    name = "しゃがみ強"
+    input = "下 + 強"
+
+# 特殊技
+    [[moves]]
+    name = "後ろ + 強（ホーンブレイク）"
+    input = "左 + 強"
+
+    [[moves]]
+    name = "前下 + 強（スコールキック）"
+    input = "右下 + 強"
+
+    [[moves]]
+    name = "ボディプレス（グレートスピン ジャンプ2強）"
+    input = "下 + 強"
+
+    [[moves]]
+    name = "ジャンプ 中タゲコン始動（ダブルアロー始動）"
+    input = "中"
+
+    [[moves]]
+    name = "前 + 強タゲコン始動（デザートストーム始動）"
+    input = "右 + 強"
 
 # 投げ
     [[moves]]
-    name = "前投げ or 後ろ投げ"
+    name = "前投げ"
     input = "右 + 弱 + 中"
+
+    [[moves]]
+    name = "後ろ投げ"
+    input = "左 + 弱 + 中"
 
 # 必殺技
     [[moves]]
-    name = "メキシカンタイフーン"
+    name = "タイフーン"
     input = "必"
 
+#    [[moves]]
+#    name = "コンドルダイブ"
+#    input = "必"
+
     [[moves]]
-    name = "トマホークバスター or コンドルウィンド"
+    name = "トマホーク"
     input = "右 + 必"
 
     [[moves]]
-    name = "コンドルスパイア"
+    name = "ウィンド"
+    input = "左 + 必"
+
+    [[moves]]
+    name = "スパイア"
     input = "下 + 必"
 
 # DI
@@ -65,33 +113,49 @@
     input = "DP"
 
     [[moves]]
-    name = "（右向き）ラッシュ準備 or （左向き）立ちジャストパリイ"
+    name = "ラッシュ準備"
     input = "右 + DP"
+
+    [[moves]]
+    name = "立ちジャストパリイ"
+    input = "左 + DP"
+
+    [[moves]]
+    name = "しゃがみジャストパリイ"
+    input = "左下 + DP"
 
 # アシスト
     [[moves]]
-    name = "アシストコンボ（弱）"
+    name = "弱アシコン"
     input = "ア + 弱"
 
     [[moves]]
-    name = "アシストコンボ（中）"
+    name = "中アシコン"
     input = "ア + 中"
 
     [[moves]]
-    name = "アシストコンボ（強）"
+    name = "強アシコン"
     input = "ア + 強"
 
     [[moves]]
-    name = "ODメキシカンタイフーン"
+    name = "ODタイフーン"
     input = "ア + 必"
 
+#    [[moves]]
+#    name = "ODダイブ"
+#    input = "ア + 必"
+
     [[moves]]
-    name = "ODコンドルスパイア"
+    name = "ODスパイア"
     input = "下 + ア + 必"
 
     [[moves]]
-    name = "ODトマホークバスター or ODコンドルウィンド"
+    name = "ODトマホーク"
     input = "右 + ア + 必"
+
+    [[moves]]
+    name = "ODウィンド"
+    input = "左 + ア + 必"
 
 # SA
     [[moves]]
@@ -99,9 +163,9 @@
     input = "強 + 必"
 
     [[moves]]
-    name = "SA3"
-    input = "下 + 強 + 必"
+    name = "SA2"
+    input = "左 + 強 + 必"
 
     [[moves]]
-    name = "（右向き）SA1 or （左向き）SA2"
-    input = "右 + 強 + 必"
+    name = "SA3"
+    input = "下 + 強 + 必"
