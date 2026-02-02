@@ -5,7 +5,9 @@ mission_toml      = "config/mission.toml"
 #moves_toml        = "config/moves.toml"
 moves_toml        = "config/moves_sf6lily.toml"
 
-challenge_phase = "1_buttons"  # "1_buttons" or "2_moves"
+challenge_phase = "1_buttons"  # "1_buttons" or "2_moves" - Phase to start from (for debugging)
+                               # "1_buttons": ボタン練習フェーズ (amplifies missions with left/right variants)
+                               # "2_moves": 技練習フェーズ (missions with directional awareness, toggles left/right each cycle)
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "700x150+256+256"
