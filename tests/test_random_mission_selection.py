@@ -1,6 +1,5 @@
 import os
 import sys
-import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from missions import get_new_mission_index, initialize_mission_sets, PHASE_1_BUTTONS
@@ -49,7 +48,7 @@ def test_get_new_mission_index_deterministic():
     # With random=False, should always pick the same mission (sorted first)
     assert len(results) == 1
     # The sorted first mission should be "上" (comes first in Japanese sorting)
-    assert results.pop() in missions_set
+    assert results == {"上"}
 
 
 def test_get_new_mission_index_deterministic_picks_sorted_first():
