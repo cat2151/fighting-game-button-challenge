@@ -28,7 +28,7 @@ def test_debug_phase2_config_file_exists():
     
     # Verify title mentions DEBUG
     assert 'title' in toml_data
-    assert 'DEBUG' in toml_data['title'] or 'debug' in toml_data['title'].lower()
+    assert 'debug' in toml_data['title'].lower()
 
 
 def test_integration_phase2_start_from_config():
