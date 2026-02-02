@@ -122,7 +122,7 @@ def test_get_new_mission_index_with_japanese_characters():
     ]
     missions_set = {"右", "上", "下", "左"}
     
-    # Sorted order in Japanese: ["上", "下", "右", "左"]
+    # Sorted order in Unicode: ['上', '下', '右', '左'] (based on Unicode code points)
     # Test start_index = 2 (third mission)
     idx = get_new_mission_index(missions, missions_set, use_random=False, start_index=2)
     sorted_list = sorted(list(missions_set))
