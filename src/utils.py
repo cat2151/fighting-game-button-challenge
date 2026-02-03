@@ -34,16 +34,18 @@ def get_args():
 def update_args_by_toml(args, config_filename=None):
     if not config_filename:
         config_filename = args.config_filename
-    debug_print(f'args : before: {args}')
     toml_data = read_toml(config_filename)
-    debug_print(f'TOML : {toml_data}')
     for key, value in toml_data.items():
         setattr(args, key, value)
-    debug_print(f'args : after : {args}')
     
     # Initialize debug_print global flag if present in config
     if hasattr(args, 'debug_print'):
         set_debug_print_enabled(args.debug_print)
+    
+    # Debug prints after flag is set so they can be controlled
+    debug_print(f'args : before: {args}')
+    debug_print(f'TOML : {toml_data}')
+    debug_print(f'args : after : {args}')
     
     return args
 

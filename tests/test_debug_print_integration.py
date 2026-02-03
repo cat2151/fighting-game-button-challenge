@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from utils import set_debug_print_enabled, debug_print, read_toml, update_args_by_toml
+from utils import set_debug_print_enabled, update_args_by_toml
 from missions import amplify_missions_left_right, generate_missions_for_direction, extract_mission_elapsed_time
 import argparse
 import io
