@@ -33,7 +33,6 @@ def test_debug_print_suppresses_output_when_disabled():
     
     output = f.getvalue()
     assert output == ""
-    assert "This should not appear" not in output
 
 
 def test_debug_print_outputs_when_enabled():

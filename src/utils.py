@@ -14,7 +14,14 @@ def is_debug_print_enabled():
     return _debug_print_enabled
 
 def debug_print(message):
-    """Print debug message if debug_print is enabled"""
+    """Print debug message to stdout if debug printing is enabled.
+    
+    Args:
+        message (str): The debug message to print
+    
+    Returns:
+        None
+    """
     if _debug_print_enabled:
         print(message)
 
