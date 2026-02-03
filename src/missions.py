@@ -3,6 +3,7 @@ import copy
 import time
 import os
 import numpy as np
+from utils import debug_print
 
 # Challenge phase constants
 PHASE_1_BUTTONS = "1_buttons"
@@ -75,8 +76,8 @@ def amplify_missions_left_right(missions, left_right, left_right_temp):
             amplified.append({**copy.deepcopy(mission), "input": swapped})
             seen.add(swapped)
 
-    print(f"[amplify_missions_left_right] 変更前 missions:\n{os.linesep.join(f'  {m}' for m in missions)}")
-    print(f"[amplify_missions_left_right] 変更後 amplified:\n{os.linesep.join(f'  {a}' for a in amplified)}")
+    debug_print(f"[amplify_missions_left_right] 変更前 missions:\n{os.linesep.join(f'  {m}' for m in missions)}")
+    debug_print(f"[amplify_missions_left_right] 変更後 amplified:\n{os.linesep.join(f'  {a}' for a in amplified)}")
 
     return amplified
 
@@ -104,9 +105,9 @@ def generate_missions_for_direction(missions, left_right, left_right_temp, direc
         # For right direction, use as-is (assuming missions are right-facing by default)
         generated.append({**copy.deepcopy(mission), "input": input_str})
     
-    print(f"[generate_missions_for_direction] direction={direction}")
-    print(f"[generate_missions_for_direction] 変更前 missions:\n{os.linesep.join(f'  {m}' for m in missions)}")
-    print(f"[generate_missions_for_direction] 変更後 generated:\n{os.linesep.join(f'  {g}' for g in generated)}")
+    debug_print(f"[generate_missions_for_direction] direction={direction}")
+    debug_print(f"[generate_missions_for_direction] 変更前 missions:\n{os.linesep.join(f'  {m}' for m in missions)}")
+    debug_print(f"[generate_missions_for_direction] 変更後 generated:\n{os.linesep.join(f'  {g}' for g in generated)}")
     
     return generated
 
@@ -239,7 +240,7 @@ def update_success_frame_stats(state, score, args):
 def extract_mission_elapsed_time(state):
     elapsed = time.time() - state["mission_start_time"]
     state.setdefault("mission_times", []).append(elapsed)
-    print(f"[DEBUG] mission_times: {state['mission_times']}")
+    debug_print(f"[DEBUG] mission_times: {state['mission_times']}")
     return state
 
 def on_mission_start(state):
@@ -282,7 +283,7 @@ def update_missions_set(missions, missions_set, mission, success_missions, fail_
     return missions_set, fail_count, should_toggle_direction, should_transition_phase
 
 def on_all_mission_green(missions, success_missions, fail_count):
-    print("すべてのmissionを成功しました")
+    debug_print("すべてのmissionを成功しました")
     success_missions.clear()
     missions_set = set(m["input"] for m in missions)
     fail_count = 0  # 1周したらfail_countをリセット
@@ -322,7 +323,7 @@ def transition_to_phase2(original_missions, left_right, left_right_temp):
     Returns:
         Tuple of (new_missions, new_direction, new_phase)
     """
-    print("[transition_to_phase2] Phase 1 -> Phase 2")
+    debug_print("[transition_to_phase2] Phase 1 -> Phase 2")
     new_phase = PHASE_2_MOVES
     new_direction = "right"  # Start with right direction
     
@@ -348,7 +349,7 @@ def toggle_direction_and_regenerate_missions(original_missions, left_right, left
     """
     # Toggle direction
     new_direction = "left" if current_direction == "right" else "right"
-    print(f"[toggle_direction_and_regenerate_missions] {current_direction} -> {new_direction}")
+    debug_print(f"[toggle_direction_and_regenerate_missions] {current_direction} -> {new_direction}")
     
     # Regenerate missions for new direction
     new_missions = generate_missions_for_direction(original_missions, left_right, left_right_temp, new_direction)

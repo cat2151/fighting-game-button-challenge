@@ -15,6 +15,9 @@ start_mission_index = 0        # Starting mission index (0-based). 0: first miss
                                # Only used when use_random_mission = false
                                # If index is out of range, wraps around using modulo
 
+debug_print = false            # true: enable debug statistics print to console, false: disable (default)
+                               # When enabled, prints mission generation details, statistics, and phase transition logs
+
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "700x150+256+256"
 font_name = "Arial"
