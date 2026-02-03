@@ -119,7 +119,7 @@ def test_toml_file_tracker_detect_deletion():
         raise
 
 
-def test_toml_file_tracker_ignores_nonexistent():
+def test_toml_file_tracker_ignores_nonexistent_files():
     """Test that tracker ignores non-existent files during initialization."""
     tracker = TomlFileTracker()
     

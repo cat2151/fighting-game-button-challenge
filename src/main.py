@@ -96,7 +96,7 @@ def main_loop(tkinter_root, args, check_interval_msec, last_check_msec, joystick
                     use_random_mission = getattr(args, 'use_random_mission', True)
                     
                     (missions, missions_set, success_missions, mission_index, current_direction, original_missions) = initialize_mission_sets(
-                        missions, args.left_right, args.left_right_temp, challenge_phase, current_direction, use_random_mission, 0  # Always start from index 0
+                        missions, args.left_right, args.left_right_temp, challenge_phase, current_direction, use_random_mission, 0
                     )
                     
                     # Reset state to beginning
