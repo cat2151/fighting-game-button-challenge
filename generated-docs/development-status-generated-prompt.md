@@ -1,4 +1,4 @@
-Last updated: 2026-02-02
+Last updated: 2026-02-04
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -202,18 +202,26 @@ Last updated: 2026-02-02
 - .gitignore
 - .pylintrc
 - .vscode/settings.json
+- IMPLEMENTATION_SUMMARY.md
 - LICENSE
 - README.ja.md
 - README.md
 - _config.yml
 - button_challenge.bat
+- config/README_DEBUG_DETERMINISTIC.md
+- config/README_PHASE2_DEBUG.md
+- config/README_START_INDEX_DEBUG.md
 - config/alias.toml
 - config/button_challenge.toml
+- config/button_challenge_debug_deterministic.toml
+- config/button_challenge_debug_phase2.toml
+- config/button_challenge_debug_start_index.toml
 - config/button_names.toml
 - config/lever_names.toml
 - config/mission.toml
 - config/moves.toml
 - config/moves_sf6lily.toml
+- docs/hot_reload.md
 - generated-docs/project-overview-generated-prompt.md
 - googled947dc864c270e07.html
 - issue-notes/10.md
@@ -230,6 +238,11 @@ Last updated: 2026-02-02
 - issue-notes/22.md
 - issue-notes/24.md
 - issue-notes/26.md
+- issue-notes/27.md
+- issue-notes/29.md
+- issue-notes/30.md
+- issue-notes/31.md
+- issue-notes/32.md
 - issue-notes/5.md
 - issue-notes/8.md
 - requirements.txt
@@ -241,15 +254,25 @@ Last updated: 2026-02-02
 - src/joystick.py
 - src/main.py
 - src/missions.py
+- src/toml_hot_reload.py
 - src/utils.py
+- tests/manual_test_hot_reload.py
 - tests/test_amplify_missions_left_right.py
 - tests/test_challenge_phases.py
+- tests/test_config_phase2_start.py
+- tests/test_debug_print_config.py
+- tests/test_debug_print_integration.py
+- tests/test_demo_random_vs_deterministic.py
 - tests/test_format_mission_string.py
 - tests/test_get_move_name_for_input.py
 - tests/test_get_pressed_buttons.py
 - tests/test_gui_phase2_mission_display.py
+- tests/test_integration_phase2_debug_config.py
 - tests/test_is_no_count_case.py
 - tests/test_phase_transition_integration.py
+- tests/test_random_mission_selection.py
+- tests/test_start_mission_index.py
+- tests/test_toml_hot_reload.py
 
 ## 現在のオープンIssues
 ## [Issue #26](../issue-notes/26.md): （人力）localでphase2 move練習モード の動作確認をする
@@ -2033,7 +2056,18 @@ mission_toml      = "config/mission.toml"
 #moves_toml        = "config/moves.toml"
 moves_toml        = "config/moves_sf6lily.toml"
 
-challenge_phase = "1_buttons"  # "1_buttons" or "2_moves"
+challenge_phase = "1_buttons"  # "1_buttons" or "2_moves" - Phase to start from (for debugging)
+                               # "1_buttons": ボタン練習フェーズ (amplifies missions with left/right variants)
+                               # "2_moves": 技練習フェーズ (missions with directional awareness, toggles left/right each cycle)
+
+use_random_mission = true      # true: random mission selection (default), false: deterministic selection (for debugging)
+
+start_mission_index = 0        # Starting mission index (0-based). 0: first mission, 1: second mission, etc. (for debugging)
+                               # Only used when use_random_mission = false
+                               # If index is out of range, wraps around using modulo
+
+debug_print = false            # true: enable debug statistics print to console, false: disable (default)
+                               # When enabled, prints mission generation details, statistics, and phase transition logs
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "700x150+256+256"
@@ -2042,9 +2076,15 @@ font_size = 20
 
 histogram_mode_sample_count = 50 # hist中心の表示用
 
-[display_format]
+[display_format_phase1]
     label1 = "mission : {mission}"
     label2 = "move : {move_name}"
+    label3 = "{lever_plus_pressed}"
+    label4 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
+
+[display_format_phase2]
+    label1 = "mission : {mission}"
+    label2 = "{direction_arrow}"
     label3 = "{lever_plus_pressed}"
     label4 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
 
@@ -2299,7 +2339,7 @@ pywin32
 ### src/configs.py
 ```py
 {% raw %}
-from utils import get_args, read_toml, update_args_by_toml
+from utils import get_args, read_toml, update_args_by_toml, debug_print
 
 def load_game_configuration():
     args = get_args()
@@ -2313,13 +2353,13 @@ def load_all_configs(args):
     names = config.get("names", [])
     plus = config.get("plus")
     none_word = config.get("none_word")
-    print(f"読み込まれた設定: {names}")
+    debug_print(f"読み込まれた設定: {names}")
 
     config = read_toml(args.lever_toml)
     lever_names = config.get("names", [])
     no_count_names = config.get("no_count_names", [])
-    print(f"読み込まれた設定: {lever_names}")
-    print(f"no_count_names: {no_count_names}")
+    debug_print(f"読み込まれた設定: {lever_names}")
+    debug_print(f"no_count_names: {no_count_names}")
 
     alias_conf = read_toml(args.alias_toml)
 
@@ -2395,33 +2435,46 @@ def test_is_no_count_case(mission_success, input_name, no_count_names_param, exp
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-007f9b6 Add issue note for #26 [auto]
-974b613 first
-41331a6 Merge pull request #25 from cat2151/copilot/remove-phase1-guide-display
-f279604 Address PR review comments: refactor test helper, remove redundant code, add validation
-93c01fa Update project summaries (overview & development status) [auto]
-4c9ef9a Refactor tests to use helper function and reduce duplication
-0906f22 Fix trailing whitespace in gui.py
-2b09dbc Hide phase1 button operation guide in phase2
-68ccf6c Initial plan
-ab3d5f1 Add issue note for #24 [auto]
+6c4691b Auto-translate README.ja.md to README.md [auto]
+0d51424 Merge pull request #38 from cat2151/copilot/enable-hot-reload-for-toml
+9933189 Remove unused imports (pytest, Optional)
+d0ae203 Add implementation summary document
+5cfe732 Address code review feedback: improve code clarity
+848831b Add documentation and manual test for hot reload feature
+b682127 Add TOML hot reload infrastructure and tests
+5e6a1b3 Initial plan
+8d46d09 Merge pull request #37 from cat2151/copilot/enable-statistics-print-toggle
+b39a250 Improve debug message labels for clarity
 
 ### 変更されたファイル:
-.github/copilot-instructions.md
+IMPLEMENTATION_SUMMARY.md
+README.ja.md
+README.md
+config/README_DEBUG_DETERMINISTIC.md
+config/README_PHASE2_DEBUG.md
+config/README_START_INDEX_DEBUG.md
 config/button_challenge.toml
-config/moves_sf6lily.toml
-generated-docs/development-status-generated-prompt.md
-generated-docs/development-status.md
-generated-docs/project-overview-generated-prompt.md
-generated-docs/project-overview.md
-issue-notes/24.md
-issue-notes/26.md
+config/button_challenge_debug_deterministic.toml
+config/button_challenge_debug_phase2.toml
+config/button_challenge_debug_start_index.toml
+docs/hot_reload.md
+src/configs.py
 src/gui.py
+src/main.py
 src/missions.py
-tests/test_challenge_phases.py
+src/toml_hot_reload.py
+src/utils.py
+tests/manual_test_hot_reload.py
+tests/test_config_phase2_start.py
+tests/test_debug_print_config.py
+tests/test_debug_print_integration.py
+tests/test_demo_random_vs_deterministic.py
 tests/test_gui_phase2_mission_display.py
-tests/test_phase_transition_integration.py
+tests/test_integration_phase2_debug_config.py
+tests/test_random_mission_selection.py
+tests/test_start_mission_index.py
+tests/test_toml_hot_reload.py
 
 
 ---
-Generated at: 2026-02-02 07:04:08 JST
+Generated at: 2026-02-04 07:07:35 JST
