@@ -43,9 +43,9 @@ def update_args_by_toml(args, config_filename=None):
         set_debug_print_enabled(args.debug_print)
     
     # Debug prints after flag is set so they can be controlled
-    debug_print(f'args : before: {args}')
-    debug_print(f'TOML : {toml_data}')
-    debug_print(f'args : after : {args}')
+    debug_print(f'TOML loaded from: {config_filename}')
+    debug_print(f'TOML data: {toml_data}')
+    debug_print(f'args after TOML merge: {args}')
     
     return args
 
