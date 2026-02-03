@@ -3,7 +3,7 @@ TOML hot reload functionality.
 Tracks modification times of TOML files and detects changes.
 """
 import os
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 class TomlFileTracker:
