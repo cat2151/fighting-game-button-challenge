@@ -40,6 +40,11 @@ A fighting game practice app for Windows. You can practice button inputs. Develo
         - You can probably use it with Classic controls, not just Modern, by configuring it.
         - It can probably also be configured for fighting games other than SF6, or even games other than fighting games.
         - There are no configuration files for anything other than SF6 Modern. Try creating your own.
+    - Hot Reload
+        - When you edit TOML configuration files, the settings are automatically applied without restarting the app.
+        - Useful for toggling debug display on/off or maintaining moves.
+        - After reload, the game automatically restarts from the beginning of Phase 1.
+        - See [docs/hot_reload.md](docs/hot_reload.md) for details.
 - Verified Environment
     - Windows
     - XInput
