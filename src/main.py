@@ -13,9 +13,15 @@ def main():
     challenge_phase = getattr(args, 'challenge_phase', PHASE_1_BUTTONS)
     current_direction = "right"  # Default direction for phase 2
     use_random_mission = getattr(args, 'use_random_mission', True)  # Default to random if not set
+    start_mission_index = getattr(args, 'start_mission_index', 0)  # Default to 0 if not set
+    
+    # Validate start_mission_index
+    if not isinstance(start_mission_index, int) or start_mission_index < 0:
+        print(f"Warning: start_mission_index must be a non-negative integer. Got: {start_mission_index}. Using default value 0.")
+        start_mission_index = 0
     
     (missions, missions_set, success_missions, mission_index, current_direction, original_missions) = initialize_mission_sets(
-        missions, args.left_right, args.left_right_temp, challenge_phase, current_direction, use_random_mission
+        missions, args.left_right, args.left_right_temp, challenge_phase, current_direction, use_random_mission, start_mission_index
     )
     
     (timer_id_dict, clock, check_interval_msec, last_check_msec) = init_timer_for_check_playing_game(args)

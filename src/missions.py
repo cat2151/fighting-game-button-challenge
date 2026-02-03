@@ -26,7 +26,7 @@ def _swap_left_right(input_str, left_right, left_right_temp):
         swapped = swapped.replace(temp, repl)
     return swapped
 
-def initialize_mission_sets(missions, left_right, left_right_temp, challenge_phase=PHASE_1_BUTTONS, current_direction="right", use_random=True):
+def initialize_mission_sets(missions, left_right, left_right_temp, challenge_phase=PHASE_1_BUTTONS, current_direction="right", use_random=True, start_mission_index=0):
     """
     Initialize mission sets based on challenge phase.
     
@@ -37,6 +37,7 @@ def initialize_mission_sets(missions, left_right, left_right_temp, challenge_pha
         challenge_phase: PHASE_1_BUTTONS or PHASE_2_MOVES
         current_direction: "right" or "left" (used in phase 2)
         use_random: If True, select missions randomly; if False, select deterministically
+        start_mission_index: Starting mission index (0-based), only used when use_random=False
     
     Returns:
         Tuple of (missions, missions_set, success_missions, mission_index, current_direction, original_missions)
@@ -55,7 +56,7 @@ def initialize_mission_sets(missions, left_right, left_right_temp, challenge_pha
     
     missions_set = set(mission["input"] for mission in missions)
     success_missions = set()
-    mission_index = get_new_mission_index(missions, missions_set, use_random)
+    mission_index = get_new_mission_index(missions, missions_set, use_random, start_mission_index)
     return missions, missions_set, success_missions, mission_index, current_direction, original_missions
 
 def amplify_missions_left_right(missions, left_right, left_right_temp):
@@ -354,7 +355,7 @@ def toggle_direction_and_regenerate_missions(original_missions, left_right, left
     
     return new_missions, new_direction
 
-def get_new_mission_index(missions, missions_set, use_random=True):
+def get_new_mission_index(missions, missions_set, use_random=True, start_index=0):
     """
     Get index of next mission to display.
     
@@ -362,6 +363,7 @@ def get_new_mission_index(missions, missions_set, use_random=True):
         missions: List of mission dictionaries
         missions_set: Set of available mission input strings
         use_random: If True, select randomly; if False, select deterministically (for debugging)
+        start_index: Starting mission index (0-based), only used when use_random=False (for initial selection)
     
     Returns:
         Index of selected mission in missions list, or -1 if not found
@@ -369,8 +371,11 @@ def get_new_mission_index(missions, missions_set, use_random=True):
     if use_random:
         mission = random.choice(list(missions_set))
     else:
-        # Deterministic selection: sort and pick first
-        mission = sorted(list(missions_set))[0]
+        # Deterministic selection: sort and pick by index
+        sorted_missions = sorted(list(missions_set))
+        # Use modulo to wrap around if index is out of range
+        index = start_index % len(sorted_missions) if sorted_missions else 0
+        mission = sorted_missions[index]
     mission_index = next((i for i, m in enumerate(missions) if m["input"] == mission), -1)
     return mission_index
 
