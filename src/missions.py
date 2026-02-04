@@ -268,8 +268,6 @@ def update_missions_set(missions, missions_set, mission, success_missions, fail_
     should_transition_phase = False
     
     if not missions_set:
-        missions_set, fail_count = on_all_mission_green(missions, success_missions, fail_count)
-        
         if state:
             current_phase = state.get("challenge_phase", PHASE_1_BUTTONS)
             
@@ -279,6 +277,15 @@ def update_missions_set(missions, missions_set, mission, success_missions, fail_
             # Check if we need to toggle direction for phase 2
             elif current_phase == PHASE_2_MOVES:
                 should_toggle_direction = True
+        
+        # When transitioning/toggling, clear success_missions and reset fail_count
+        # but don't rebuild missions_set from OLD missions (it will be rebuilt from NEW missions in on_green)
+        if should_transition_phase or should_toggle_direction:
+            debug_print("すべてのmissionを成功しました")
+            success_missions.clear()
+            fail_count = 0
+        else:
+            missions_set, fail_count = on_all_mission_green(missions, success_missions, fail_count)
     
     return missions_set, fail_count, should_toggle_direction, should_transition_phase
 
