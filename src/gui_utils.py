@@ -4,13 +4,14 @@ import tkinter
 def init_tkinter(title, geometry, font, label_count, theme_colors=None):
     """
     Tkinterウィンドウを初期化する
+    Initialize Tkinter window
     
     Args:
-        title: ウィンドウタイトル
-        geometry: ウィンドウサイズと位置
-        font: フォント設定
-        label_count: ラベルの数
-        theme_colors: テーマカラー設定 (dict with bg_color, fg_color)
+        title: ウィンドウタイトル / Window title
+        geometry: ウィンドウサイズと位置 / Window size and position
+        font: フォント設定 / Font settings
+        label_count: ラベルの数 / Number of labels
+        theme_colors: テーマカラー設定 (dict with bg_color, fg_color) / Theme color settings
     
     Returns:
         tuple: (root, labels)

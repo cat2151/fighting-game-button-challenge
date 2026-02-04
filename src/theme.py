@@ -7,9 +7,11 @@ import platform
 def get_windows_dark_mode():
     """
     Windows OSのダークモード設定を取得する
+    Get Windows OS dark mode setting
     
     Returns:
         bool: ダークモードが有効な場合True、それ以外はFalse
+              True if dark mode is enabled, False otherwise
     """
     if platform.system() != "Windows":
         return False
@@ -32,14 +34,15 @@ def get_windows_dark_mode():
 def get_theme_colors(theme_mode, light_colors=None, dark_colors=None):
     """
     テーマモードに基づいて適切な色設定を返す
+    Return appropriate color settings based on theme mode
     
     Args:
         theme_mode (str): "light", "dark", or "system"
-        light_colors (dict): ライトモードの色設定
-        dark_colors (dict): ダークモードの色設定
+        light_colors (dict): ライトモードの色設定 / Light mode color settings
+        dark_colors (dict): ダークモードの色設定 / Dark mode color settings
     
     Returns:
-        dict: 適用すべき色設定
+        dict: 適用すべき色設定 / Color settings to apply
     """
     # デフォルトの色設定
     default_light = {

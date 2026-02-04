@@ -13,7 +13,10 @@ def load_game_configuration():
     return args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves
 
 def apply_theme_configuration(args):
-    """テーマ設定を読み込んでargsに適用する"""
+    """
+    テーマ設定を読み込んでargsに適用する
+    Load theme settings and apply to args
+    """
     # デフォルト値
     theme_mode = "light"
     light_colors = None
