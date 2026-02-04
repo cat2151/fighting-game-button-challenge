@@ -5,18 +5,13 @@ mission_toml      = "config/mission.toml"
 #moves_toml        = "config/moves.toml"
 moves_toml        = "config/moves_sf6lily.toml"
 
-challenge_phase = "1_buttons"  # "1_buttons" or "2_moves" - Phase to start from (for debugging)
-                               # "1_buttons": ボタン練習フェーズ (amplifies missions with left/right variants)
-                               # "2_moves": 技練習フェーズ (missions with directional awareness, toggles left/right each cycle)
-
-use_random_mission = true      # true: random mission selection (default), false: deterministic selection (for debugging)
-
-start_mission_index = 0        # Starting mission index (0-based). 0: first mission, 1: second mission, etc. (for debugging)
-                               # Only used when use_random_mission = false
-                               # If index is out of range, wraps around using modulo
-
-debug_print = false            # true: enable debug statistics print to console, false: disable (default)
-                               # When enabled, prints mission generation details, statistics, and phase transition logs
+challenge_phase = "1_buttons"
+#challenge_phase = "2_moves"
+use_random_mission = true
+#use_random_mission = false
+#start_mission_index = 0
+#debug_print = true
+debug_print = false
 
 title = "ボタンチャレンジ 終了はterminalでCTRL+C"
 geometry = "700x150+256+256"
@@ -27,13 +22,14 @@ histogram_mode_sample_count = 50 # hist中心の表示用
 
 [display_format_phase1]
     label1 = "mission : {mission}"
-    label2 = "move : {move_name}"
-    label3 = "{lever_plus_pressed}"
+    label2 = "{lever_plus_pressed}"
+#    label2 = "move : {move_name}"
+    label3 = ""
     label4 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
 
 [display_format_phase2]
-    label1 = "mission : {mission}"
-    label2 = "{direction_arrow}"
+    label1 = "{direction_arrow}"
+    label2 = "mission : {mission}"
     label3 = "{lever_plus_pressed}"
     label4 = "score:{score} fail:{fail_count} 前回:{last_mission_frame_count} 最速:{prev_success_min_frame_count} hist中心:{prev_success_hist_center} now:{current_mission_frame_count}"
 
