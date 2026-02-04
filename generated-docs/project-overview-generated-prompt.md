@@ -1,4 +1,4 @@
-Last updated: 2026-02-04
+Last updated: 2026-02-05
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -238,6 +238,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📖 30.md
   📖 31.md
   📖 32.md
+  📖 39.md
+  📖 41.md
   📖 5.md
   📖 8.md
 📄 requirements.txt
@@ -264,7 +266,6 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 test_get_move_name_for_input.py
   📄 test_get_pressed_buttons.py
   📄 test_gui_phase2_mission_display.py
-  📄 test_integration_phase2_debug_config.py
   📄 test_is_no_count_case.py
   📄 test_phase_transition_integration.py
   📄 test_random_mission_selection.py
@@ -305,6 +306,8 @@ issue-notes/29.md
 issue-notes/30.md
 issue-notes/31.md
 issue-notes/32.md
+issue-notes/39.md
+issue-notes/41.md
 issue-notes/5.md
 issue-notes/8.md
 
@@ -318,4 +321,4 @@ issue-notes/8.md
 
 
 ---
-Generated at: 2026-02-04 07:07:35 JST
+Generated at: 2026-02-05 07:04:27 JST
