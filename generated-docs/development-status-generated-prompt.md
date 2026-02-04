@@ -208,14 +208,8 @@ Last updated: 2026-02-04
 - README.md
 - _config.yml
 - button_challenge.bat
-- config/README_DEBUG_DETERMINISTIC.md
-- config/README_PHASE2_DEBUG.md
-- config/README_START_INDEX_DEBUG.md
 - config/alias.toml
 - config/button_challenge.toml
-- config/button_challenge_debug_deterministic.toml
-- config/button_challenge_debug_phase2.toml
-- config/button_challenge_debug_start_index.toml
 - config/button_names.toml
 - config/lever_names.toml
 - config/mission.toml
@@ -2450,13 +2444,7 @@ b39a250 Improve debug message labels for clarity
 IMPLEMENTATION_SUMMARY.md
 README.ja.md
 README.md
-config/README_DEBUG_DETERMINISTIC.md
-config/README_PHASE2_DEBUG.md
-config/README_START_INDEX_DEBUG.md
 config/button_challenge.toml
-config/button_challenge_debug_deterministic.toml
-config/button_challenge_debug_phase2.toml
-config/button_challenge_debug_start_index.toml
 docs/hot_reload.md
 src/configs.py
 src/gui.py
@@ -2470,7 +2458,6 @@ tests/test_debug_print_config.py
 tests/test_debug_print_integration.py
 tests/test_demo_random_vs_deterministic.py
 tests/test_gui_phase2_mission_display.py
-tests/test_integration_phase2_debug_config.py
 tests/test_random_mission_selection.py
 tests/test_start_mission_index.py
 tests/test_toml_hot_reload.py

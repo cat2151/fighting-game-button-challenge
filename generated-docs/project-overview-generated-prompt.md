@@ -207,14 +207,8 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 📄 _config.yml
 📄 button_challenge.bat
 📁 config/
-  📖 README_DEBUG_DETERMINISTIC.md
-  📖 README_PHASE2_DEBUG.md
-  📖 README_START_INDEX_DEBUG.md
   📄 alias.toml
   📄 button_challenge.toml
-  📄 button_challenge_debug_deterministic.toml
-  📄 button_challenge_debug_phase2.toml
-  📄 button_challenge_debug_start_index.toml
   📄 button_names.toml
   📄 lever_names.toml
   📄 mission.toml
@@ -290,9 +284,6 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 IMPLEMENTATION_SUMMARY.md
 README.ja.md
 README.md
-config/README_DEBUG_DETERMINISTIC.md
-config/README_PHASE2_DEBUG.md
-config/README_START_INDEX_DEBUG.md
 docs/hot_reload.md
 googled947dc864c270e07.html
 issue-notes/10.md
