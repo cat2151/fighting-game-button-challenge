@@ -1,13 +1,36 @@
 import ctypes
 import tkinter
 
-def init_tkinter(title, geometry, font, label_count):
+def init_tkinter(title, geometry, font, label_count, theme_colors=None):
+    """
+    Tkinterウィンドウを初期化する
+    
+    Args:
+        title: ウィンドウタイトル
+        geometry: ウィンドウサイズと位置
+        font: フォント設定
+        label_count: ラベルの数
+        theme_colors: テーマカラー設定 (dict with bg_color, fg_color)
+    
+    Returns:
+        tuple: (root, labels)
+    """
     root = tkinter.Tk()
     root.title(title)
     root.geometry(geometry)
+    
+    # テーマカラーを適用
+    if theme_colors:
+        root.config(bg=theme_colors.get('bg_color', 'SystemButtonFace'))
+    
     labels = []
     for _ in range(label_count):
-        label = tkinter.Label(root, text="", font=font)
+        label_config = {"text": "", "font": font}
+        if theme_colors:
+            label_config["bg"] = theme_colors.get('bg_color', 'SystemButtonFace')
+            label_config["fg"] = theme_colors.get('fg_color', 'black')
+        
+        label = tkinter.Label(root, **label_config)
         label.pack()
         labels.append(label)
     return root, labels

@@ -121,10 +121,11 @@ def check_and_update_mission(state, missions, plus, lever_plus_pressed, no_count
     mission = missions[state["mission_index"]]["input"]
     mission_result = check_mission_success(mission, lever_plus_pressed, plus, no_count_names, none_word)
     state["status"] = mission_result
+    theme_colors = getattr(args, 'theme_colors', None)
     if mission_result == "green":
         state.update(on_green(missions, state["missions_set"], mission, state["success_missions"], state["score"], state["wait_for_all_buttons_release"], state["fail_count"], state=state, args=args))
     elif mission_result == "red":
-        state["fail_count"], state["last_failed_input"] = on_red(state["fail_count"], lever_plus_pressed, state["last_failed_input"], state)
+        state["fail_count"], state["last_failed_input"] = on_red(state["fail_count"], lever_plus_pressed, state["last_failed_input"], state, theme_colors)
     elif mission_result == "no_count":
         pass
     return state
@@ -144,12 +145,14 @@ def handle_wait_for_all_buttons_release(result, missions, lever_plus_pressed, no
         return True, result
     raise ValueError("wait_for_all_buttons_releaseがTrueのとき、lever_plus_pressedはnone_wordでなければなりません。") # 今後仕様変更時にここに到達したら問題検知できる用
 
-def on_red(fail_count, lever_plus_pressed, last_failed_input, state):
+def on_red(fail_count, lever_plus_pressed, last_failed_input, state, theme_colors=None):
     if last_failed_input != lever_plus_pressed:
         fail_count += 1
         last_failed_input = lever_plus_pressed
 
-    state["bg_flash_color"] = "red"
+    # テーマカラーがあればそれを使用、なければデフォルトの赤
+    fail_color = theme_colors.get('fail_color', 'red') if theme_colors else 'red'
+    state["bg_flash_color"] = fail_color
     state["bg_flash_frames"] = 5
     return fail_count, last_failed_input
 
@@ -193,7 +196,10 @@ def on_green(missions, missions_set, mission, success_missions, score, wait_for_
 
     state = update_success_frame_stats(state, score, args)
 
-    state["bg_flash_color"] = "#00FF00" # 今後、framesともどもTOMLで設定できるようにする予定
+    # テーマカラーがあればそれを使用、なければデフォルトの緑
+    theme_colors = getattr(args, 'theme_colors', None)
+    success_color = theme_colors.get('success_color', '#00FF00') if theme_colors else '#00FF00'
+    state["bg_flash_color"] = success_color  # 今後、framesともどもTOMLで設定できるようにする予定
     state["bg_flash_frames"] = 8 # 5だと短い、10だと長い
     return {
         "mission_index": mission_index,

@@ -1,11 +1,37 @@
 from utils import get_args, read_toml, update_args_by_toml, debug_print
+from theme import get_theme_colors
 
 def load_game_configuration():
     args = get_args()
     args = update_args_by_toml(args, args.config_filename)
     args = update_args_by_toml(args, args.mission_toml)
+    
+    # テーマ設定を読み込んで適用
+    args = apply_theme_configuration(args)
+    
     (names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves) = load_all_configs(args)
     return args, names, plus, lever_names, missions, none_word, alias_conf, no_count_names, moves
+
+def apply_theme_configuration(args):
+    """テーマ設定を読み込んでargsに適用する"""
+    # デフォルト値
+    theme_mode = "light"
+    light_colors = None
+    dark_colors = None
+    
+    # TOML設定からテーマ情報を取得
+    if hasattr(args, 'theme'):
+        theme_config = args.theme
+        theme_mode = theme_config.get('mode', 'light')
+        
+        # ライトモードとダークモードの色設定を取得
+        light_colors = theme_config.get('light', None)
+        dark_colors = theme_config.get('dark', None)
+    
+    # テーマカラーを計算してargsに設定
+    args.theme_colors = get_theme_colors(theme_mode, light_colors, dark_colors)
+    
+    return args
 
 def load_all_configs(args):
     config = read_toml(args.button_names_toml)

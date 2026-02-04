@@ -20,6 +20,25 @@ font_size = 20
 
 histogram_mode_sample_count = 50 # hist中心の表示用
 
+# Theme settings
+# theme_mode: "light" (ライトモード), "dark" (ダークモード), "system" (OSの設定に追従)
+[theme]
+    mode = "system"
+    
+    # Light theme colors
+    [theme.light]
+        bg_color = "SystemButtonFace"
+        fg_color = "black"
+        success_color = "#00FF00"
+        fail_color = "red"
+    
+    # Dark theme colors
+    [theme.dark]
+        bg_color = "#2b2b2b"
+        fg_color = "#ffffff"
+        success_color = "#00FF00"
+        fail_color = "#ff4444"
+
 [display_format_phase1]
     label1 = "mission : {mission}"
     label2 = "{lever_plus_pressed}"
