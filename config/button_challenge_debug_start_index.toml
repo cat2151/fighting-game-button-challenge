@@ -6,7 +6,7 @@ mission_toml      = "config/mission.toml"
 moves_toml        = "config/moves_sf6lily.toml"
 
 challenge_phase = "1_buttons"
-use_random_mission = true
+use_random_mission = false
 start_mission_index = 0
 #debug_print = true
 debug_print = false
