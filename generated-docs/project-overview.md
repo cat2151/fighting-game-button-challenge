@@ -37,14 +37,8 @@ Last updated: 2026-02-04
 📄 _config.yml
 📄 button_challenge.bat
 📁 config/
-  📖 README_DEBUG_DETERMINISTIC.md
-  📖 README_PHASE2_DEBUG.md
-  📖 README_START_INDEX_DEBUG.md
   📄 alias.toml
   📄 button_challenge.toml
-  📄 button_challenge_debug_deterministic.toml
-  📄 button_challenge_debug_phase2.toml
-  📄 button_challenge_debug_start_index.toml
   📄 button_names.toml
   📄 lever_names.toml
   📄 mission.toml
@@ -120,10 +114,8 @@ Last updated: 2026-02-04
 - **`_config.yml`**: GitHub Pagesの設定ファイルなど、静的サイトジェネレータに関連する可能性があります。
 - **`button_challenge.bat`**: Windows環境でアプリケーションを起動するためのバッチスクリプトです。
 - **`config/`**: アプリケーションの各種設定ファイルを格納するディレクトリです。
-    - **`config/README_DEBUG_*.md`**: デバッグモードに関する特別な設定や情報が記載されたREADMEファイルです。
     - **`config/alias.toml`**: ボタン名やレバー名の別名を定義し、表示をカスタマイズするための設定ファイルです。
     - **`config/button_challenge.toml`**: アプリケーションの基本的な動作設定（UI表示、タイムリミットなど）を定義する主要な設定ファイルです。
-    - **`config/button_challenge_debug_*.toml`**: デバッグ時専用の特別なアプリケーション動作設定ファイルです。
     - **`config/button_names.toml`**: 格闘ゲームのボタンに対応する名前や入力を定義するファイルです。
     - **`config/lever_names.toml`**: 格闘ゲームのレバー入力に対応する名前を定義するファイルです。
     - **`config/mission.toml`**: アプリケーションで出題されるミッションの内容（例: 特定のボタンを押す）を定義するファイルです。
