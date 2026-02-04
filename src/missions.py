@@ -279,12 +279,15 @@ def update_missions_set(missions, missions_set, mission, success_missions, fail_
                 should_toggle_direction = True
         
         # When transitioning/toggling, clear success_missions and reset fail_count
-        # but don't rebuild missions_set from OLD missions (it will be rebuilt from NEW missions in on_green)
+        # but DON'T rebuild missions_set from OLD missions (it will be rebuilt from NEW missions in on_green)
+        # This prevents the bug where missions_set contains Phase 1 mission strings
+        # when we're trying to match against Phase 2 missions (issue #41)
         if should_transition_phase or should_toggle_direction:
             debug_print("すべてのmissionを成功しました")
             success_missions.clear()
             fail_count = 0
         else:
+            # Normal case: rebuild missions_set from current missions
             missions_set, fail_count = on_all_mission_green(missions, success_missions, fail_count)
     
     return missions_set, fail_count, should_toggle_direction, should_transition_phase
