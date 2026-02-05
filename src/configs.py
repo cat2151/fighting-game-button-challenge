@@ -47,7 +47,7 @@ def apply_theme_configuration(args):
         # 安全なデフォルトカラー（テーマが壊れていても UI が動作するようにする）
         default_colors = {
             "bg_color": "SystemButtonFace",
-            "fg_color": "black",
+            "fg_color": "SystemWindowText",  # システムテーマに適応
             "success_color": "#00FF00",
             "fail_color": "red",
         }

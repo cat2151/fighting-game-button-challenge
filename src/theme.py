@@ -3,6 +3,7 @@ Theme management for the application.
 Supports light, dark, and system (auto) theme modes.
 """
 import platform
+import sys
 
 def get_windows_dark_mode():
     """
@@ -30,7 +31,6 @@ def get_windows_dark_mode():
     except Exception as e:
         # レジストリ読み取りに失敗した場合はライトモードとして扱う
         # デバッグ用にエラー情報を出力（オプション）
-        import sys
         if hasattr(sys, 'stderr'):
             print(f"Warning: Failed to detect Windows dark mode: {e}", file=sys.stderr)
         return False
