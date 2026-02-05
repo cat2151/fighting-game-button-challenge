@@ -6,7 +6,7 @@ This document summarizes the dark mode feature implementation for the button cha
 
 ## Overview
 
-**Issue:** [dark modeがほしい](https://github.com/cat2151/fighting-game-button-challenge/issues/XXX)
+**Issue:** [dark modeがほしい](https://github.com/cat2151/fighting-game-button-challenge/issues/7)
 
 The user requested dark mode support because they use dark mode in other applications but this app had a white background.
 

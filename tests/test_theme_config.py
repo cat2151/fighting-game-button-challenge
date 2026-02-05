@@ -63,7 +63,7 @@ def test_apply_theme_configuration_no_theme():
     
     args = apply_theme_configuration(args)
     
-    # Should get default light theme
+    # Should get default system theme (which may resolve to light or dark based on OS)
     assert hasattr(args, 'theme_colors')
     assert 'bg_color' in args.theme_colors
     assert 'fg_color' in args.theme_colors

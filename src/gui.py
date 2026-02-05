@@ -110,12 +110,19 @@ def show_input_frame_etc(root, label, text, timer, has_input, state, bg_color, t
         else:
             # 通常時はテーマカラーを適用
             default_bg = theme_colors.get('bg_color', 'SystemButtonFace') if theme_colors else 'SystemButtonFace'
+            default_fg = theme_colors.get('fg_color') if theme_colors else None
             root.config(bg=default_bg)
             if isinstance(label, list):
                 for l in label:
-                    l.config(bg=default_bg)
+                    if default_fg is not None:
+                        l.config(bg=default_bg, fg=default_fg)
+                    else:
+                        l.config(bg=default_bg)
             else:
-                label.config(bg=default_bg)
+                if default_fg is not None:
+                    label.config(bg=default_bg, fg=default_fg)
+                else:
+                    label.config(bg=default_bg)
 
     # 入力から指定秒数後にbackmost化する用
     if has_input:

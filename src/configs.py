@@ -18,21 +18,44 @@ def apply_theme_configuration(args):
     Load theme settings and apply to args
     """
     # デフォルト値
-    theme_mode = "light"
+    theme_mode = "system"
     light_colors = None
     dark_colors = None
     
     # TOML設定からテーマ情報を取得
     if hasattr(args, 'theme'):
         theme_config = args.theme
-        theme_mode = theme_config.get('mode', 'light')
+        theme_mode = theme_config.get('mode', 'system')
         
         # ライトモードとダークモードの色設定を取得
         light_colors = theme_config.get('light', None)
         dark_colors = theme_config.get('dark', None)
     
-    # テーマカラーを計算してargsに設定
-    args.theme_colors = get_theme_colors(theme_mode, light_colors, dark_colors)
+    # テーマカラーを計算
+    theme_colors = get_theme_colors(theme_mode, light_colors, dark_colors)
+    
+    # テーマカラーの検証: 必須キーが存在するか確認
+    required_keys = ("bg_color", "fg_color", "success_color", "fail_color")
+    
+    if not isinstance(theme_colors, dict):
+        debug_print(f"theme_colors が dict ではありませんでした: {theme_colors!r} - デフォルト値を使用します")
+        theme_colors = {}
+    
+    missing_keys = [key for key in required_keys if key not in theme_colors]
+    if missing_keys:
+        debug_print(f"theme_colors に必須キーが不足しています: {missing_keys} - デフォルト値で補完します")
+        # 安全なデフォルトカラー（テーマが壊れていても UI が動作するようにする）
+        default_colors = {
+            "bg_color": "SystemButtonFace",
+            "fg_color": "black",
+            "success_color": "#00FF00",
+            "fail_color": "red",
+        }
+        for key in missing_keys:
+            theme_colors[key] = default_colors.get(key, "#000000")
+    
+    # 検証済みのテーマカラーを args に設定
+    args.theme_colors = theme_colors
     
     return args
 

@@ -6,8 +6,6 @@ Creates screenshots of each theme mode for documentation.
 import sys
 import os
 import tkinter as tk
-from PIL import ImageGrab
-import time
 
 # Add src directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))

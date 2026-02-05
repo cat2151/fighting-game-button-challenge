@@ -27,8 +27,12 @@ def get_windows_dark_mode():
         value, _ = winreg.QueryValueEx(registry_key, "AppsUseLightTheme")
         winreg.CloseKey(registry_key)
         return value == 0  # 0ならダークモード
-    except Exception:
+    except Exception as e:
         # レジストリ読み取りに失敗した場合はライトモードとして扱う
+        # デバッグ用にエラー情報を出力（オプション）
+        import sys
+        if hasattr(sys, 'stderr'):
+            print(f"Warning: Failed to detect Windows dark mode: {e}", file=sys.stderr)
         return False
 
 def get_theme_colors(theme_mode, light_colors=None, dark_colors=None):
