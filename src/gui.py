@@ -3,7 +3,8 @@ from missions import PHASE_1_BUTTONS, PHASE_2_MOVES
 
 def gui_init_tkinter(args):
     gui_label_count = 4
-    return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count)
+    theme_colors = getattr(args, 'theme_colors', None)
+    return init_tkinter(args.title, args.geometry, (args.font_name, args.font_size), gui_label_count, theme_colors)
 
 def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, lever_plus_pressed, mission, wait_for_all_release, alias_conf, should_skip, none_word, args, move_name=""):
     if should_skip and none_word is not None:
@@ -62,8 +63,11 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
         texts.append(fmt.format(**format_dict))
 
     # 背景色フラッシュ処理
+    # テーマカラーを取得
+    theme_colors = getattr(args, 'theme_colors', None)
     bg_color = None
     if state.get('bg_flash_frames', 0) > 0:
+        # フラッシュ中は設定された色を使用（テーマの成功/失敗色）
         bg_color = state['bg_flash_color']
         state['bg_flash_frames'] -= 1
     else:
@@ -72,15 +76,15 @@ def update_display_with_mission(state, tkinter_root, labels, timer_id_dict, leve
 
     if texts != state['old_texts']:
         has_input = lever_plus_pressed != state["old_lever_plus_pressed"]
-        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input, state, bg_color)
+        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, has_input, state, bg_color, theme_colors)
         state['old_texts'] = texts
     else:
         # text変化なしで、背景色だけ更新する用
-        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, False, state, bg_color)
+        show_input_frame_etc(tkinter_root, labels, texts, timer_id_dict, False, state, bg_color, theme_colors)
     state["old_lever_plus_pressed"] = lever_plus_pressed
     return state['old_texts']
 
-def show_input_frame_etc(root, label, text, timer, has_input, state, bg_color):
+def show_input_frame_etc(root, label, text, timer, has_input, state, bg_color, theme_colors=None):
     if has_input:
         do_topmost(root)
         state['is_backmost'] = False
@@ -97,8 +101,28 @@ def show_input_frame_etc(root, label, text, timer, has_input, state, bg_color):
 
         if bg_color:
             root.config(bg=bg_color)
+            # フラッシュ時はラベルの背景も同じ色にする
+            if isinstance(label, list):
+                for l in label:
+                    l.config(bg=bg_color)
+            else:
+                label.config(bg=bg_color)
         else:
-            root.config(bg='SystemButtonFace')
+            # 通常時はテーマカラーを適用
+            default_bg = theme_colors.get('bg_color', 'SystemButtonFace') if theme_colors else 'SystemButtonFace'
+            default_fg = theme_colors.get('fg_color') if theme_colors else None
+            root.config(bg=default_bg)
+            if isinstance(label, list):
+                for l in label:
+                    if default_fg is not None:
+                        l.config(bg=default_bg, fg=default_fg)
+                    else:
+                        l.config(bg=default_bg)
+            else:
+                if default_fg is not None:
+                    label.config(bg=default_bg, fg=default_fg)
+                else:
+                    label.config(bg=default_bg)
 
     # 入力から指定秒数後にbackmost化する用
     if has_input:
