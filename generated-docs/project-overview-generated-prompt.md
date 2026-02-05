@@ -1,4 +1,4 @@
-Last updated: 2026-02-05
+Last updated: 2026-02-06
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -200,10 +200,14 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 📄 .pylintrc
 📁 .vscode/
   📊 settings.json
+📖 DARK_MODE.md
+📖 DARK_MODE_INTEGRATION.md
 📖 IMPLEMENTATION_SUMMARY.md
 📄 LICENSE
 📖 README.ja.md
 📖 README.md
+📖 THEME_COMPARISON.md
+📖 THEME_EXAMPLES.md
 📄 _config.yml
 📄 button_challenge.bat
 📁 config/
@@ -252,10 +256,13 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 joystick.py
   📄 main.py
   📄 missions.py
+  📄 theme.py
   📄 toml_hot_reload.py
   📄 utils.py
 📁 tests/
+  📄 demo_theme_colors.py
   📄 manual_test_hot_reload.py
+  📄 screenshot_demo.py
   📄 test_amplify_missions_left_right.py
   📄 test_challenge_phases.py
   📄 test_config_phase2_start.py
@@ -267,10 +274,14 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
   📄 test_get_pressed_buttons.py
   📄 test_gui_phase2_mission_display.py
   📄 test_is_no_count_case.py
+  📄 test_phase2_initial_mission_not_empty.py
   📄 test_phase_transition_integration.py
   📄 test_random_mission_selection.py
   📄 test_start_mission_index.py
+  📄 test_theme.py
+  📄 test_theme_config.py
   📄 test_toml_hot_reload.py
+  📄 visual_test_theme.py
 
 ## ファイル詳細分析
 **googled947dc864c270e07.html** (1行, 53バイト)
@@ -282,9 +293,13 @@ README.md は README.ja.md を元にGeminiの翻訳でGitHub Actionsで自動生
 
 ## プロジェクト構造（ファイル一覧）
 .vscode/settings.json
+DARK_MODE.md
+DARK_MODE_INTEGRATION.md
 IMPLEMENTATION_SUMMARY.md
 README.ja.md
 README.md
+THEME_COMPARISON.md
+THEME_EXAMPLES.md
 docs/hot_reload.md
 googled947dc864c270e07.html
 issue-notes/10.md
@@ -307,9 +322,6 @@ issue-notes/30.md
 issue-notes/31.md
 issue-notes/32.md
 issue-notes/39.md
-issue-notes/41.md
-issue-notes/5.md
-issue-notes/8.md
 
 上記の情報を基に、プロンプトで指定された形式でプロジェクト概要を生成してください。
 特に以下の点を重視してください：
@@ -321,4 +333,4 @@ issue-notes/8.md
 
 
 ---
-Generated at: 2026-02-05 07:04:27 JST
+Generated at: 2026-02-06 07:05:41 JST
