@@ -1,4 +1,4 @@
-Last updated: 2026-02-06
+Last updated: 2026-03-17
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -105,11 +105,13 @@ Last updated: 2026-02-06
 ## プロジェクトのファイル一覧
 - .editorconfig
 - .github/actions-tmp/.github/workflows/call-callgraph.yml
+- .github/actions-tmp/.github/workflows/call-check-large-files.yml
 - .github/actions-tmp/.github/workflows/call-daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/call-issue-note.yml
 - .github/actions-tmp/.github/workflows/call-rust-windows-check.yml
 - .github/actions-tmp/.github/workflows/call-translate-readme.yml
 - .github/actions-tmp/.github/workflows/callgraph.yml
+- .github/actions-tmp/.github/workflows/check-large-files.yml
 - .github/actions-tmp/.github/workflows/check-recent-human-commit.yml
 - .github/actions-tmp/.github/workflows/daily-project-summary.yml
 - .github/actions-tmp/.github/workflows/issue-note.yml
@@ -132,6 +134,9 @@ Last updated: 2026-02-06
 - .github/actions-tmp/.github_automation/callgraph/scripts/find-process-results.cjs
 - .github/actions-tmp/.github_automation/callgraph/scripts/generate-html-graph.cjs
 - .github/actions-tmp/.github_automation/callgraph/scripts/generateHTML.cjs
+- .github/actions-tmp/.github_automation/check-large-files/README.md
+- .github/actions-tmp/.github_automation/check-large-files/check-large-files.toml.default
+- .github/actions-tmp/.github_automation/check-large-files/scripts/check_large_files.py
 - .github/actions-tmp/.github_automation/check_recent_human_commit/scripts/check-recent-human-commit.cjs
 - .github/actions-tmp/.github_automation/project_summary/docs/daily-summary-setup.md
 - .github/actions-tmp/.github_automation/project_summary/prompts/development-status-prompt.md
@@ -188,7 +193,12 @@ Last updated: 2026-02-06
 - .github/actions-tmp/issue-notes/29.md
 - .github/actions-tmp/issue-notes/3.md
 - .github/actions-tmp/issue-notes/30.md
+- .github/actions-tmp/issue-notes/35.md
+- .github/actions-tmp/issue-notes/38.md
 - .github/actions-tmp/issue-notes/4.md
+- .github/actions-tmp/issue-notes/40.md
+- .github/actions-tmp/issue-notes/44.md
+- .github/actions-tmp/issue-notes/52.md
 - .github/actions-tmp/issue-notes/7.md
 - .github/actions-tmp/issue-notes/8.md
 - .github/actions-tmp/issue-notes/9.md
@@ -196,6 +206,7 @@ Last updated: 2026-02-06
 - .github/actions-tmp/package.json
 - .github/actions-tmp/src/main.js
 - .github/copilot-instructions.md
+- .github/workflows/call-check-large-files.yml
 - .github/workflows/call-daily-project-summary.yml
 - .github/workflows/call-issue-note.yml
 - .github/workflows/call-translate-readme.yml
@@ -2483,18 +2494,10 @@ def test_is_no_count_case(mission_success, input_name, no_count_names_param, exp
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-7e2819a Merge pull request #43 from cat2151/copilot/add-dark-mode-feature
-5401a2f Move sys import to top level and improve fallback foreground color
-78cc888 Address PR review comments: fix hot reload, default to system mode, add validation and logging
-d617785 Add comprehensive integration summary for dark mode feature
-d122a02 Add comprehensive theme documentation and examples
-42249dd Add English translations to docstrings for better accessibility
-44a492c Add documentation and demo scripts for dark mode feature
-3be363d Add comprehensive tests for dark mode functionality
-2cecbd1 Add dark mode implementation with system detection
-ebb85c2 Initial plan
+8857cfe CI
 
 ### 変更されたファイル:
+.github/workflows/call-check-large-files.yml
 DARK_MODE.md
 DARK_MODE_INTEGRATION.md
 THEME_COMPARISON.md
@@ -2504,7 +2507,6 @@ generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
-issue-notes/39.md
 issue-notes/41.md
 src/configs.py
 src/gui.py
@@ -2521,4 +2523,4 @@ tests/visual_test_theme.py
 
 
 ---
-Generated at: 2026-02-06 07:05:42 JST
+Generated at: 2026-03-17 07:09:11 JST

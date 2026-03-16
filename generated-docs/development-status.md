@@ -1,51 +1,79 @@
-Last updated: 2026-02-06
+Last updated: 2026-03-17
 
 # Development Status
 
 ## 現在のIssues
-- プレイヤーの上達をスコアで可視化する [Issue #10](../issue-notes/10.md) の実装が進行中で、失敗判定の厳格化は完了しました。
-- ミッションごとのタイマー計測が実装され、現在は全ミッションを1周するラップタイムの算出と表示に向けた検討を進めています。
-- その他、2択モードの検討 [Issue #16](../issue-notes/16.md) やコンボ表示の検討 [Issue #15](../issue-notes/15.md) がオープン状態です。
+- 現在、[Issue #10](../issue-notes/10.md) のスコアによる上達可視化に注力しており、失敗判定の厳格化、失敗回数表示、ミッションごとの時間計測が進行中です。
+- [Issue #15](../issue-notes/15.md) ではコンボ表示による達成感向上、[Issue #16](../issue-notes/16.md) では2択モードの検討がそれぞれ保留・検討段階にあります。
+- その他のオープンissue（[Issue #26](../issue-notes/26.md), [Issue #12](../issue-notes/12.md), [Issue #9](../issue-notes/9.md), [Issue #3](../issue-notes/3.md), [Issue #1](../issue-notes/1.md)）は、手動確認、または現時点での対応が保留されています。
 
 ## 次の一手候補
-1. [Issue #10](../issue-notes/10.md) ラップタイムの算出と表示（全ミッション1周のタイム計測）
-   - 最初の小さな一歩: 全てのミッションが開始されるタイミングを特定し、その開始時刻を記録する `on_all_mission_start` 関数とそのロジックを実装する。
-   - Agent実行プロンプ:
+1. 全ミッション完了時のラップタイム計測と表示 [Issue #10](../issue-notes/10.md)
+   - 最初の小さな一歩: 全ミッション開始時刻を記録する `all_mission_start_time` をstateに追加し、`on_all_mission_start` 関数で初期化と記録を行う。
+   - Agent実行プロンプト:
      ```
-     対象ファイル: `src/main.py`, `src/missions.py`
+     対象ファイル: `src/main.py`, `src/missions.py`, `src/utils.py` (state管理に関連するファイル)
 
-     実行内容: 全てのミッションが始まる前に一度だけ実行される `on_all_mission_start` 関数を新設し、その中で全ミッション周回の開始時刻を記録する `all_mission_start_time` (state変数) を初期化・設定してください。`main_loop` の適切な箇所からこの関数を呼び出すように変更してください。
+     実行内容:
+     1. `src/main.py` の `main` 関数内で、`state` オブジェクト（または同等の状態管理変数）に `all_mission_start_time` という新規メンバを追加し、初期値として `time.time()` を設定してください。
+     2. `src/main.py` の `main_loop` 関数内で、全てのミッションがリセットされ、新たな「1周」が始まるタイミング（例えば `initialize_mission_sets` が呼び出された直後や、既存のミッション開始ロジック）で、新規関数 `on_all_mission_start` を呼び出すように変更してください。
+     3. `src/missions.py` (または適切な場所) に `on_all_mission_start` 関数を新規作成し、その関数内で `state.all_mission_start_time` に現在の時刻を記録する処理を実装してください。この関数は引数として `state` を受け取るようにしてください。
+     4. `src/missions.py` から `src/main.py` に `on_all_mission_start` をインポートするようにしてください。
 
-     確認事項: `on_all_mission_start` がゲーム開始時または全ミッション完了後の次の周回開始時に一度だけ呼ばれることを確認してください。既存の `mission_start_time` と `all_mission_start_time` が混同しないように注意してください。
+     確認事項:
+     - `state` オブジェクトの構造と、新しいメンバ `all_mission_start_time` の追加が既存のロジックに影響を与えないことを確認してください。
+     - `on_all_mission_start` を呼び出すタイミングが、全てのミッションがリセットされた直後であり、新たな1周が開始される時点であることを確認してください。
+     - 時刻計測には `time.time()` を使用し、ミリ秒単位ではなく秒単位で問題ないことを確認してください。
 
-     期待する出力: `src/main.py` または関連ファイルに `on_all_mission_start` 関数と `all_mission_start_time` の追加、および `main_loop` からの呼び出しの変更。
-     ```
-
-2. [Issue #15](../issue-notes/15.md) コンボ数の可視化（ミッション成功時にコンボ数をprint）
-   - 最初の小さな一歩: ミッション成功時 (`on_green` 処理内) に、現在のコンボ数をカウントするロジックを導入し、コンソールに `print` する。コンボは成功で増加、失敗でリセットと定義する。
-   - Agent実行プロンプ:
-     ```
-     対象ファイル: `src/main.py`, `src/gui.py`, `src/missions.py`
-
-     実行内容: ミッション成功時 (`on_green` 処理内) に、現在のコンボ数を管理する変数 (例: `current_combo`) を導入し、成功するとインクリメント、ミッション失敗時に0にリセットするロジックを追加してください。そして、`on_green` の最後に `f"Combo: {current_combo}"` の形式でコンボ数をコンソールに `print` してください。
-
-     確認事項: `on_green` が呼ばれるタイミングと、コンボカウントの増減が適切に行われることを確認してください。失敗時のリセットロジックが正しく機能することを確認してください。
-
-     期待する出力: `src/main.py` または関連ファイルに `current_combo` 変数の導入と管理ロジック、`on_green` 内でのコンボ数 `print` 処理の追加。
+     期待する出力:
+     - `src/main.py` および `src/missions.py` の変更点を示すコードブロック。
+     - `all_mission_start_time` が適切に初期化され、新しい1周の開始時に記録されることを確認する説明。
      ```
 
-3. [Issue #16](../issue-notes/16.md) 2択モードの導入準備
-   - 最初の小さな一歩: `config/button_challenge.toml` に2択モードを有効にする設定項目を追加し、`src/configs.py` でその設定を読み込めるようにする。
-   - Agent実行プロンプ:
+2. 全ミッション完了時のラップタイム計算とDEBUG表示 [Issue #10](../issue-notes/10.md)
+   - 最初の小さな一歩: 全ミッション成功時(`on_all_mission_green` 相当のロジック内)に、`all_mission_start_time` と現在時刻の差分からラップタイムを計算し、コンソールにDEBUG表示する。
+   - Agent実行プロンプト:
      ```
-     対象ファイル: `config/button_challenge.toml`, `src/configs.py`, `src/main.py`
+     対象ファイル: `src/main.py`, `src/missions.py`, `src/utils.py`
 
-     実行内容: `config/button_challenge.toml` に `enable_two_choice_mode = false` という設定項目を追加してください。次に、`src/configs.py` の `load_game_configuration` 関数内でこの `enable_two_choice_mode` の値を読み込み、その値を `src/main.py` の `main` および `main_loop` 関数に渡せるように変更してください。
+     実行内容:
+     1. `src/missions.py` の `check_and_update_mission` 関数内で、全てのミッションが成功したと判定されるタイミング（例: `on_all_mission_green` に相当する部分）を見つけてください。
+     2. そのタイミングで、`state.all_mission_start_time` と現在の時刻(`time.time()`)の差分を計算し、`lap_time_seconds` として保存してください。
+     3. 計算された `lap_time_seconds` を、`debug_print` 関数を使ってコンソールに表示してください。メッセージは「Lap Time: X.XX seconds」のようにしてください。
+     4. 必要であれば、`src/missions.py` に `time` モジュールをインポートしてください。
 
-     確認事項: `toml` から設定が正しく読み込まれ、`main_loop` で `enable_two_choice_mode` の値が利用可能になることを確認してください。既存のゲームロジックに影響を与えないことを確認してください。
+     確認事項:
+     - `on_all_mission_green` に相当するロジックが、全てのミッションが成功し、かつ新しい1周が始まる直前であることを確認してください。
+     - `state.all_mission_start_time` が正しく設定されていることを前提としてください。
+     - `debug_print` が有効になっている場合にのみ表示されることを確認してください。
 
-     期待する出力: `config/button_challenge.toml` への設定項目追加、`src/configs.py` での読み込みロジック追加、`src/main.py` の `main` および `main_loop` の引数または状態管理に当該設定値が渡される変更。
+     期待する出力:
+     - `src/missions.py` の変更点を示すコードブロック。
+     - ラップタイムが正確に計算され、コンソールに出力されることを確認する説明。
+     ```
+
+3. コンボカウントの計算とデバッグ表示 [Issue #15](../issue-notes/15.md)
+   - 最初の小さな一歩: ミッション成功時にコンボカウントを増やし、失敗時にリセットするロジックを実装し、成功時に現在のコンボ数をコンソールにデバッグ表示する。
+   - Agent実行プロンプト:
+     ```
+     対象ファイル: `src/main.py`, `src/missions.py`, `src/utils.py`
+
+     実行内容:
+     1. `src/missions.py` 内の `check_and_update_mission` 関数（または関連するミッション判定ロジック）で、`state` オブジェクトに `current_combo_count` という新しいメンバを追加し、初期値を `0` としてください。
+     2. ミッションが成功 (`on_green` 相当) した際に、`state.current_combo_count` をインクリメントする処理を実装してください。
+     3. ミッションが失敗 (`on_red` 相当) した際に、`state.current_combo_count` を `0` にリセットする処理を実装してください。
+     4. ミッション成功時に、`debug_print` 関数を使って現在の `state.current_combo_count` をコンソールに表示してください。メッセージは「Combo: X」のようにしてください。
+     5. `src/main.py` の `main` 関数または `main_loop` 関数で、ゲーム開始時またはリセット時に `state.current_combo_count` が適切に初期化されることを確認してください。
+
+     確認事項:
+     - `current_combo_count` の追加が既存のロジックに影響を与えないことを確認してください。
+     - 成功判定と失敗判定のロジックが明確であり、それぞれでコンボカウントが正確に更新されることを確認してください。
+     - `debug_print` が有効になっている場合にのみ表示されることを確認してください。
+
+     期待する出力:
+     - `src/missions.py` および `src/main.py` の変更点を示すコードブロック。
+     - コンボカウントが正確に計算され、コンソールに出力されることを確認する説明。
      ```
 
 ---
-Generated at: 2026-02-06 07:06:00 JST
+Generated at: 2026-03-17 07:09:34 JST
